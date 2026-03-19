@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing Agent Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: #0d1117;
+    --border: #1c2333;
+    --text-dim: #4a5568;
+    --text-muted: #6b7280;
+    --text-base: #9ca3af;
+    --text-bright: #e2e8f0;
+
+    --grof: #3b82f6;
+    --grof-dim: #1d4ed8;
+    --grof-bg: #0d1b35;
+    --grof-border: #1e3a5f;
+    --grof-glow: rgba(59,130,246,0.12);
+
+    --accpro: #f59e0b;
+    --accpro-dim: #d97706;
+    --accpro-bg: #1a120d;
+    --accpro-border: #5c3d10;
+    --accpro-glow: rgba(245,158,11,0.1);
+
+    --orch: #818cf8;
+    --orch-bg: #0d0d20;
+    --orch-border: #2e2d5c;
+    --orch-glow: rgba(129,140,248,0.1);
+
+    --cowork: #34d399;
+    --cowork-bg: #071a0f;
+    --cowork-border: #134e2e;
+    --cowork-glow: rgba(52,211,153,0.08);
+
+    --mcp: #a78bfa;
+    --mcp-bg: #0e0a1e;
+    --mcp-border: #3b2777;
+    --mcp-glow: rgba(167,139,250,0.08);
+
+    --data: #6b7280;
+    --data-bg: #0c0c0c;
+    --data-border: #1f2937;
+
+    --exec: #c084fc;
+    --exec-bg: #0d0620;
+    --exec-border: #4c1d95;
+    --exec-glow: rgba(192,132,252,0.08);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-base);
+    font-family: 'Inter', -apple-system, sans-serif;
+    padding: 48px 24px 80px;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  .page { max-width: 1000px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 52px;
+  }
+  .header .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .header .eyebrow::before,
+  .header .eyebrow::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--border);
+  }
+  .header h1 {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+  .header .sub {
+    font-size: 0.9em;
+    color: var(--text-muted);
+  }
+  .header .pills {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    font-size: 0.72em;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+
+  /* ── LAYER WRAPPER ── */
+  .layer-wrap {
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 4px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .layer-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .layer-human { background: linear-gradient(135deg, #0d1117 0%, #0f1520 100%); border-color: #1c2535; }
+  .layer-orch { background: linear-gradient(135deg, var(--orch-bg) 0%, #0f0d22 100%); border-color: var(--orch-border); box-shadow: 0 0 40px var(--orch-glow); }
+  .layer-cowork { background: linear-gradient(135deg, var(--cowork-bg) 0%, #0a1c12 100%); border-color: var(--cowork-border); box-shadow: 0 0 40px var(--cowork-glow); }
+  .layer-mcp { background: linear-gradient(135deg, var(--mcp-bg) 0%, #0d0a20 100%); border-color: var(--mcp-border); box-shadow: 0 0 40px var(--mcp-glow); }
+  .layer-data { background: var(--data-bg); border-color: var(--data-border); }
+  .layer-exec { background: linear-gradient(135deg, var(--exec-bg) 0%, #0e0520 100%); border-color: var(--exec-border); box-shadow: 0 0 40px var(--exec-glow); }
+
+  /* ── LAYER HEADER ── */
+  .layer-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .layer-num {
+    font-size: 0.65em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    min-width: 52px;
+  }
+  .layer-badge {
+    font-size: 0.72em;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid;
+  }
+  .badge-human { background: rgba(148,163,184,0.08); color: #94a3b8; border-color: #334155; }
+  .badge-orch { background: rgba(129,140,248,0.12); color: var(--orch); border-color: var(--orch-border); }
+  .badge-cowork { background: rgba(52,211,153,0.1); color: var(--cowork); border-color: var(--cowork-border); }
+  .badge-mcp { background: rgba(167,139,250,0.1); color: var(--mcp); border-color: var(--mcp-border); }
+  .badge-data { background: rgba(107,114,128,0.1); color: var(--data); border-color: var(--data-border); }
+  .badge-exec { background: rgba(192,132,252,0.1); color: var(--exec); border-color: var(--exec-border); }
+  .layer-desc { font-size: 0.78em; color: var(--text-dim); }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ── HUMAN CARDS ── */
+  .human-card {
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .human-grof { background: var(--grof-bg); border: 1px solid var(--grof-border); }
+  .human-accpro { background: var(--accpro-bg); border: 1px solid var(--accpro-border); }
+  .human-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    flex-shrink: 0;
+  }
+  .avatar-grof { background: rgba(59,130,246,0.15); border: 1px solid var(--grof-border); }
+  .avatar-accpro { background: rgba(245,158,11,0.12); border: 1px solid var(--accpro-border); }
+  .human-name { font-weight: 600; font-size: 0.95em; margin-bottom: 3px; }
+  .name-grof { color: var(--grof); }
+  .name-accpro { color: var(--accpro); }
+  .human-role { font-size: 0.76em; color: var(--text-dim); }
+
+  /* ── CONNECTOR ── */
+  .connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 0;
+    color: var(--text-dim);
+    font-size: 0.72em;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .connector::before, .connector::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ── SIDEKICK CARDS ── */
+  .sidekick-card {
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .sk-grof { background: linear-gradient(135deg, #0a1230 0%, #0d1636 100%); border: 1px solid #2d3d6b; }
+  .sk-accpro { background: linear-gradient(135deg, #1a1008 0%, #1f1408 100%); border: 1px solid #6b4a12; }
+  .sk-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .sk-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    flex-shrink: 0;
+  }
+  .sk-icon-grof { background: rgba(99,102,241,0.15); border: 1px solid #3730a3; }
+  .sk-icon-accpro { background: rgba(249,115,22,0.12); border: 1px solid #78350f; }
+  .sk-name { font-size: 0.95em; font-weight: 700; margin-bottom: 2px; }
+  .sk-name-grof { color: var(--orch); }
+  .sk-name-accpro { color: #fb923c; }
+  .sk-tag { font-size: 0.72em; color: var(--text-dim); }
+  .sk-caps {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .sk-cap {
+    border-radius: 7px;
+    padding: 7px 9px;
+    font-size: 0.74em;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+  .sk-cap-grof { background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.2); color: #a5b4fc; }
+  .sk-cap-accpro { background: rgba(249,115,22,0.07); border: 1px solid rgba(249,115,22,0.2); color: #fdba74; }
+  .sk-memory {
+    border-radius: 7px;
+    padding: 9px 11px;
+    font-size: 0.74em;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .sk-memory-grof { background: rgba(99,102,241,0.05); border: 1px dashed rgba(99,102,241,0.25); color: var(--orch); }
+  .sk-memory-accpro { background: rgba(249,115,22,0.05); border: 1px dashed rgba(249,115,22,0.25); color: #f97316; }
+  .mem-title { font-weight: 600; margin-bottom: 2px; }
+  .mem-desc { color: var(--text-dim); margin-top: 1px; }
+
+  /* ── AGENTS ── */
+  .brand-plugin {
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .plugin-grof { background: rgba(59,130,246,0.04); border: 1px solid var(--grof-border); }
+  .plugin-accpro { background: rgba(245,158,11,0.04); border: 1px solid var(--accpro-border); }
+  .plugin-title {
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pt-grof { color: var(--grof); }
+  .pt-accpro { color: var(--accpro); }
+  .agents-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .agent {
+    border-radius: 7px;
+    padding: 8px 9px;
+    text-align: center;
+  }
+  .agent-grof { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18); }
+  .agent-accpro { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18); }
+  .agent-name { font-size: 0.76em; font-weight: 600; margin-bottom: 2px; }
+  .an-grof { color: #93c5fd; }
+  .an-accpro { color: #fcd34d; }
+  .agent-tag { font-size: 0.66em; color: var(--text-dim); }
+  .agent-full { grid-column: 1/-1; }
+
+  .cowork-infra { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--cowork-border); }
+  .infra-card {
+    background: rgba(52,211,153,0.04);
+    border: 1px solid rgba(52,211,153,0.12);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .infra-icon { font-size: 1.1em; flex-shrink: 0; }
+  .infra-name { font-size: 0.8em; font-weight: 600; color: #6ee7b7; margin-bottom: 2px; }
+  .infra-desc { font-size: 0.72em; color: var(--text-dim); }
+
+  /* ── MCP ── */
+  .mcp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mcp-card {
+    background: rgba(167,139,250,0.05);
+    border: 1px solid rgba(167,139,250,0.15);
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .mcp-icon { font-size: 1.5em; margin-bottom: 6px; }
+  .mcp-name { font-size: 0.82em; font-weight: 600; color: #c4b5fd; margin-bottom: 4px; }
+  .mcp-desc { font-size: 0.72em; color: var(--text-dim); line-height: 1.4; }
+
+  /* ── DATA ── */
+  .data-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .data-card {
+    background: #0d0d0d;
+    border: 1px solid var(--data-border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .data-name { font-size: 0.78em; font-weight: 600; color: #9ca3af; margin-bottom: 3px; }
+  .data-desc { font-size: 0.7em; color: var(--text-dim); line-height: 1.35; }
+
+  /* ── EXECUTION ── */
+  .exec-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .exec-card {
+    background: rgba(192,132,252,0.05);
+    border: 1px solid rgba(192,132,252,0.15);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .exec-name { font-size: 0.8em; font-weight: 600; color: #d8b4fe; margin-bottom: 4px; }
+  .exec-desc { font-size: 0.7em; color: var(--text-dim); line-height: 1.35; }
+
+  /* ── DAILY FLOW ── */
+  .flow {
+    margin-top: 28px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .flow-header {
+    background: var(--surface);
+    padding: 14px 24px;
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .flow-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .flow-step {
+    padding: 18px 16px;
+    border-right: 1px solid var(--border);
+  }
+  .flow-step:last-child { border-right: none; }
+  .flow-time {
+    font-size: 0.72em;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .ft-1 { color: var(--cowork); }
+  .ft-2 { color: var(--orch); }
+  .ft-3 { color: var(--accpro); }
+  .ft-4 { color: var(--exec); }
+  .flow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .fd-1 { background: var(--cowork); }
+  .fd-2 { background: var(--orch); }
+  .fd-3 { background: var(--accpro); }
+  .fd-4 { background: var(--exec); }
+  .flow-desc { font-size: 0.76em; color: var(--text-dim); line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 0.72em;
+    color: var(--text-dim);
+  }
+  .footer span { color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="eyebrow">System Architecture</div>
+    <h1>Marketing Agent Team</h1>
+    <p class="sub">AI-powered marketing for two brands — built to outlast staff turnover</p>
+    <div class="pills">
+      <span class="pill">Grof</span>
+      <span class="pill">AccPro</span>
+      <span class="pill">1 Sidekick per brand</span>
+      <span class="pill">7 specialist agents</span>
+      <span class="pill">Cowork · GrofAgent-OS · Notion · n8n</span>
+    </div>
+  </div>
+
+  <!-- LAYER 1: HUMAN -->
+  <div class="layer-wrap layer-human">
+    <div class="layer-header">
+      <span class="layer-num">Layer 1</span>
+      <span class="layer-badge badge-human">Human</span>
+      <span class="layer-desc">The marketer — whoever is in the seat today</span>
+    </div>
+    <div class="two-col">
+      <div class="human-card human-grof">
+        <div class="human-avatar avatar-grof">👤</div>
+        <div>
+          <div class="human-name name-grof">Grof Marketer</div>
+          <div class="human-role">Briefs in plain language · reviews outputs · approves content</div>
+        </div>
+      </div>
+      <div class="human-card human-accpro">
+        <div class="human-avatar avatar-accpro">👤</div>
+        <div>
+          <div class="human-name name-accpro">AccPro Marketer</div>
+          <div class="human-role">Briefs in plain language · reviews outputs · approves content</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">natural language brief · daily conversation in Cowork</div>
+
+  <!-- LAYER 2: SIDEKICK -->
+  <div class="layer-wrap layer-orch">
+    <div class="layer-header">
+      <span class="layer-num">Layer 2</span>
+      <span class="layer-badge badge-orch">Brand Sidekick</span>
+      <span class="layer-desc">Orchestrator · one per brand · carries institutional knowledge across staff turnover</span>
+    </div>
+    <div class="two-col">
+      <div class="sidekick-card sk-grof">
+        <div class="sk-header">
+          <div class="sk-icon sk-icon-grof">🤖</div>
+          <div>
+            <div class="sk-name sk-name-grof">Grof Brand Sidekick</div>
+            <div class="sk-tag">Persistent Cowork Project · always-on</div>
+          </div>
+        </div>
+        <div class="sk-caps">
+          <div class="sk-cap sk-cap-grof"><span>🧭</span>Understands brief, decides which agents to invoke</div>
+          <div class="sk-cap sk-cap-grof"><span>🔗</span>Chains agents — write → review → schedule</div>
+          <div class="sk-cap sk-cap-grof"><span>📚</span>Knows past campaigns, what worked</div>
+          <div class="sk-cap sk-cap-grof"><span>🔄</span>Onboards new staff — zero knowledge lost</div>
+        </div>
+        <div class="sk-memory sk-memory-grof">
+          <span>🧠</span>
+          <div>
+            <div class="mem-title">Long-term memory via Notion</div>
+            <div class="mem-desc">Reads Brand Voice · Campaign History · Analytics — grounded in real Grof data</div>
+          </div>
+        </div>
+      </div>
+      <div class="sidekick-card sk-accpro">
+        <div class="sk-header">
+          <div class="sk-icon sk-icon-accpro">🤖</div>
+          <div>
+            <div class="sk-name sk-name-accpro">AccPro Brand Sidekick</div>
+            <div class="sk-tag">Persistent Cowork Project · always-on</div>
+          </div>
+        </div>
+        <div class="sk-caps">
+          <div class="sk-cap sk-cap-accpro"><span>🧭</span>Understands brief, decides which agents to invoke</div>
+          <div class="sk-cap sk-cap-accpro"><span>🔗</span>Chains agents — write → review → schedule</div>
+          <div class="sk-cap sk-cap-accpro"><span>📚</span>Knows past campaigns, what worked</div>
+          <div class="sk-cap sk-cap-accpro"><span>🔄</span>Onboards new staff — zero knowledge lost</div>
+        </div>
+        <div class="sk-memory sk-memory-accpro">
+          <span>🧠</span>
+          <div>
+            <div class="mem-title">Long-term memory via Notion</div>
+            <div class="mem-desc">Reads Brand Voice · Campaign History · Analytics — grounded in real AccPro data</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">activates skills · passes context · aggregates results</div>
+
+  <!-- LAYER 3: COWORK AGENTS -->
+  <div class="layer-wrap layer-cowork">
+    <div class="layer-header">
+      <span class="layer-num">Layer 3</span>
+      <span class="layer-badge badge-cowork">Cowork Platform</span>
+      <span class="layer-desc">Specialist agents — invoked by Sidekick, never directly by human</span>
+    </div>
+    <div class="two-col">
+      <div class="brand-plugin plugin-grof">
+        <div class="plugin-title pt-grof">📦 Grof Marketing Plugin</div>
+        <div class="agents-grid">
+          <div class="agent agent-grof"><div class="agent-name an-grof">✍️ Content Creator</div><div class="agent-tag">on-demand</div></div>
+          <div class="agent agent-grof"><div class="agent-name an-grof">🎯 Brand Reviewer</div><div class="agent-tag">sub-agent</div></div>
+          <div class="agent agent-grof"><div class="agent-name an-grof">🖼 Image Designer</div><div class="agent-tag">on-demand</div></div>
+          <div class="agent agent-grof"><div class="agent-name an-grof">📈 CRO Agent</div><div class="agent-tag">on-demand</div></div>
+          <div class="agent agent-grof"><div class="agent-name an-grof">📱 Social Manager</div><div class="agent-tag">scheduled</div></div>
+          <div class="agent agent-grof"><div class="agent-name an-grof">💰 Perf. Marketing</div><div class="agent-tag">scheduled</div></div>
+        </div>
+        <div class="agent agent-grof agent-full"><div class="agent-name an-grof">📊 Analytics Agent</div><div class="agent-tag">daily 7am · feeds Sidekick + all agents</div></div>
+      </div>
+      <div class="brand-plugin plugin-accpro">
+        <div class="plugin-title pt-accpro">📦 AccPro Marketing Plugin</div>
+        <div class="agents-grid">
+          <div class="agent agent-accpro"><div class="agent-name an-accpro">✍️ Content Creator</div><div class="agent-tag">on-demand</div></div>
+          <div class="agent agent-accpro"><div class="agent-name an-accpro">🎯 Brand Reviewer</div><div class="agent-tag">sub-agent</div></div>
+          <div class="agent agent-accpro"><div class="agent-name an-accpro">🖼 Image Designer</div><div class="agent-tag">on-demand</div></div>
+          <div class="agent agent-accpro"><div class="agent-name an-accpro">📈 CRO Agent</div><div class="agent-tag">on-demand</div></div>
+          <div class="agent agent-accpro"><div class="agent-name an-accpro">📱 Social Manager</div><div class="agent-tag">scheduled</div></div>
+          <div class="agent agent-accpro"><div class="agent-name an-accpro">💰 Perf. Marketing</div><div class="agent-tag">scheduled</div></div>
+        </div>
+        <div class="agent agent-accpro agent-full"><div class="agent-name an-accpro">📊 Analytics Agent</div><div class="agent-tag">daily 7am · feeds Sidekick + all agents</div></div>
+      </div>
+    </div>
+    <div class="cowork-infra">
+      <div class="infra-card"><div class="infra-icon">⏱</div><div><div class="infra-name">Native Schedules</div><div class="infra-desc">Daily 7am heartbeat · weekly digest · SEO audit</div></div></div>
+      <div class="infra-card"><div class="infra-icon">🔗</div><div><div class="infra-name">Sub-agent Handoffs</div><div class="infra-desc">Content Creator → Brand Reviewer auto-trigger</div></div></div>
+    </div>
+  </div>
+
+  <div class="connector">MCP tool calls · connectors</div>
+
+  <!-- LAYER 4: MCP -->
+  <div class="layer-wrap layer-mcp">
+    <div class="layer-header">
+      <span class="layer-num">Layer 4</span>
+      <span class="layer-badge badge-mcp">MCP Platform</span>
+      <span class="layer-desc">GrofAgent-OS — Microsoft 365 bridge</span>
+    </div>
+    <div class="mcp-grid">
+      <div class="mcp-card"><div class="mcp-icon">💬</div><div class="mcp-name">Teams</div><div class="mcp-desc">Morning briefings · approval pings · alerts</div></div>
+      <div class="mcp-card"><div class="mcp-icon">📁</div><div class="mcp-name">SharePoint</div><div class="mcp-desc">File storage · asset library</div></div>
+      <div class="mcp-card"><div class="mcp-icon">📧</div><div class="mcp-name">Outlook</div><div class="mcp-desc">Email drafts · newsletter triggers</div></div>
+      <div class="mcp-card"><div class="mcp-icon">📅</div><div class="mcp-name">Calendar</div><div class="mcp-desc">Campaign scheduling · content calendar sync</div></div>
+    </div>
+  </div>
+
+  <div class="connector">read/write · status triggers · webhooks</div>
+
+  <!-- LAYER 5: DATA -->
+  <div class="layer-wrap layer-data">
+    <div class="layer-header">
+      <span class="layer-num">Layer 5</span>
+      <span class="layer-badge badge-data">Data Layer</span>
+      <span class="layer-desc">Notion — single source of truth per brand · Sidekick memory store</span>
+    </div>
+    <div class="data-grid">
+      <div class="data-card"><div class="data-name">Brand Voice</div><div class="data-desc">Tone · audience · writing rules</div></div>
+      <div class="data-card"><div class="data-name">Content Calendar</div><div class="data-desc">Schedule · themes · status</div></div>
+      <div class="data-card"><div class="data-name">Drafts + Queue</div><div class="data-desc">Pending approval · scheduled</div></div>
+      <div class="data-card"><div class="data-name">Analytics DB</div><div class="data-desc">Live metrics · GA4 · ads</div></div>
+      <div class="data-card"><div class="data-name">Campaign History</div><div class="data-desc">Past performance · learnings</div></div>
+    </div>
+  </div>
+
+  <div class="connector">webhook on approval · scheduled data pulls</div>
+
+  <!-- LAYER 6: EXECUTION -->
+  <div class="layer-wrap layer-exec">
+    <div class="layer-header">
+      <span class="layer-num">Layer 6</span>
+      <span class="layer-badge badge-exec">Execution Layer</span>
+      <span class="layer-desc">n8n on Railway — mechanical publishing only, no intelligence</span>
+    </div>
+    <div class="exec-grid">
+      <div class="exec-card"><div class="exec-name">LinkedIn</div><div class="exec-desc">Post on schedule</div></div>
+      <div class="exec-card"><div class="exec-name">WordPress</div><div class="exec-desc">Publish blog + landing pages</div></div>
+      <div class="exec-card"><div class="exec-name">Odoo</div><div class="exec-desc">Send email newsletter</div></div>
+      <div class="exec-card"><div class="exec-name">Google + Meta Ads</div><div class="exec-desc">Pull performance data</div></div>
+      <div class="exec-card"><div class="exec-name">GA4</div><div class="exec-desc">Pull analytics + SEO</div></div>
+    </div>
+  </div>
+
+  <!-- DAILY FLOW -->
+  <div class="flow">
+    <div class="flow-header">Daily Flow</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>7am — Heartbeat</div>
+        <div class="flow-desc">Analytics Agent fires. Pulls GA4 + Ads via n8n. Writes Notion briefing. Sidekick pings marketer in Teams.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-time ft-2"><div class="flow-dot fd-2"></div>Morning — Brief</div>
+        <div class="flow-desc">Marketer talks to Sidekick naturally. Sidekick picks agents, chains write → review → draft.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-time ft-3"><div class="flow-dot fd-3"></div>Midday — Approve</div>
+        <div class="flow-desc">Draft in Notion. Teams ping. Marketer toggles status → Approved. n8n webhook fires instantly.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-time ft-4"><div class="flow-dot fd-4"></div>Scheduled — Publish</div>
+        <div class="flow-desc">n8n publishes to all platforms. Analytics logged back to Notion. Sidekick learns for next time.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Marketing Agent Team · Grof + AccPro · <span>v3 · March 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
