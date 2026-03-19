@@ -341,7 +341,8 @@
   .mcp-desc { font-size: 0.72em; color: var(--text-dim); line-height: 1.4; }
 
   /* ── DATA ── */
-  .data-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .data-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .data-card-highlight { border-color: #2d3748 !important; background: #111827 !important; }
   .data-card {
     background: #0d0d0d;
     border: 1px solid var(--data-border);
@@ -383,7 +384,7 @@
   }
   .flow-steps {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
   .flow-step {
     padding: 18px 16px;
@@ -548,7 +549,7 @@
           <div class="agent agent-grof"><div class="agent-name an-grof">💰 Perf. Marketing</div><div class="agent-tag">scheduled</div></div>
           <div class="agent agent-grof"><div class="agent-name an-grof">🌐 Website Builder</div><div class="agent-tag">on-demand</div></div>
         </div>
-        <div class="agent agent-grof agent-full"><div class="agent-name an-grof">📊 Analytics Agent</div><div class="agent-tag">daily 7am · feeds Sidekick + all agents</div></div>
+        <div class="agent agent-grof agent-full"><div class="agent-name an-grof">📊 Analytics Agent</div><div class="agent-tag">n8n cron · daily 7am · feeds Sidekick + all agents</div></div>
       </div>
       <div class="brand-plugin plugin-accpro">
         <div class="plugin-title pt-accpro">📦 AccPro Marketing Plugin</div>
@@ -561,11 +562,11 @@
           <div class="agent agent-accpro"><div class="agent-name an-accpro">💰 Perf. Marketing</div><div class="agent-tag">scheduled</div></div>
           <div class="agent agent-accpro"><div class="agent-name an-accpro">🌐 Website Builder</div><div class="agent-tag">on-demand</div></div>
         </div>
-        <div class="agent agent-accpro agent-full"><div class="agent-name an-accpro">📊 Analytics Agent</div><div class="agent-tag">daily 7am · feeds Sidekick + all agents</div></div>
+        <div class="agent agent-accpro agent-full"><div class="agent-name an-accpro">📊 Analytics Agent</div><div class="agent-tag">n8n cron · daily 7am · feeds Sidekick + all agents</div></div>
       </div>
     </div>
     <div class="cowork-infra">
-      <div class="infra-card"><div class="infra-icon">⏱</div><div><div class="infra-name">Native Schedules</div><div class="infra-desc">Daily 7am heartbeat · weekly digest · SEO audit</div></div></div>
+      <div class="infra-card"><div class="infra-icon">⏱</div><div><div class="infra-name">n8n Cron Triggers</div><div class="infra-desc">Hourly scheduled bursts → Claude API (always-on on Railway, not desktop-dependent)</div></div></div>
       <div class="infra-card"><div class="infra-icon">🔗</div><div><div class="infra-name">Sub-agent Handoffs</div><div class="infra-desc">Content Creator → Brand Reviewer auto-trigger</div></div></div>
     </div>
   </div>
@@ -602,24 +603,46 @@
       <div class="data-card"><div class="data-name">Drafts + Queue</div><div class="data-desc">Pending approval · scheduled</div></div>
       <div class="data-card"><div class="data-name">Analytics DB</div><div class="data-desc">Live metrics · GA4 · ads</div></div>
       <div class="data-card"><div class="data-name">Campaign History</div><div class="data-desc">Past performance · learnings</div></div>
+      <div class="data-card data-card-highlight"><div class="data-name" style="color:#e2e8f0;">Campaign State</div><div class="data-desc">Heartbeat DB · every cron reads first · agents write back after acting</div></div>
     </div>
   </div>
 
-  <div class="connector">webhook on approval · scheduled data pulls</div>
+  <div class="connector">cron invokes Claude API · webhook on approval · data pulls</div>
 
   <!-- LAYER 6: EXECUTION -->
   <div class="layer-wrap layer-exec">
     <div class="layer-header">
       <span class="layer-num">Layer 6</span>
       <span class="layer-badge badge-exec">Execution Layer</span>
-      <span class="layer-desc">n8n on Railway — mechanical publishing only, no intelligence</span>
+      <span class="layer-desc">n8n on Railway — two roles: scheduled agent invocation + mechanical publishing</span>
     </div>
-    <div class="exec-grid">
-      <div class="exec-card"><div class="exec-name">LinkedIn</div><div class="exec-desc">Post on schedule</div></div>
-      <div class="exec-card"><div class="exec-name">WordPress</div><div class="exec-desc">Publish blog + landing pages</div></div>
-      <div class="exec-card"><div class="exec-name">Odoo</div><div class="exec-desc">Send email newsletter</div></div>
-      <div class="exec-card"><div class="exec-name">Google + Meta Ads</div><div class="exec-desc">Pull performance data</div></div>
-      <div class="exec-card"><div class="exec-name">GA4</div><div class="exec-desc">Pull analytics + SEO</div></div>
+
+    <!-- Role 1: Cron -->
+    <div style="margin-bottom: 16px;">
+      <div style="font-size:0.7em;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--exec);margin-bottom:10px;">⏱ Role 1 — Scheduled Agent Invocation</div>
+      <div style="background:rgba(192,132,252,0.04);border:1px solid rgba(192,132,252,0.15);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:0.76em;color:#d8b4fe;font-family:monospace;line-height:1.8;">
+          Cron trigger → Notion read (Campaign State) → HTTP POST Claude API → Notion write + Teams ping
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
+        <div class="exec-card"><div class="exec-name" style="font-size:0.72em;">7am</div><div class="exec-desc">Analytics pull · pings marketer</div></div>
+        <div class="exec-card"><div class="exec-name" style="font-size:0.72em;">9am</div><div class="exec-desc">Brief processor · triggers write chain</div></div>
+        <div class="exec-card"><div class="exec-name" style="font-size:0.72em;">5pm</div><div class="exec-desc">Daily digest · what went out + pending</div></div>
+        <div class="exec-card" style="border-style:dashed;opacity:0.5;"><div class="exec-name" style="font-size:0.72em;">+5 more</div><div class="exec-desc">8am · 12pm · 3pm · 8pm · Mon 8am</div></div>
+      </div>
+    </div>
+
+    <!-- Role 2: Publishing -->
+    <div style="padding-top:14px;border-top:1px solid rgba(192,132,252,0.15);">
+      <div style="font-size:0.7em;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);margin-bottom:10px;">📤 Role 2 — Mechanical Publishing (no intelligence)</div>
+      <div class="exec-grid">
+        <div class="exec-card"><div class="exec-name">LinkedIn</div><div class="exec-desc">Post on schedule</div></div>
+        <div class="exec-card"><div class="exec-name">WordPress</div><div class="exec-desc">Publish blog + landing pages</div></div>
+        <div class="exec-card"><div class="exec-name">Odoo</div><div class="exec-desc">Send email newsletter</div></div>
+        <div class="exec-card"><div class="exec-name">Google + Meta Ads</div><div class="exec-desc">Pull performance data</div></div>
+        <div class="exec-card"><div class="exec-name">GA4</div><div class="exec-desc">Pull analytics + SEO</div></div>
+      </div>
     </div>
   </div>
 
@@ -628,26 +651,30 @@
     <div class="flow-header">Daily Flow</div>
     <div class="flow-steps">
       <div class="flow-step">
-        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>7am — Heartbeat</div>
-        <div class="flow-desc">Analytics Agent fires. Pulls GA4 + Ads via n8n. Writes Notion briefing. Sidekick pings marketer in Teams.</div>
+        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>7am — n8n cron</div>
+        <div class="flow-desc">Cron fires Claude API. Reads Campaign State. Pulls GA4 + Ads. Writes Notion briefing. Pings marketer in Teams.</div>
       </div>
       <div class="flow-step">
         <div class="flow-time ft-2"><div class="flow-dot fd-2"></div>Morning — Brief</div>
-        <div class="flow-desc">Marketer talks to Sidekick naturally. Sidekick picks agents, chains write → review → draft.</div>
+        <div class="flow-desc">Marketer talks to Sidekick in Cowork. Sidekick picks agents, chains write → review → draft.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>9am — n8n cron</div>
+        <div class="flow-desc">Brief processor check. If new brief dropped overnight, Sidekick triggers write chain automatically.</div>
       </div>
       <div class="flow-step">
         <div class="flow-time ft-3"><div class="flow-dot fd-3"></div>Midday — Approve</div>
-        <div class="flow-desc">Draft in Notion. Teams ping. Marketer toggles status → Approved. n8n webhook fires instantly.</div>
+        <div class="flow-desc">Draft in Notion. Teams ping. Marketer toggles status → Approved. n8n webhook fires publish.</div>
       </div>
       <div class="flow-step">
-        <div class="flow-time ft-4"><div class="flow-dot fd-4"></div>Scheduled — Publish</div>
-        <div class="flow-desc">n8n publishes to all platforms. Analytics logged back to Notion. Sidekick learns for next time.</div>
+        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>5pm — n8n cron</div>
+        <div class="flow-desc">Daily digest: what went out, what's pending, one recommendation. Campaign State updated.</div>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Marketing Agent Team · Grof + AccPro · <span>v3 · March 2026</span>
+    Marketing Agent Team · Grof + AccPro · <span>v4 · March 2026</span>
   </div>
 
 </div>
