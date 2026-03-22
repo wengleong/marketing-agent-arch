@@ -3,680 +3,1157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketing Agent Team</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Grof · AI Agent Operating Layer</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f45;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#e8eaf2;--muted:#6c7489;--subtle:#3a3f52;
+  --teal:#00d4b4;--teal-bg:rgba(0,212,180,0.08);--teal-border:rgba(0,212,180,0.25);
+  --blue:#4f9cf9;--blue-bg:rgba(79,156,249,0.08);--blue-border:rgba(79,156,249,0.25);
+  --amber:#f5a623;--amber-bg:rgba(245,166,35,0.08);--amber-border:rgba(245,166,35,0.25);
+  --coral:#ff7057;--coral-bg:rgba(255,112,87,0.08);--coral-border:rgba(255,112,87,0.25);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.08);--purple-border:rgba(167,139,250,0.25);
+  --green:#34d399;--green-bg:rgba(52,211,153,0.08);--green-border:rgba(52,211,153,0.25);
+  --pink:#f472b6;--pink-bg:rgba(244,114,182,0.08);--pink-border:rgba(244,114,182,0.25);
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:14px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,0.03) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
 
-  :root {
-    --bg: #07090f;
-    --surface: #0d1117;
-    --border: #1c2333;
-    --text-dim: #4a5568;
-    --text-muted: #6b7280;
-    --text-base: #9ca3af;
-    --text-bright: #e2e8f0;
+/* NAV */
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-brand{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;padding:16px 0;margin-right:28px;white-space:nowrap;flex-shrink:0}
+.nav-tab{padding:16px 16px;font-size:12px;font-weight:500;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.18s;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--teal)}
 
-    --grof: #3b82f6;
-    --grof-dim: #1d4ed8;
-    --grof-bg: #0d1b35;
-    --grof-border: #1e3a5f;
-    --grof-glow: rgba(59,130,246,0.12);
+/* SECTIONS */
+.tab-section{display:none;position:relative;z-index:1}
+.tab-section.active{display:block}
+.page{max-width:1100px;margin:0 auto;padding:48px 28px 100px}
 
-    --accpro: #f59e0b;
-    --accpro-dim: #d97706;
-    --accpro-bg: #1a120d;
-    --accpro-border: #5c3d10;
-    --accpro-glow: rgba(245,158,11,0.1);
+/* HEADER */
+.page-header{margin-bottom:44px}
+.header-tag{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:500;letter-spacing:0.04em;margin-bottom:14px}
+.header-tag.teal{background:var(--teal-bg);border:1px solid var(--teal-border);color:var(--teal)}
+.header-tag.coral{background:var(--coral-bg);border:1px solid var(--coral-border);color:var(--coral)}
+.header-tag.amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
+.header-tag.purple{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple)}
+.header-tag.blue{background:var(--blue-bg);border:1px solid var(--blue-border);color:var(--blue)}
+.header-tag.green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+.hdot{width:6px;height:6px;border-radius:50%;animation:pulse 2s ease-in-out infinite}
+.hdot.teal{background:var(--teal)} .hdot.coral{background:var(--coral)} .hdot.amber{background:var(--amber)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.75)}}
+.page-header h1{font-size:30px;font-weight:600;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em}
+.page-header h1 .hl-teal{color:var(--teal)} .page-header h1 .hl-coral{color:var(--coral)} .page-header h1 .hl-amber{color:var(--amber)} .page-header h1 .hl-purple{color:var(--purple)}
+.page-header p{color:var(--muted);font-size:14px;max-width:580px}
+.header-meta{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.meta-pill{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:11px;color:var(--muted)}
+.meta-pill strong{color:var(--text)}
 
-    --orch: #818cf8;
-    --orch-bg: #0d0d20;
-    --orch-border: #2e2d5c;
-    --orch-glow: rgba(129,140,248,0.1);
+/* LAYER LABELS */
+.layer-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.layer-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
-    --cowork: #34d399;
-    --cowork-bg: #071a0f;
-    --cowork-border: #134e2e;
-    --cowork-glow: rgba(52,211,153,0.08);
+/* CONNECTOR */
+.connector{display:flex;justify-content:center;align-items:center;height:34px;position:relative}
+.connector::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--border2),transparent)}
+.connector-arrow{width:18px;height:18px;background:var(--surface2);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);z-index:1}
 
-    --mcp: #a78bfa;
-    --mcp-bg: #0e0a1e;
-    --mcp-border: #3b2777;
-    --mcp-glow: rgba(167,139,250,0.08);
+/* HUMAN / SIDEKICK */
+.human-row{display:flex;gap:12px;justify-content:center}
+.human-card{background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:12px;padding:16px 22px;text-align:center;min-width:200px;max-width:340px;flex:1}
+.human-icon{font-size:20px;margin-bottom:5px}
+.human-name{font-size:14px;font-weight:600;color:var(--purple);margin-bottom:3px}
+.human-sub{font-size:11px;color:var(--muted)}
+.human-note{text-align:center;color:var(--muted);font-size:11px;margin:5px 0;font-style:italic}
+.sidekick-card{background:var(--teal-bg);border:1px solid var(--teal-border);border-radius:12px;padding:18px 22px;position:relative;overflow:hidden}
+.sidekick-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,180,0.04),transparent 60%);pointer-events:none}
+.sidekick-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.sidekick-title{font-size:15px;font-weight:600;color:var(--teal)}
+.cron-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,212,180,0.12);border:1px solid var(--teal-border);border-radius:20px;padding:3px 9px;font-size:10px;color:var(--teal)}
+.sidekick-sub{font-size:12px;color:var(--muted);margin-bottom:10px}
+.sidekick-features{display:flex;flex-wrap:wrap;gap:6px}
+.sidekick-feat{background:rgba(0,212,180,0.08);border:1px solid rgba(0,212,180,0.15);border-radius:5px;padding:3px 9px;font-size:11px;color:var(--teal);opacity:0.85}
 
-    --data: #6b7280;
-    --data-bg: #0c0c0c;
-    --data-border: #1f2937;
+/* AGENT GROUPS */
+.agent-section-title{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;padding:5px 9px;background:var(--surface);border:1px solid var(--border);border-radius:5px;display:inline-block}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px;margin-bottom:9px}
+.agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all 0.18s;position:relative;overflow:hidden}
+.agent-card:hover{transform:translateY(-2px);border-color:var(--border2)}
+.agent-card.blue{border-top:2px solid var(--blue);background:var(--blue-bg)}
+.agent-card.amber{border-top:2px solid var(--amber);background:var(--amber-bg)}
+.agent-card.coral{border-top:2px solid var(--coral);background:var(--coral-bg)}
+.agent-card.teal{border-top:2px solid var(--teal);background:var(--teal-bg)}
+.agent-card.green{border-top:2px solid var(--green);background:var(--green-bg)}
+.agent-card.pink{border-top:2px solid var(--pink);background:var(--pink-bg)}
+.agent-card.shared{border-top:2px solid var(--teal);background:rgba(0,212,180,0.06);border-color:var(--teal-border)}
+.agent-header{display:flex;align-items:flex-start;justify-content:space-between;gap:5px;margin-bottom:5px}
+.agent-icon{font-size:16px;flex-shrink:0}
+.agent-tier-badge{font-size:9px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:2px 5px;border-radius:3px;flex-shrink:0}
+.tier-core{background:rgba(255,112,87,0.15);color:var(--coral);border:1px solid rgba(255,112,87,0.25)}
+.tier-standard{background:rgba(245,166,35,0.15);color:var(--amber);border:1px solid rgba(245,166,35,0.25)}
+.tier-shared{background:rgba(0,212,180,0.15);color:var(--teal);border:1px solid rgba(0,212,180,0.25)}
+.tier-on-demand{background:rgba(79,156,249,0.15);color:var(--blue);border:1px solid rgba(79,156,249,0.25)}
+.tier-scheduled{background:rgba(167,139,250,0.15);color:var(--purple);border:1px solid rgba(167,139,250,0.25)}
+.tier-sub-agent{background:rgba(52,211,153,0.15);color:var(--green);border:1px solid rgba(52,211,153,0.25)}
+.agent-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.agent-id{font-size:9px;color:var(--muted);font-family:'SF Mono','Fira Code',monospace;margin-bottom:6px}
+.agent-trigger{font-size:11px;color:var(--muted);line-height:1.5}
+.agent-skill-detail{margin-top:9px;padding-top:9px;border-top:1px solid var(--border);display:none}
+.agent-card.expanded .agent-skill-detail{display:block}
+.skill-row{margin-bottom:7px}
+.skill-row-label{font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.skill-row-text{font-size:11px;color:var(--text);line-height:1.5;opacity:0.8}
+.skill-criteria-list{list-style:none}
+.skill-criteria-list li{font-size:11px;color:var(--muted);padding:2px 0 2px 13px;position:relative}
+.skill-criteria-list li::before{content:'✓';position:absolute;left:0;color:var(--green);font-size:10px}
+.expand-hint{font-size:10px;color:var(--muted);margin-top:7px;text-align:right;opacity:0.5}
 
-    --exec: #c084fc;
-    --exec-bg: #0d0620;
-    --exec-border: #4c1d95;
-    --exec-glow: rgba(192,132,252,0.08);
-  }
+/* CALLOUT */
+.rule-callout{background:var(--coral-bg);border:1px solid var(--coral-border);border-radius:9px;padding:12px 16px;margin-top:9px;display:flex;gap:10px;align-items:flex-start}
+.rule-callout-icon{font-size:14px;flex-shrink:0;padding-top:1px}
+.rule-callout-text{font-size:12px;color:var(--text);line-height:1.6}
+.rule-callout-text strong{color:var(--coral)}
+.info-callout{background:var(--teal-bg);border:1px solid var(--teal-border);border-radius:9px;padding:12px 16px;margin-top:9px;display:flex;gap:10px;align-items:flex-start}
+.info-callout-text{font-size:12px;color:var(--text);line-height:1.6}
+.info-callout-text strong{color:var(--teal)}
 
-  body {
-    background: var(--bg);
-    color: var(--text-base);
-    font-family: 'Inter', -apple-system, sans-serif;
-    padding: 48px 24px 80px;
-    min-height: 100vh;
-    line-height: 1.5;
-  }
+/* MCP / DATA CARDS */
+.mcp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px}
+.mcp-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center}
+.mcp-card-icon{font-size:18px;margin-bottom:5px}
+.mcp-card-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.mcp-card-sub{font-size:11px;color:var(--muted)}
+.data-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px}
+.data-card{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:10px}
+.data-card-name{font-size:11px;font-weight:600;color:var(--text);margin-bottom:3px}
+.data-card-sub{font-size:10px;color:var(--muted)}
 
-  .page { max-width: 1000px; margin: 0 auto; }
+/* INFRA BARS */
+.infra-bars{display:flex;flex-direction:column;gap:7px;margin-top:9px}
+.infra-bar{background:var(--surface);border:1px dashed var(--border2);border-radius:9px;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.infra-bar-label{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;min-width:90px}
+.infra-bar-label.amber{color:var(--amber)} .infra-bar-label.subtle{color:var(--muted)}
+.infra-tags{display:flex;flex-wrap:wrap;gap:5px}
+.infra-tag{padding:2px 7px;border-radius:3px;font-size:10px;font-family:'SF Mono',monospace}
+.infra-tag.amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
+.infra-tag.subtle{background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+.infra-tag.teal{background:var(--teal-bg);border:1px solid var(--teal-border);color:var(--teal)}
 
-  /* ── HEADER ── */
-  .header {
-    text-align: center;
-    margin-bottom: 52px;
-  }
-  .header .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.72em;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    margin-bottom: 14px;
-  }
-  .header .eyebrow::before,
-  .header .eyebrow::after {
-    content: '';
-    width: 28px;
-    height: 1px;
-    background: var(--border);
-  }
-  .header h1 {
-    font-size: 2em;
-    font-weight: 700;
-    color: var(--text-bright);
-    letter-spacing: -0.5px;
-    margin-bottom: 10px;
-  }
-  .header .sub {
-    font-size: 0.9em;
-    color: var(--text-muted);
-  }
-  .header .pills {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 18px;
-    flex-wrap: wrap;
-  }
-  .pill {
-    font-size: 0.72em;
-    font-weight: 500;
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    background: var(--surface);
-  }
+/* TABLES */
+.section-heading{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;letter-spacing:-0.01em}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:7px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.data-table td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:top}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--surface)}
+.td-time{font-family:'SF Mono',monospace;color:var(--teal);font-size:11px;white-space:nowrap}
+.td-agent{font-family:'SF Mono',monospace;font-size:10px;white-space:nowrap}
+.td-agent.blue{color:var(--blue)} .td-agent.amber{color:var(--amber)} .td-agent.coral{color:var(--coral)} .td-agent.teal{color:var(--teal)}
+.td-desc{color:var(--muted);line-height:1.5}
 
-  /* ── LAYER WRAPPER ── */
-  .layer-wrap {
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 4px;
-    border: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
-  .layer-wrap::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
+/* FLOW STEPS */
+.flow-steps{display:flex;flex-direction:column}
+.flow-step{display:flex;gap:18px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)}
+.flow-step:last-child{border-bottom:none}
+.flow-step-time{font-family:'SF Mono',monospace;font-size:11px;color:var(--teal);min-width:90px;padding-top:2px;font-weight:500}
+.flow-step-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.flow-step-desc{font-size:11px;color:var(--muted);line-height:1.6}
 
-  .layer-human { background: linear-gradient(135deg, #0d1117 0%, #0f1520 100%); border-color: #1c2535; }
-  .layer-orch { background: linear-gradient(135deg, var(--orch-bg) 0%, #0f0d22 100%); border-color: var(--orch-border); box-shadow: 0 0 40px var(--orch-glow); }
-  .layer-cowork { background: linear-gradient(135deg, var(--cowork-bg) 0%, #0a1c12 100%); border-color: var(--cowork-border); box-shadow: 0 0 40px var(--cowork-glow); }
-  .layer-mcp { background: linear-gradient(135deg, var(--mcp-bg) 0%, #0d0a20 100%); border-color: var(--mcp-border); box-shadow: 0 0 40px var(--mcp-glow); }
-  .layer-data { background: var(--data-bg); border-color: var(--data-border); }
-  .layer-exec { background: linear-gradient(135deg, var(--exec-bg) 0%, #0e0520 100%); border-color: var(--exec-border); box-shadow: 0 0 40px var(--exec-glow); }
+.divider{height:1px;background:var(--border);margin:44px 0}
+.page-footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:11px}
 
-  /* ── LAYER HEADER ── */
-  .layer-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .layer-num {
-    font-size: 0.65em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-    min-width: 52px;
-  }
-  .layer-badge {
-    font-size: 0.72em;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 6px;
-    border: 1px solid;
-  }
-  .badge-human { background: rgba(148,163,184,0.08); color: #94a3b8; border-color: #334155; }
-  .badge-orch { background: rgba(129,140,248,0.12); color: var(--orch); border-color: var(--orch-border); }
-  .badge-cowork { background: rgba(52,211,153,0.1); color: var(--cowork); border-color: var(--cowork-border); }
-  .badge-mcp { background: rgba(167,139,250,0.1); color: var(--mcp); border-color: var(--mcp-border); }
-  .badge-data { background: rgba(107,114,128,0.1); color: var(--data); border-color: var(--data-border); }
-  .badge-exec { background: rgba(192,132,252,0.1); color: var(--exec); border-color: var(--exec-border); }
-  .layer-desc { font-size: 0.78em; color: var(--text-dim); }
+/* ── OVERVIEW TAB SPECIFIC ── */
+.overview-hero{text-align:center;padding:40px 20px 32px;margin-bottom:40px;border-bottom:1px solid var(--border)}
+.overview-hero h1{font-size:34px;font-weight:600;letter-spacing:-0.02em;margin-bottom:10px}
+.overview-hero p{color:var(--muted);max-width:520px;margin:0 auto 20px;font-size:14px}
+.stat-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 22px;text-align:center;min-width:100px}
+.stat-num{font-size:26px;font-weight:600;color:var(--teal)}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px}
 
-  /* ── TWO COL ── */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* OVERLAP DIAGRAM */
+.overlap-section{margin-bottom:48px}
+.overlap-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px}
+.overlap-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
 
-  /* ── HUMAN CARDS ── */
-  .human-card {
-    border-radius: 12px;
-    padding: 16px 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .human-grof { background: var(--grof-bg); border: 1px solid var(--grof-border); }
-  .human-accpro { background: var(--accpro-bg); border: 1px solid var(--accpro-border); }
-  .human-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2em;
-    flex-shrink: 0;
-  }
-  .avatar-grof { background: rgba(59,130,246,0.15); border: 1px solid var(--grof-border); }
-  .avatar-accpro { background: rgba(245,158,11,0.12); border: 1px solid var(--accpro-border); }
-  .human-name { font-weight: 600; font-size: 0.95em; margin-bottom: 3px; }
-  .name-grof { color: var(--grof); }
-  .name-accpro { color: var(--accpro); }
-  .human-role { font-size: 0.76em; color: var(--text-dim); }
+.overlap-container{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;position:relative;overflow:hidden}
+.overlap-container::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(0,212,180,0.04),transparent 70%);pointer-events:none}
 
-  /* ── CONNECTOR ── */
-  .connector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px 0;
-    color: var(--text-dim);
-    font-size: 0.72em;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-  }
-  .connector::before, .connector::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-  }
+/* Shared skills row */
+.shared-skills-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;position:relative}
+.shared-skills-row::after{content:'';position:absolute;bottom:-16px;left:12.5%;right:12.5%;height:1px;background:linear-gradient(90deg,transparent,var(--teal-border),transparent)}
 
-  /* ── SIDEKICK CARDS ── */
-  .sidekick-card {
-    border-radius: 12px;
-    padding: 18px;
-  }
-  .sk-grof { background: linear-gradient(135deg, #0a1230 0%, #0d1636 100%); border: 1px solid #2d3d6b; }
-  .sk-accpro { background: linear-gradient(135deg, #1a1008 0%, #1f1408 100%); border: 1px solid #6b4a12; }
-  .sk-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-  .sk-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1em;
-    flex-shrink: 0;
-  }
-  .sk-icon-grof { background: rgba(99,102,241,0.15); border: 1px solid #3730a3; }
-  .sk-icon-accpro { background: rgba(249,115,22,0.12); border: 1px solid #78350f; }
-  .sk-name { font-size: 0.95em; font-weight: 700; margin-bottom: 2px; }
-  .sk-name-grof { color: var(--orch); }
-  .sk-name-accpro { color: #fb923c; }
-  .sk-tag { font-size: 0.72em; color: var(--text-dim); }
-  .sk-caps {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  .sk-cap {
-    border-radius: 7px;
-    padding: 7px 9px;
-    font-size: 0.74em;
-    display: flex;
-    gap: 6px;
-    align-items: flex-start;
-    line-height: 1.4;
-  }
-  .sk-cap-grof { background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.2); color: #a5b4fc; }
-  .sk-cap-accpro { background: rgba(249,115,22,0.07); border: 1px solid rgba(249,115,22,0.2); color: #fdba74; }
-  .sk-memory {
-    border-radius: 7px;
-    padding: 9px 11px;
-    font-size: 0.74em;
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-  }
-  .sk-memory-grof { background: rgba(99,102,241,0.05); border: 1px dashed rgba(99,102,241,0.25); color: var(--orch); }
-  .sk-memory-accpro { background: rgba(249,115,22,0.05); border: 1px dashed rgba(249,115,22,0.25); color: #f97316; }
-  .mem-title { font-weight: 600; margin-bottom: 2px; }
-  .mem-desc { color: var(--text-dim); margin-top: 1px; }
+.shared-skill-card{background:rgba(0,212,180,0.06);border:1px solid var(--teal-border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.shared-skill-card:hover{background:rgba(0,212,180,0.12);transform:translateY(-2px)}
+.shared-skill-card.highlighted{background:rgba(0,212,180,0.18);border-color:var(--teal);box-shadow:0 0 0 2px rgba(0,212,180,0.2)}
+.shared-skill-icon{font-size:18px;margin-bottom:6px}
+.shared-skill-name{font-size:12px;font-weight:600;color:var(--teal);margin-bottom:3px}
+.shared-skill-id{font-size:9px;color:var(--muted);font-family:'SF Mono',monospace;margin-bottom:8px}
+.shared-skill-teams{display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
+.team-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.team-dot.accounting{background:var(--coral)}
+.team-dot.corpsec{background:var(--amber)}
+.team-dot.compliance{background:var(--blue)}
+.team-dot.css-team{background:var(--green)}
+.shared-skill-save{font-size:10px;color:var(--teal);margin-top:6px;opacity:0.7}
 
-  /* ── AGENTS ── */
-  .brand-plugin {
-    border-radius: 12px;
-    padding: 14px;
-  }
-  .plugin-grof { background: rgba(59,130,246,0.04); border: 1px solid var(--grof-border); }
-  .plugin-accpro { background: rgba(245,158,11,0.04); border: 1px solid var(--accpro-border); }
-  .plugin-title {
-    font-size: 0.7em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .pt-grof { color: var(--grof); }
-  .pt-accpro { color: var(--accpro); }
-  .agents-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; }
-  .agent {
-    border-radius: 7px;
-    padding: 8px 9px;
-    text-align: center;
-  }
-  .agent-grof { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18); }
-  .agent-accpro { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18); }
-  .agent-name { font-size: 0.76em; font-weight: 600; margin-bottom: 2px; }
-  .an-grof { color: #93c5fd; }
-  .an-accpro { color: #fcd34d; }
-  .agent-tag { font-size: 0.66em; color: var(--text-dim); }
-  .agent-full { grid-column: 1/-1; }
+/* Department columns */
+.dept-columns{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px}
+.dept-col{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;transition:all 0.2s}
+.dept-col.highlighted{border-color:var(--border2)}
+.dept-col-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.dept-col-icon{font-size:16px}
+.dept-col-name{font-size:12px;font-weight:600;color:var(--text)}
+.dept-col-count{font-size:10px;color:var(--muted);margin-left:auto}
+.dept-agent-item{padding:4px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.dept-agent-item:last-child{border-bottom:none}
+.dept-agent-item.is-shared{color:var(--teal)}
+.dept-agent-item.is-shared .agent-dot{background:var(--teal)}
+.dept-agent-item.is-unique{color:var(--muted)}
+.dept-agent-item.is-unique .agent-dot{background:var(--subtle)}
+.agent-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dept-agent-name{font-size:11px;line-height:1.4;flex:1}
+.dept-agent-id{font-size:9px;font-family:'SF Mono',monospace;opacity:0.6}
+.dept-agent-shared-badge{font-size:8px;background:rgba(0,212,180,0.15);color:var(--teal);border:1px solid rgba(0,212,180,0.25);border-radius:3px;padding:1px 4px;white-space:nowrap}
 
-  .cowork-infra { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--cowork-border); }
-  .infra-card {
-    background: rgba(52,211,153,0.04);
-    border: 1px solid rgba(52,211,153,0.12);
-    border-radius: 8px;
-    padding: 10px 12px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-  }
-  .infra-icon { font-size: 1.1em; flex-shrink: 0; }
-  .infra-name { font-size: 0.8em; font-weight: 600; color: #6ee7b7; margin-bottom: 2px; }
-  .infra-desc { font-size: 0.72em; color: var(--text-dim); }
+/* Overlap legend */
+.overlap-legend{display:flex;gap:20px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.legend-dot.shared{background:var(--teal)}
+.legend-dot.unique{background:var(--subtle)}
 
-  /* ── MCP ── */
-  .mcp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .mcp-card {
-    background: rgba(167,139,250,0.05);
-    border: 1px solid rgba(167,139,250,0.15);
-    border-radius: 10px;
-    padding: 14px 12px;
-    text-align: center;
-  }
-  .mcp-icon { font-size: 1.5em; margin-bottom: 6px; }
-  .mcp-name { font-size: 0.82em; font-weight: 600; color: #c4b5fd; margin-bottom: 4px; }
-  .mcp-desc { font-size: 0.72em; color: var(--text-dim); line-height: 1.4; }
+/* Team legend dots */
+.team-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.team-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 
-  /* ── DATA ── */
-  .data-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-  .data-card-highlight { border-color: #2d3748 !important; background: #111827 !important; }
-  .data-card {
-    background: #0d0d0d;
-    border: 1px solid var(--data-border);
-    border-radius: 8px;
-    padding: 10px 8px;
-    text-align: center;
-  }
-  .data-name { font-size: 0.78em; font-weight: 600; color: #9ca3af; margin-bottom: 3px; }
-  .data-desc { font-size: 0.7em; color: var(--text-dim); line-height: 1.35; }
+/* Handoff chain */
+.handoff-chain{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:40px}
+.handoff-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px}
+.chain-steps{display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.chain-step{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:11px;color:var(--text);white-space:nowrap}
+.chain-step.highlight{background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal)}
+.chain-step.gate{background:rgba(167,139,250,0.08);border-color:var(--purple-border);color:var(--purple)}
+.chain-arrow{color:var(--muted);font-size:12px;padding:0 2px}
+.chain-note{font-size:11px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 
-  /* ── EXECUTION ── */
-  .exec-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-  .exec-card {
-    background: rgba(192,132,252,0.05);
-    border: 1px solid rgba(192,132,252,0.15);
-    border-radius: 10px;
-    padding: 12px 8px;
-    text-align: center;
-  }
-  .exec-name { font-size: 0.8em; font-weight: 600; color: #d8b4fe; margin-bottom: 4px; }
-  .exec-desc { font-size: 0.7em; color: var(--text-dim); line-height: 1.35; }
+/* Build roadmap */
+.roadmap-section{margin-bottom:40px}
+.phase-grid{display:flex;flex-direction:column;gap:12px}
+.phase-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;gap:16px;align-items:flex-start}
+.phase-badge{flex-shrink:0;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.phase-badge.p1{background:rgba(0,212,180,0.2);color:var(--teal)}
+.phase-badge.p2{background:rgba(245,166,35,0.2);color:var(--amber)}
+.phase-badge.p3{background:rgba(255,112,87,0.2);color:var(--coral)}
+.phase-badge.p4{background:rgba(79,156,249,0.2);color:var(--blue)}
+.phase-badge.p5{background:rgba(167,139,250,0.2);color:var(--purple)}
+.phase-badge.p6{background:rgba(52,211,153,0.2);color:var(--green)}
+.phase-badge.pm{background:rgba(244,114,182,0.2);color:var(--pink)}
+.phase-content{flex:1}
+.phase-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.phase-weeks{font-size:10px;color:var(--muted);font-family:'SF Mono',monospace;margin-bottom:8px}
+.phase-items{display:flex;flex-wrap:wrap;gap:5px}
+.phase-item{padding:2px 8px;border-radius:4px;font-size:10px;font-family:'SF Mono',monospace}
+.phase-item.shared-item{background:rgba(0,212,180,0.1);color:var(--teal);border:1px solid rgba(0,212,180,0.2)}
+.phase-item.normal-item{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.phase-benefit{font-size:11px;color:var(--muted);margin-top:8px}
 
-  /* ── DAILY FLOW ── */
-  .flow {
-    margin-top: 28px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-  .flow-header {
-    background: var(--surface);
-    padding: 14px 24px;
-    font-size: 0.7em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-    border-bottom: 1px solid var(--border);
-  }
-  .flow-steps {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-  }
-  .flow-step {
-    padding: 18px 16px;
-    border-right: 1px solid var(--border);
-  }
-  .flow-step:last-child { border-right: none; }
-  .flow-time {
-    font-size: 0.72em;
-    font-weight: 700;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .ft-1 { color: var(--cowork); }
-  .ft-2 { color: var(--orch); }
-  .ft-3 { color: var(--accpro); }
-  .ft-4 { color: var(--exec); }
-  .flow-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .fd-1 { background: var(--cowork); }
-  .fd-2 { background: var(--orch); }
-  .fd-3 { background: var(--accpro); }
-  .fd-4 { background: var(--exec); }
-  .flow-desc { font-size: 0.76em; color: var(--text-dim); line-height: 1.5; }
+/* Dept summary cards */
+.dept-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:40px}
+.dept-summary-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s}
+.dept-summary-card:hover{transform:translateY(-2px);border-color:var(--border2)}
+.dept-summary-icon{font-size:22px;margin-bottom:8px}
+.dept-summary-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.dept-summary-count{font-size:11px;color:var(--muted);margin-bottom:8px}
+.dept-summary-bar{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.dept-summary-fill{height:100%;border-radius:2px}
 
-  /* ── FOOTER ── */
-  .footer {
-    text-align: center;
-    margin-top: 48px;
-    font-size: 0.72em;
-    color: var(--text-dim);
-  }
-  .footer span { color: var(--text-muted); }
+/* Marketing agents plugin cards */
+.plugin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.plugin-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px}
+.plugin-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px}
+.plugin-agents{display:flex;flex-direction:column;gap:6px}
+.plugin-agent-row{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:7px}
+.plugin-agent-name{font-size:12px;font-weight:500;color:var(--text)}
+
+@media(max-width:700px){
+  .page{padding:32px 16px 60px}
+  .human-row{flex-direction:column}
+  .agent-grid{grid-template-columns:repeat(2,1fr)}
+  .data-grid{grid-template-columns:repeat(2,1fr)}
+  .shared-skills-row{grid-template-columns:repeat(2,1fr)}
+  .dept-columns{grid-template-columns:repeat(2,1fr)}
+  .plugin-grid{grid-template-columns:1fr}
+  .chain-steps{flex-direction:column;align-items:flex-start}
+  .top-nav{padding:0 14px}
+  .nav-brand{display:none}
+}
 </style>
 </head>
 <body>
+
+<nav class="top-nav">
+  <div class="nav-brand">Grof · AI Agents</div>
+  <div style="display:flex;gap:0">
+    <button class="nav-tab active" onclick="switchTab('overview',this)">🧩 Overview</button>
+    <button class="nav-tab" onclick="switchTab('marketing',this)">📣 Marketing</button>
+    <button class="nav-tab" onclick="switchTab('accounting',this)">🧾 Accounting</button>
+    <button class="nav-tab" onclick="switchTab('corpsec',this)">🏛️ CorpSec</button>
+    <button class="nav-tab" onclick="switchTab('compliance',this)">🛡️ Compliance</button>
+    <button class="nav-tab" onclick="switchTab('css',this)">🌟 CSS</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════ OVERVIEW ══ -->
+<div id="tab-overview" class="tab-section active">
 <div class="page">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="eyebrow">System Architecture</div>
-    <h1>Marketing Agent Team</h1>
-    <p class="sub">AI-powered marketing for two brands — built to outlast staff turnover</p>
-    <div class="pills">
-      <span class="pill">Grof</span>
-      <span class="pill">AccPro</span>
-      <span class="pill">1 Sidekick per brand</span>
-      <span class="pill">8 specialist agents</span>
-      <span class="pill">Cowork · GrofAgent-OS · Notion · n8n</span>
+  <div class="overview-hero">
+    <div class="header-tag teal" style="margin-bottom:12px"><span class="hdot teal"></span>Grof AI Operating Layer · v2 · March 2026</div>
+    <h1>Agent Teams Across<br><span class="hl-teal">All Departments</span></h1>
+    <p>5 departments. 40 agents. 4 shared skills that eliminate 40% of the build. One operating model.</p>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num">40</div><div class="stat-label">total agents</div></div>
+      <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">shared skills</div></div>
+      <div class="stat-box"><div class="stat-num">26</div><div class="stat-label">unique builds</div></div>
+      <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">departments</div></div>
+      <div class="stat-box"><div class="stat-num">~30</div><div class="stat-label">min/week human mktg</div></div>
     </div>
   </div>
 
-  <!-- LAYER 1: HUMAN -->
-  <div class="layer-wrap layer-human">
-    <div class="layer-header">
-      <span class="layer-num">Layer 1</span>
-      <span class="layer-badge badge-human">Human</span>
-      <span class="layer-desc">The marketer — whoever is in the seat today</span>
+  <!-- DEPT QUICK LINKS -->
+  <div class="dept-cards">
+    <div class="dept-summary-card" onclick="switchTab('accounting',document.querySelector('[onclick*=accounting]'))">
+      <div class="dept-summary-icon">🧾</div>
+      <div class="dept-summary-name">Accounting</div>
+      <div class="dept-summary-count">9 agents · 4 shared · 5 unique</div>
+      <div class="dept-summary-bar"><div class="dept-summary-fill" style="width:44%;background:var(--coral)"></div></div>
     </div>
-    <div class="two-col">
-      <div class="human-card human-grof">
-        <div class="human-avatar avatar-grof">👤</div>
-        <div>
-          <div class="human-name name-grof">Grof Marketer</div>
-          <div class="human-role">Briefs in plain language · reviews outputs · approves content</div>
-        </div>
-      </div>
-      <div class="human-card human-accpro">
-        <div class="human-avatar avatar-accpro">👤</div>
-        <div>
-          <div class="human-name name-accpro">AccPro Marketer</div>
-          <div class="human-role">Briefs in plain language · reviews outputs · approves content</div>
-        </div>
-      </div>
+    <div class="dept-summary-card" onclick="switchTab('corpsec',document.querySelector('[onclick*=corpsec]'))">
+      <div class="dept-summary-icon">🏛️</div>
+      <div class="dept-summary-name">CorpSec</div>
+      <div class="dept-summary-count">9 agents · 4 shared · 5 unique</div>
+      <div class="dept-summary-bar"><div class="dept-summary-fill" style="width:44%;background:var(--amber)"></div></div>
+    </div>
+    <div class="dept-summary-card" onclick="switchTab('compliance',document.querySelector('[onclick*=compliance]'))">
+      <div class="dept-summary-icon">🛡️</div>
+      <div class="dept-summary-name">Compliance</div>
+      <div class="dept-summary-count">8 agents · 4 shared · 4 unique</div>
+      <div class="dept-summary-bar"><div class="dept-summary-fill" style="width:50%;background:var(--blue)"></div></div>
+    </div>
+    <div class="dept-summary-card" onclick="switchTab('css',document.querySelector('[onclick*=css]'))">
+      <div class="dept-summary-icon">🌟</div>
+      <div class="dept-summary-name">Customer Success</div>
+      <div class="dept-summary-count">8 agents · 2 shared · 6 unique</div>
+      <div class="dept-summary-bar"><div class="dept-summary-fill" style="width:25%;background:var(--green)"></div></div>
+    </div>
+    <div class="dept-summary-card" onclick="switchTab('marketing',document.querySelector('[onclick*=marketing]'))">
+      <div class="dept-summary-icon">📣</div>
+      <div class="dept-summary-name">Marketing</div>
+      <div class="dept-summary-count">6 agents · 0 shared · 6 unique</div>
+      <div class="dept-summary-bar"><div class="dept-summary-fill" style="width:0%;background:var(--pink)"></div></div>
     </div>
   </div>
 
-  <div class="connector">natural language brief · daily conversation in Cowork</div>
+  <!-- OVERLAP DIAGRAM -->
+  <div class="overlap-section">
+    <div class="overlap-title">Shared Agent Infrastructure</div>
+    <div class="overlap-sub">4 skills built once, deployed across multiple departments. Click a skill to highlight which teams use it.</div>
 
-  <!-- LAYER 2: SIDEKICK -->
-  <div class="layer-wrap layer-orch">
-    <div class="layer-header">
-      <span class="layer-num">Layer 2</span>
-      <span class="layer-badge badge-orch">Brand Sidekick</span>
-      <span class="layer-desc">Orchestrator · persistent memory · marketing strategy · gives instructions to subagents · survives staff turnover</span>
+    <div class="team-legend">
+      <div class="team-legend-item"><span class="team-dot accounting" style="width:10px;height:10px;border-radius:50%;display:inline-block"></span>Accounting</div>
+      <div class="team-legend-item"><span class="team-dot corpsec" style="width:10px;height:10px;border-radius:50%;display:inline-block"></span>CorpSec</div>
+      <div class="team-legend-item"><span class="team-dot compliance" style="width:10px;height:10px;border-radius:50%;display:inline-block"></span>Compliance</div>
+      <div class="team-legend-item"><span class="team-dot css-team" style="width:10px;height:10px;border-radius:50%;display:inline-block"></span>CSS</div>
     </div>
-    <div class="two-col">
-      <div class="sidekick-card sk-grof">
-        <div class="sk-header">
-          <div class="sk-icon sk-icon-grof">🤖</div>
-          <div>
-            <div class="sk-name sk-name-grof">Grof Brand Sidekick</div>
-            <div class="sk-tag">Persistent Cowork Project · always-on</div>
+
+    <div class="overlap-container">
+
+      <!-- 4 Shared skills at top -->
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;opacity:0.7">Shared skills — build once</div>
+      <div class="shared-skills-row" id="sharedRow">
+        <div class="shared-skill-card" onclick="highlightSkill('comms')" id="skill-comms">
+          <div class="shared-skill-icon">💬</div>
+          <div class="shared-skill-name">Client Comms</div>
+          <div class="shared-skill-id">shared-client-comms</div>
+          <div class="shared-skill-teams">
+            <span class="team-dot accounting" title="Accounting"></span>
+            <span class="team-dot corpsec" title="CorpSec"></span>
+            <span class="team-dot css-team" title="CSS"></span>
           </div>
+          <div class="shared-skill-save">saves ~3 builds</div>
         </div>
-        <div class="sk-caps">
-          <div class="sk-cap sk-cap-grof"><span>🧠</span>Persistent memory — full context of every campaign, decision, and outcome ever made</div>
-          <div class="sk-cap sk-cap-grof"><span>📡</span>Best continued context — picks up exactly where the last conversation ended</div>
-          <div class="sk-cap sk-cap-grof"><span>🎯</span>Marketing strategy advisor — recommends channels, timing, budget allocation</div>
-          <div class="sk-cap sk-cap-grof"><span>🗂</span>Gives structured instructions to subagents with brand context pre-loaded</div>
-          <div class="sk-cap sk-cap-grof"><span>🔗</span>Chains agents — write → review → schedule → publish</div>
-          <div class="sk-cap sk-cap-grof"><span>🔄</span>Onboards new staff — zero knowledge lost on staff change</div>
-        </div>
-        <div class="sk-memory sk-memory-grof">
-          <span>🧠</span>
-          <div>
-            <div class="mem-title">Persistent memory via Notion</div>
-            <div class="mem-desc">Brand Voice · Campaign History · Analytics · Decisions — Sidekick never forgets, new marketer inherits everything</div>
+        <div class="shared-skill-card" onclick="highlightSkill('docchaser')" id="skill-docchaser">
+          <div class="shared-skill-icon">📎</div>
+          <div class="shared-skill-name">Doc Chaser</div>
+          <div class="shared-skill-id">shared-doc-chaser</div>
+          <div class="shared-skill-teams">
+            <span class="team-dot accounting" title="Accounting"></span>
+            <span class="team-dot corpsec" title="CorpSec"></span>
+            <span class="team-dot compliance" title="Compliance (D1/D7/D14/D21)"></span>
           </div>
+          <div class="shared-skill-save">saves ~3 builds</div>
         </div>
-      </div>
-      <div class="sidekick-card sk-accpro">
-        <div class="sk-header">
-          <div class="sk-icon sk-icon-accpro">🤖</div>
-          <div>
-            <div class="sk-name sk-name-accpro">AccPro Brand Sidekick</div>
-            <div class="sk-tag">Persistent Cowork Project · always-on</div>
+        <div class="shared-skill-card" onclick="highlightSkill('deadline')" id="skill-deadline">
+          <div class="shared-skill-icon">⏰</div>
+          <div class="shared-skill-name">Deadline Monitor</div>
+          <div class="shared-skill-id">shared-deadline-monitor</div>
+          <div class="shared-skill-teams">
+            <span class="team-dot accounting" title="Accounting"></span>
+            <span class="team-dot corpsec" title="CorpSec"></span>
+            <span class="team-dot compliance" title="Compliance"></span>
           </div>
+          <div class="shared-skill-save">saves ~3 builds</div>
         </div>
-        <div class="sk-caps">
-          <div class="sk-cap sk-cap-accpro"><span>🧠</span>Persistent memory — full context of every campaign, decision, and outcome ever made</div>
-          <div class="sk-cap sk-cap-accpro"><span>📡</span>Best continued context — picks up exactly where the last conversation ended</div>
-          <div class="sk-cap sk-cap-accpro"><span>🎯</span>Marketing strategy advisor — recommends channels, timing, budget allocation</div>
-          <div class="sk-cap sk-cap-accpro"><span>🗂</span>Gives structured instructions to subagents with brand context pre-loaded</div>
-          <div class="sk-cap sk-cap-accpro"><span>🔗</span>Chains agents — write → review → schedule → publish</div>
-          <div class="sk-cap sk-cap-accpro"><span>🔄</span>Onboards new staff — zero knowledge lost on staff change</div>
-        </div>
-        <div class="sk-memory sk-memory-accpro">
-          <span>🧠</span>
-          <div>
-            <div class="mem-title">Persistent memory via Notion</div>
-            <div class="mem-desc">Brand Voice · Campaign History · Analytics · Decisions — Sidekick never forgets, new marketer inherits everything</div>
+        <div class="shared-skill-card" onclick="highlightSkill('status')" id="skill-status">
+          <div class="shared-skill-icon">📤</div>
+          <div class="shared-skill-name">Status Updater</div>
+          <div class="shared-skill-id">shared-status-updater</div>
+          <div class="shared-skill-teams">
+            <span class="team-dot accounting" title="Accounting"></span>
+            <span class="team-dot corpsec" title="CorpSec"></span>
+            <span class="team-dot css-team" title="CSS"></span>
+            <span class="team-dot compliance" title="Compliance (internal)"></span>
           </div>
+          <div class="shared-skill-save">saves ~4 builds</div>
+        </div>
+      </div>
+
+      <!-- Connector lines visual -->
+      <div style="position:relative;height:36px;margin:0 -32px">
+        <svg width="100%" height="36" style="position:absolute;top:0;left:0" preserveAspectRatio="none">
+          <!-- Lines from shared skills down to dept columns -->
+          <!-- comms → acct, corpsec, css -->
+          <line x1="12.5%" y1="0" x2="12.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-comms-acct"/>
+          <line x1="12.5%" y1="0" x2="37.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-comms-corpsec"/>
+          <line x1="12.5%" y1="0" x2="87.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-comms-css"/>
+          <!-- docchaser → acct, corpsec, compliance -->
+          <line x1="37.5%" y1="0" x2="12.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-doc-acct"/>
+          <line x1="37.5%" y1="0" x2="37.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-doc-corpsec"/>
+          <line x1="37.5%" y1="0" x2="62.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-doc-compliance"/>
+          <!-- deadline → acct, corpsec, compliance -->
+          <line x1="62.5%" y1="0" x2="12.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-dl-acct"/>
+          <line x1="62.5%" y1="0" x2="37.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-dl-corpsec"/>
+          <line x1="62.5%" y1="0" x2="62.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-dl-compliance"/>
+          <!-- status → all 4 -->
+          <line x1="87.5%" y1="0" x2="12.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-st-acct"/>
+          <line x1="87.5%" y1="0" x2="37.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-st-corpsec"/>
+          <line x1="87.5%" y1="0" x2="62.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-st-compliance"/>
+          <line x1="87.5%" y1="0" x2="87.5%" y2="36" stroke="rgba(0,212,180,0.2)" stroke-width="1" stroke-dasharray="3 3" id="line-st-css"/>
+        </svg>
+      </div>
+
+      <!-- Department columns -->
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;opacity:0.7">Department agent teams</div>
+      <div class="dept-columns">
+        <!-- Accounting -->
+        <div class="dept-col" id="dept-accounting">
+          <div class="dept-col-header">
+            <span class="dept-col-icon">🧾</span>
+            <span class="dept-col-name">Accounting</span>
+            <span class="dept-col-count">9 agents</span>
+          </div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Comms Agent</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Doc Chaser</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Deadline Monitor</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Status Updater</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">BK Prep Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">GST Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Payroll Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Tax Comp Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">FS Compiler</span></div>
+        </div>
+        <!-- CorpSec -->
+        <div class="dept-col" id="dept-corpsec">
+          <div class="dept-col-header">
+            <span class="dept-col-icon">🏛️</span>
+            <span class="dept-col-name">CorpSec</span>
+            <span class="dept-col-count">9 agents</span>
+          </div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Comms Agent</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Doc Chaser</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Deadline Monitor</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Status Updater</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">AGM/AR Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Corporate Changes</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Incorporation Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Strike-Off Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Transfer Agent</span></div>
+        </div>
+        <!-- Compliance -->
+        <div class="dept-col" id="dept-compliance">
+          <div class="dept-col-header">
+            <span class="dept-col-icon">🛡️</span>
+            <span class="dept-col-name">Compliance</span>
+            <span class="dept-col-count">8 agents</span>
+          </div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">ND Scheduler</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Doc Chaser</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">CDD Doc Tracker</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Status Updater ⚠️</span><span class="dept-agent-shared-badge">internal</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Periodic Review</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Ad-hoc Risk Assess.</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">AML/CDD Monitor</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Escalation Router</span></div>
+        </div>
+        <!-- CSS -->
+        <div class="dept-col" id="dept-css">
+          <div class="dept-col-header">
+            <span class="dept-col-icon">🌟</span>
+            <span class="dept-col-name">CSS</span>
+            <span class="dept-col-count">8 agents</span>
+          </div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Comms Agent</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-shared"><span class="agent-dot"></span><span class="dept-agent-name">Status Updater</span><span class="dept-agent-shared-badge">shared</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Renewal Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Collections Agent</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Overage Detection</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Onboarding Guidance</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Ad-hoc Router</span></div>
+          <div class="dept-agent-item is-unique"><span class="agent-dot"></span><span class="dept-agent-name">Billing Query Handler</span></div>
+        </div>
+      </div>
+
+      <div class="overlap-legend">
+        <div class="legend-item"><span class="legend-dot shared"></span>Shared skill (one build serves multiple teams)</div>
+        <div class="legend-item"><span class="legend-dot unique"></span>Unique skill (department-specific)</div>
+        <div class="legend-item" style="margin-left:auto;color:var(--teal);font-size:10px">Click a shared skill above to highlight connections</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HANDOFF CHAIN -->
+  <div class="handoff-chain">
+    <div class="handoff-title">Cross-Department Handoff Chain</div>
+    <div class="chain-steps">
+      <div class="chain-step">Sales closes deal</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step highlight">CSS confirms payment (Odoo)</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">Grof App onboarding</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step gate">Compliance screens individuals ⚠️</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step highlight">CorpSec files ACRA</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">Accounting activates services</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step highlight">CSS manages renewals</div>
+    </div>
+    <div class="chain-note">⚠️ Critical gate: CorpSec cannot file with ACRA until Compliance clears new individuals. &nbsp;|&nbsp; AGM date −30 days fires CorpSec AGM/AR Agent AND Compliance Periodic Review Agent simultaneously.</div>
+  </div>
+
+  <!-- BUILD ROADMAP -->
+  <div class="roadmap-section">
+    <div class="section-heading">Master Build Roadmap</div>
+    <div class="section-sub">22 prioritised skill builds across 7 phases. Marketing runs as an independent parallel track.</div>
+    <div class="phase-grid">
+      <div class="phase-row">
+        <div class="phase-badge p1">1</div>
+        <div class="phase-content">
+          <div class="phase-title">Shared Infrastructure — all teams benefit immediately</div>
+          <div class="phase-weeks">Weeks 1–2</div>
+          <div class="phase-items">
+            <span class="phase-item shared-item">shared-client-comms</span>
+            <span class="phase-item shared-item">shared-doc-chaser</span>
+            <span class="phase-item shared-item">shared-deadline-monitor</span>
+            <span class="phase-item shared-item">shared-status-updater</span>
+          </div>
+          <div class="phase-benefit">Kills WhatsApp noise across CorpSec, Accounting, CSS. Nothing slips across 200+ companies.</div>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge p2">2</div>
+        <div class="phase-content">
+          <div class="phase-title">CorpSec High Volume — before next annual return season</div>
+          <div class="phase-weeks">Weeks 3–4</div>
+          <div class="phase-items">
+            <span class="phase-item normal-item">corpsec-agm-ar</span>
+            <span class="phase-item normal-item">corpsec-corporate-changes</span>
+          </div>
+          <div class="phase-benefit">Annual return season automated. Director/share changes processed in hours not days.</div>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge p3">3</div>
+        <div class="phase-content">
+          <div class="phase-title">Accounting Monthly + CSS Billing</div>
+          <div class="phase-weeks">Weeks 5–6</div>
+          <div class="phase-items">
+            <span class="phase-item normal-item">accounting-payroll</span>
+            <span class="phase-item normal-item">accounting-bk-prep</span>
+            <span class="phase-item normal-item">css-renewal</span>
+            <span class="phase-item normal-item">css-collections</span>
+          </div>
+          <div class="phase-benefit">Monthly recurring accounting work automated. Renewal sequences run without manual chasing.</div>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge p4">4</div>
+        <div class="phase-content">
+          <div class="phase-title">Compliance Monitoring + Accounting Compliance</div>
+          <div class="phase-weeks">Weeks 7–8</div>
+          <div class="phase-items">
+            <span class="phase-item normal-item">compliance-nd-scheduler</span>
+            <span class="phase-item normal-item">compliance-periodic-review</span>
+            <span class="phase-item normal-item">accounting-gst</span>
+            <span class="phase-item normal-item">corpsec-strike-off</span>
+          </div>
+          <div class="phase-benefit">ND monitoring cycle automated. Quarterly GST workings prepared before accountant starts.</div>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge p5">5</div>
+        <div class="phase-content">
+          <div class="phase-title">Complex Workflows</div>
+          <div class="phase-weeks">Weeks 9–10</div>
+          <div class="phase-items">
+            <span class="phase-item normal-item">corpsec-incorporation</span>
+            <span class="phase-item normal-item">css-adhoc-router</span>
+            <span class="phase-item normal-item">compliance-adhoc-risk</span>
+            <span class="phase-item normal-item">css-overage-detection</span>
+          </div>
+          <div class="phase-benefit">High-touch workflows automated. Revenue recovery from accounting tier under-billing.</div>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge p6">6</div>
+        <div class="phase-content">
+          <div class="phase-title">Year-End + Remaining</div>
+          <div class="phase-weeks">Weeks 11–12</div>
+          <div class="phase-items">
+            <span class="phase-item normal-item">accounting-tax-comp</span>
+            <span class="phase-item normal-item">accounting-fs-compiler</span>
+            <span class="phase-item normal-item">corpsec-transfer</span>
+            <span class="phase-item normal-item">compliance-escalation-router</span>
+          </div>
+          <div class="phase-benefit">Full-set FS compiled from Xero. All service lines covered end-to-end.</div>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge pm">M</div>
+        <div class="phase-content">
+          <div class="phase-title">Marketing — independent parallel track</div>
+          <div class="phase-weeks">Runs in parallel, any phase</div>
+          <div class="phase-items">
+            <span class="phase-item normal-item">marketing-researcher</span>
+            <span class="phase-item normal-item">marketing-content-writer</span>
+            <span class="phase-item normal-item">marketing-brand-reviewer</span>
+            <span class="phase-item normal-item">marketing-image-prompt</span>
+            <span class="phase-item normal-item">marketing-social-manager</span>
+            <span class="phase-item normal-item">marketing-analytics</span>
+          </div>
+          <div class="phase-benefit">1-person marketer runs full mini-brand operation. ~30 min/week human input.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="connector">activates skills · passes context · aggregates results</div>
-
-  <!-- LAYER 3: COWORK AGENTS -->
-  <div class="layer-wrap layer-cowork">
-    <div class="layer-header">
-      <span class="layer-num">Layer 3</span>
-      <span class="layer-badge badge-cowork">Cowork Platform</span>
-      <span class="layer-desc">Specialist agents — invoked by Sidekick, never directly by human</span>
-    </div>
-    <div class="two-col">
-      <div class="brand-plugin plugin-grof">
-        <div class="plugin-title pt-grof">📦 Grof Marketing Plugin</div>
-        <div class="agents-grid">
-          <div class="agent agent-grof"><div class="agent-name an-grof">✍️ Content Creator</div><div class="agent-tag">on-demand</div></div>
-          <div class="agent agent-grof"><div class="agent-name an-grof">🎯 Brand Reviewer</div><div class="agent-tag">sub-agent</div></div>
-          <div class="agent agent-grof"><div class="agent-name an-grof">🖼 Image Designer</div><div class="agent-tag">on-demand</div></div>
-          <div class="agent agent-grof"><div class="agent-name an-grof">📈 CRO Agent</div><div class="agent-tag">on-demand</div></div>
-          <div class="agent agent-grof"><div class="agent-name an-grof">📱 Social Manager</div><div class="agent-tag">scheduled</div></div>
-          <div class="agent agent-grof"><div class="agent-name an-grof">💰 Perf. Marketing</div><div class="agent-tag">scheduled</div></div>
-          <div class="agent agent-grof"><div class="agent-name an-grof">🌐 Website Builder</div><div class="agent-tag">on-demand</div></div>
-        </div>
-        <div class="agent agent-grof agent-full"><div class="agent-name an-grof">📊 Analytics Agent</div><div class="agent-tag">n8n cron · daily 7am · feeds Sidekick + all agents</div></div>
-      </div>
-      <div class="brand-plugin plugin-accpro">
-        <div class="plugin-title pt-accpro">📦 AccPro Marketing Plugin</div>
-        <div class="agents-grid">
-          <div class="agent agent-accpro"><div class="agent-name an-accpro">✍️ Content Creator</div><div class="agent-tag">on-demand</div></div>
-          <div class="agent agent-accpro"><div class="agent-name an-accpro">🎯 Brand Reviewer</div><div class="agent-tag">sub-agent</div></div>
-          <div class="agent agent-accpro"><div class="agent-name an-accpro">🖼 Image Designer</div><div class="agent-tag">on-demand</div></div>
-          <div class="agent agent-accpro"><div class="agent-name an-accpro">📈 CRO Agent</div><div class="agent-tag">on-demand</div></div>
-          <div class="agent agent-accpro"><div class="agent-name an-accpro">📱 Social Manager</div><div class="agent-tag">scheduled</div></div>
-          <div class="agent agent-accpro"><div class="agent-name an-accpro">💰 Perf. Marketing</div><div class="agent-tag">scheduled</div></div>
-          <div class="agent agent-accpro"><div class="agent-name an-accpro">🌐 Website Builder</div><div class="agent-tag">on-demand</div></div>
-        </div>
-        <div class="agent agent-accpro agent-full"><div class="agent-name an-accpro">📊 Analytics Agent</div><div class="agent-tag">n8n cron · daily 7am · feeds Sidekick + all agents</div></div>
-      </div>
-    </div>
-    <div class="cowork-infra">
-      <div class="infra-card"><div class="infra-icon">⏱</div><div><div class="infra-name">n8n Cron Triggers</div><div class="infra-desc">Hourly scheduled bursts → Claude API (always-on on Railway, not desktop-dependent)</div></div></div>
-      <div class="infra-card"><div class="infra-icon">🔗</div><div><div class="infra-name">Sub-agent Handoffs</div><div class="infra-desc">Content Creator → Brand Reviewer auto-trigger</div></div></div>
-    </div>
+  <div class="page-footer">
+    <span>Grof AI Agent Operating Layer · v2 · March 2026</span>
+    <span>Claude Cowork · n8n Railway · Notion · Xero · GrofAgent-OS</span>
   </div>
-
-  <div class="connector">MCP tool calls · connectors</div>
-
-  <!-- LAYER 4: MCP -->
-  <div class="layer-wrap layer-mcp">
-    <div class="layer-header">
-      <span class="layer-num">Layer 4</span>
-      <span class="layer-badge badge-mcp">MCP Platform</span>
-      <span class="layer-desc">GrofAgent-OS — Microsoft 365 bridge</span>
-    </div>
-    <div class="mcp-grid">
-      <div class="mcp-card"><div class="mcp-icon">💬</div><div class="mcp-name">Teams</div><div class="mcp-desc">Morning briefings · approval pings · alerts</div></div>
-      <div class="mcp-card"><div class="mcp-icon">📁</div><div class="mcp-name">SharePoint</div><div class="mcp-desc">File storage · asset library</div></div>
-      <div class="mcp-card"><div class="mcp-icon">📧</div><div class="mcp-name">Outlook</div><div class="mcp-desc">Email drafts · newsletter triggers</div></div>
-      <div class="mcp-card"><div class="mcp-icon">📅</div><div class="mcp-name">Calendar</div><div class="mcp-desc">Campaign scheduling · content calendar sync</div></div>
-    </div>
-  </div>
-
-  <div class="connector">read/write · status triggers · webhooks</div>
-
-  <!-- LAYER 5: DATA -->
-  <div class="layer-wrap layer-data">
-    <div class="layer-header">
-      <span class="layer-num">Layer 5</span>
-      <span class="layer-badge badge-data">Data Layer</span>
-      <span class="layer-desc">Notion — single source of truth per brand · Sidekick memory store</span>
-    </div>
-    <div class="data-grid">
-      <div class="data-card"><div class="data-name">Brand Voice</div><div class="data-desc">Tone · audience · writing rules</div></div>
-      <div class="data-card"><div class="data-name">Content Calendar</div><div class="data-desc">Schedule · themes · status</div></div>
-      <div class="data-card"><div class="data-name">Drafts + Queue</div><div class="data-desc">Pending approval · scheduled</div></div>
-      <div class="data-card"><div class="data-name">Analytics DB</div><div class="data-desc">Live metrics · GA4 · ads</div></div>
-      <div class="data-card"><div class="data-name">Campaign History</div><div class="data-desc">Past performance · learnings</div></div>
-      <div class="data-card data-card-highlight"><div class="data-name" style="color:#e2e8f0;">Campaign State</div><div class="data-desc">Heartbeat DB · every cron reads first · agents write back after acting</div></div>
-    </div>
-  </div>
-
-  <div class="connector">cron invokes Claude API · webhook on approval · data pulls</div>
-
-  <!-- LAYER 6: EXECUTION -->
-  <div class="layer-wrap layer-exec">
-    <div class="layer-header">
-      <span class="layer-num">Layer 6</span>
-      <span class="layer-badge badge-exec">Execution Layer</span>
-      <span class="layer-desc">n8n on Railway — two roles: scheduled agent invocation + mechanical publishing</span>
-    </div>
-
-    <!-- Role 1: Cron -->
-    <div style="margin-bottom: 16px;">
-      <div style="font-size:0.7em;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--exec);margin-bottom:10px;">⏱ Role 1 — Scheduled Agent Invocation</div>
-      <div style="background:rgba(192,132,252,0.04);border:1px solid rgba(192,132,252,0.15);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-        <div style="font-size:0.76em;color:#d8b4fe;font-family:monospace;line-height:1.8;">
-          Cron trigger → Notion read (Campaign State) → HTTP POST Claude API → Notion write + Teams ping
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
-        <div class="exec-card"><div class="exec-name" style="font-size:0.72em;">7am</div><div class="exec-desc">Analytics pull · pings marketer</div></div>
-        <div class="exec-card"><div class="exec-name" style="font-size:0.72em;">9am</div><div class="exec-desc">Brief processor · triggers write chain</div></div>
-        <div class="exec-card"><div class="exec-name" style="font-size:0.72em;">5pm</div><div class="exec-desc">Daily digest · what went out + pending</div></div>
-        <div class="exec-card" style="border-style:dashed;opacity:0.5;"><div class="exec-name" style="font-size:0.72em;">+5 more</div><div class="exec-desc">8am · 12pm · 3pm · 8pm · Mon 8am</div></div>
-      </div>
-    </div>
-
-    <!-- Role 2: Publishing -->
-    <div style="padding-top:14px;border-top:1px solid rgba(192,132,252,0.15);">
-      <div style="font-size:0.7em;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);margin-bottom:10px;">📤 Role 2 — Mechanical Publishing (no intelligence)</div>
-      <div class="exec-grid">
-        <div class="exec-card"><div class="exec-name">LinkedIn</div><div class="exec-desc">Post on schedule</div></div>
-        <div class="exec-card"><div class="exec-name">WordPress</div><div class="exec-desc">Publish blog + landing pages</div></div>
-        <div class="exec-card"><div class="exec-name">Odoo</div><div class="exec-desc">Send email newsletter</div></div>
-        <div class="exec-card"><div class="exec-name">Google + Meta Ads</div><div class="exec-desc">Pull performance data</div></div>
-        <div class="exec-card"><div class="exec-name">GA4</div><div class="exec-desc">Pull analytics + SEO</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DAILY FLOW -->
-  <div class="flow">
-    <div class="flow-header">Daily Flow</div>
-    <div class="flow-steps">
-      <div class="flow-step">
-        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>7am — n8n cron</div>
-        <div class="flow-desc">Cron fires Claude API. Reads Campaign State. Pulls GA4 + Ads. Writes Notion briefing. Pings marketer in Teams.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-time ft-2"><div class="flow-dot fd-2"></div>Morning — Brief</div>
-        <div class="flow-desc">Marketer talks to Sidekick in Cowork. Sidekick picks agents, chains write → review → draft.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>9am — n8n cron</div>
-        <div class="flow-desc">Brief processor check. If new brief dropped overnight, Sidekick triggers write chain automatically.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-time ft-3"><div class="flow-dot fd-3"></div>Midday — Approve</div>
-        <div class="flow-desc">Draft in Notion. Teams ping. Marketer toggles status → Approved. n8n webhook fires publish.</div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-time ft-1"><div class="flow-dot fd-1"></div>5pm — n8n cron</div>
-        <div class="flow-desc">Daily digest: what went out, what's pending, one recommendation. Campaign State updated.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    Marketing Agent Team · Grof + AccPro · <span>v4 · March 2026</span>
-  </div>
-
 </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ MARKETING ══ -->
+<div id="tab-marketing" class="tab-section">
+<div class="page">
+  <div class="page-header">
+    <div class="header-tag teal"><span class="hdot teal"></span>Marketing Agent Team · Grof + AccPro</div>
+    <h1>Marketing Agent Team</h1>
+    <p>AI-powered marketing for two brands — built to outlast staff turnover</p>
+    <div class="header-meta">
+      <span class="meta-pill">Grof</span><span class="meta-pill">AccPro</span>
+      <span class="meta-pill"><strong>1</strong> Sidekick per brand</span>
+      <span class="meta-pill"><strong>8</strong> specialist agents</span>
+      <span class="meta-pill">Cowork · GrofAgent-OS · Notion · n8n</span>
+    </div>
+  </div>
+  <div class="layer-label">Layer 1 — Human</div>
+  <div class="human-row">
+    <div class="human-card"><div class="human-icon">👤</div><div class="human-name">Grof Marketer</div><div class="human-sub">Briefs in plain language · reviews outputs · approves content</div></div>
+    <div class="human-card"><div class="human-icon">👤</div><div class="human-name">AccPro Marketer</div><div class="human-sub">Briefs in plain language · reviews outputs · approves content</div></div>
+  </div>
+  <div class="human-note">natural language brief · daily conversation in Cowork</div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 2 — Brand Sidekick · Orchestrator · persistent memory</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="sidekick-card">
+      <div class="sidekick-header"><div class="sidekick-title">🤖 Grof Brand Sidekick</div><div class="cron-badge"><span class="hdot teal"></span>n8n hourly cron</div></div>
+      <div class="sidekick-sub">Persistent Cowork Project · always-on brand memory</div>
+      <div class="sidekick-features">
+        <span class="sidekick-feat">🧠 Persistent campaign memory</span><span class="sidekick-feat">📡 Best continued context</span>
+        <span class="sidekick-feat">🎯 Strategy advisor</span><span class="sidekick-feat">🔗 Chains agents</span><span class="sidekick-feat">🔄 Survives staff turnover</span>
+      </div>
+    </div>
+    <div class="sidekick-card">
+      <div class="sidekick-header"><div class="sidekick-title">🤖 AccPro Brand Sidekick</div><div class="cron-badge"><span class="hdot teal"></span>n8n hourly cron</div></div>
+      <div class="sidekick-sub">Persistent Cowork Project · always-on brand memory</div>
+      <div class="sidekick-features">
+        <span class="sidekick-feat">🧠 Persistent campaign memory</span><span class="sidekick-feat">📡 Best continued context</span>
+        <span class="sidekick-feat">🎯 Strategy advisor</span><span class="sidekick-feat">🔗 Chains agents</span><span class="sidekick-feat">🔄 Survives staff turnover</span>
+      </div>
+    </div>
+  </div>
+  <div class="human-note" style="margin-top:8px">activates skills · passes context · aggregates results</div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 3 — Specialist Agents (invoked by Sidekick, never directly by human)</div>
+  <div class="plugin-grid">
+    <div class="plugin-card">
+      <div class="plugin-title">📦 Grof Marketing Plugin</div>
+      <div class="plugin-agents">
+        <div class="plugin-agent-row"><span class="plugin-agent-name">✍️ Content Creator</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">🎯 Brand Reviewer</span><span class="agent-tier-badge tier-sub-agent">sub-agent</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">🖼 Image Designer</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">📈 CRO Agent</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">📱 Social Manager</span><span class="agent-tier-badge tier-scheduled">scheduled</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">💰 Perf. Marketing</span><span class="agent-tier-badge tier-scheduled">scheduled</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">🌐 Website Builder</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">📊 Analytics Agent</span><span style="font-size:10px;color:var(--muted)">n8n cron · daily 7am</span></div>
+      </div>
+    </div>
+    <div class="plugin-card">
+      <div class="plugin-title">📦 AccPro Marketing Plugin</div>
+      <div class="plugin-agents">
+        <div class="plugin-agent-row"><span class="plugin-agent-name">✍️ Content Creator</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">🎯 Brand Reviewer</span><span class="agent-tier-badge tier-sub-agent">sub-agent</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">🖼 Image Designer</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">📈 CRO Agent</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">📱 Social Manager</span><span class="agent-tier-badge tier-scheduled">scheduled</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">💰 Perf. Marketing</span><span class="agent-tier-badge tier-scheduled">scheduled</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">🌐 Website Builder</span><span class="agent-tier-badge tier-on-demand">on-demand</span></div>
+        <div class="plugin-agent-row"><span class="plugin-agent-name">📊 Analytics Agent</span><span style="font-size:10px;color:var(--muted)">n8n cron · daily 7am</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 4 — MCP Platform · GrofAgent-OS</div>
+  <div class="mcp-grid">
+    <div class="mcp-card"><div class="mcp-card-icon">💬</div><div class="mcp-card-name">Teams</div><div class="mcp-card-sub">Morning briefings · approval pings</div></div>
+    <div class="mcp-card"><div class="mcp-card-icon">📁</div><div class="mcp-card-name">SharePoint</div><div class="mcp-card-sub">Asset library · file storage</div></div>
+    <div class="mcp-card"><div class="mcp-card-icon">📧</div><div class="mcp-card-name">Outlook</div><div class="mcp-card-sub">Email drafts · newsletter triggers</div></div>
+    <div class="mcp-card"><div class="mcp-card-icon">📅</div><div class="mcp-card-name">Calendar</div><div class="mcp-card-sub">Campaign scheduling</div></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 5 — Data · Notion per brand</div>
+  <div class="data-grid">
+    <div class="data-card"><div class="data-card-name">Brand Voice</div><div class="data-card-sub">Tone · audience · rules</div></div>
+    <div class="data-card"><div class="data-card-name">Content Calendar</div><div class="data-card-sub">Schedule · themes · status</div></div>
+    <div class="data-card"><div class="data-card-name">Drafts + Queue</div><div class="data-card-sub">Pending approval · scheduled</div></div>
+    <div class="data-card"><div class="data-card-name">Analytics DB</div><div class="data-card-sub">Live metrics · GA4 · ads</div></div>
+    <div class="data-card"><div class="data-card-name">Campaign History</div><div class="data-card-sub">Past performance · learnings</div></div>
+    <div class="data-card"><div class="data-card-name">Campaign State</div><div class="data-card-sub">Every cron reads first</div></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 6 — Execution · n8n on Railway</div>
+  <div class="infra-bars">
+    <div class="infra-bar"><div class="infra-bar-label amber">⏱ Scheduled invocation</div><div class="infra-tags"><span class="infra-tag amber">Cron trigger</span><span class="infra-tag amber">Notion read</span><span class="infra-tag amber">HTTP POST Claude API</span><span class="infra-tag amber">Notion write + Teams ping</span></div></div>
+    <div class="infra-bar"><div class="infra-bar-label amber">📤 Mechanical publishing</div><div class="infra-tags"><span class="infra-tag amber">LinkedIn</span><span class="infra-tag amber">WordPress</span><span class="infra-tag amber">Odoo newsletter</span><span class="infra-tag amber">Google + Meta Ads</span><span class="infra-tag amber">GA4</span></div></div>
+  </div>
+  <div class="divider"></div>
+  <div class="section-heading">Daily Flow</div>
+  <div class="flow-steps">
+    <div class="flow-step"><div class="flow-step-time">7am — n8n</div><div><div class="flow-step-title">Analytics pull</div><div class="flow-step-desc">Cron fires Claude API. Reads Campaign State. Pulls GA4 + Ads. Writes Notion briefing. Pings marketer in Teams.</div></div></div>
+    <div class="flow-step"><div class="flow-step-time">Morning</div><div><div class="flow-step-title">Marketer briefs Sidekick</div><div class="flow-step-desc">Marketer talks to Sidekick in Cowork. Sidekick picks agents, chains write → review → draft.</div></div></div>
+    <div class="flow-step"><div class="flow-step-time">9am — n8n</div><div><div class="flow-step-title">Brief processor check</div><div class="flow-step-desc">If new brief dropped overnight, Sidekick triggers write chain automatically.</div></div></div>
+    <div class="flow-step"><div class="flow-step-time">Midday — Approve</div><div><div class="flow-step-title">Draft in Notion</div><div class="flow-step-desc">Teams ping. Marketer toggles status → Approved. n8n webhook fires publish.</div></div></div>
+    <div class="flow-step"><div class="flow-step-time">5pm — n8n</div><div><div class="flow-step-title">Daily digest</div><div class="flow-step-desc">What went out, what's pending, one recommendation. Campaign State updated.</div></div></div>
+  </div>
+  <div class="page-footer"><span>Marketing Agent Team · Grof + AccPro · v4 · March 2026</span></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ ACCOUNTING ══ -->
+<div id="tab-accounting" class="tab-section">
+<div class="page">
+  <div class="page-header">
+    <div class="header-tag coral"><span class="hdot coral"></span>Accounting Agent Team · Acc Pro Singapore</div>
+    <h1>Outsourced Accounting,<br><span class="hl-coral">Autonomously Operated</span></h1>
+    <p>9 specialist agents. Agents handle communication, document chasing, and work prep — humans handle judgment and sign-off.</p>
+    <div class="header-meta"><span class="meta-pill"><strong>9</strong> agents</span><span class="meta-pill"><strong>4</strong> shared · <strong>5</strong> unique</span><span class="meta-pill">Claude Cowork · n8n · Notion · Xero</span></div>
+  </div>
+  <div class="layer-label">Layer 1 — Human</div>
+  <div class="human-row"><div class="human-card"><div class="human-icon">👤</div><div class="human-name">Human Accountant</div><div class="human-sub">Reviews · signs off · professional judgment · client advisory</div></div></div>
+  <div class="human-note">reviews · approves · escalates — never chases or reminds</div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 2 — Client Sidekick (one per client)</div>
+  <div class="sidekick-card">
+    <div class="sidekick-header"><div class="sidekick-title">🤖 Client Sidekick</div><div class="cron-badge"><span class="hdot teal"></span>n8n hourly cron</div></div>
+    <div class="sidekick-sub">Knows full service scope, deadline calendar, docs status, query history · routes all tasks · never asks what it already knows</div>
+    <div class="sidekick-features"><span class="sidekick-feat">🧠 Notion memory</span><span class="sidekick-feat">🔗 Chains agents</span><span class="sidekick-feat">🔄 Staff turnover proof</span><span class="sidekick-feat">⏰ n8n hourly cron</span></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 3 — Specialist Agents</div>
+  <div style="margin-bottom:14px">
+    <div class="agent-section-title">🔁 Shared agents — built once, serve all teams</div>
+    <div class="agent-grid">
+      <div class="agent-card shared" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">💬</span><span class="agent-tier-badge tier-shared">Shared</span></div>
+        <div class="agent-name">Comms Agent</div>
+        <div class="agent-id">shared-client-comms</div>
+        <div class="agent-trigger">WhatsApp/email webhook → answers 80% directly</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Answers directly</div><div class="skill-row-text">Deadline queries · document status · basic tax/GST questions · process explanations</div></div>
+          <div class="skill-row"><div class="skill-row-label">Always escalates</div><div class="skill-row-text">Professional judgment · tax planning · disputes · anything below 80% confidence</div></div>
+        </div>
+      </div>
+      <div class="agent-card shared" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">📎</span><span class="agent-tier-badge tier-shared">Shared</span></div>
+        <div class="agent-name">Document Chaser</div>
+        <div class="agent-id">shared-doc-chaser</div>
+        <div class="agent-trigger">Daily 9am → D1/D5/D10/D15 tiered reminders</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Checklists</div><div class="skill-row-text">BK: bank stmts, CC stmts, invoices · GST: quarter docs · Payroll: inputs, OT, leave · Tax: year-end docs</div></div>
+        </div>
+      </div>
+      <div class="agent-card shared" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">⏰</span><span class="agent-tier-badge tier-shared">Shared</span></div>
+        <div class="agent-name">Deadline Monitor</div>
+        <div class="agent-id">shared-deadline-monitor</div>
+        <div class="agent-trigger">Daily 8am → IRAS, CPF, GST deadlines all clients</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Covers</div><div class="skill-row-text">GST quarterly · Payroll monthly · Corp tax annual · IR8A · ACRA handoff to CorpSec</div></div>
+        </div>
+      </div>
+      <div class="agent-card shared" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">📤</span><span class="agent-tier-badge tier-shared">Shared</span></div>
+        <div class="agent-name">Status Updater</div>
+        <div class="agent-id">shared-status-updater</div>
+        <div class="agent-trigger">Friday 4pm + on status changes → combined digest</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Format</div><div class="skill-row-text">✅ Completed · 🔄 In progress · ⏳ Waiting on client · 📅 Coming up</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="agent-section-title">🧾 Accounting work agents — agent prepares, human authorises, n8n submits</div>
+    <div class="agent-grid">
+      <div class="agent-card coral" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">📊</span><span class="agent-tier-badge tier-core">Core</span></div>
+        <div class="agent-name">BK Prep Agent</div><div class="agent-id">accounting-bk-prep</div>
+        <div class="agent-trigger">On doc receipt → categorise transactions, flag anomalies</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Output</div><div class="skill-row-text">Xero-import ready txn list · Reconciliation summary · Flags with suggested treatment</div></div>
+          <div class="skill-row"><div class="skill-row-label">Always flags</div><div class="skill-row-text">Cash &gt;$5K · director loans · inter-company txns · unrecognised recurring charges</div></div>
+        </div>
+      </div>
+      <div class="agent-card coral" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">🧮</span><span class="agent-tier-badge tier-core">Core</span></div>
+        <div class="agent-name">GST Agent</div><div class="agent-id">accounting-gst</div>
+        <div class="agent-trigger">BK complete + quarter end → F5/F7 workings</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Output</div><div class="skill-row-text">Boxes 1–14 with supporting schedules · Edge case flags · Standard checks checklist</div></div>
+          <ul class="skill-criteria-list"><li>Correct IRAS GST F5 box computation</li><li>Blocked input tax excluded (entertainment)</li><li>Never files without accountant sign-off</li></ul>
+        </div>
+      </div>
+      <div class="agent-card coral" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">💰</span><span class="agent-tier-badge tier-core">Core</span></div>
+        <div class="agent-name">Payroll Agent</div><div class="agent-id">accounting-payroll</div>
+        <div class="agent-trigger">Day 25 cron → payslips, CPF, FWL, IR8A YTD</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Monthly package</div><div class="skill-row-text">Full payroll register · CPF submission file · Bank transfer file · Xero journal · IR8A YTD</div></div>
+          <ul class="skill-criteria-list"><li>Correct CPF rates by residency and age</li><li>Never processes without confirmed inputs</li></ul>
+        </div>
+      </div>
+      <div class="agent-card coral" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">📋</span><span class="agent-tier-badge tier-standard">Standard</span></div>
+        <div class="agent-name">Tax Comp Agent</div><div class="agent-id">accounting-tax-comp</div>
+        <div class="agent-trigger">FYE +2 months → Form C/C-S workings + ECI estimate</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Steps</div><div class="skill-row-text">Accounting profit → add-backs → CA S19/S19A/S19B → startup/partial exemption → chargeable income</div></div>
+        </div>
+      </div>
+      <div class="agent-card coral" onclick="toggleAgent(this)">
+        <div class="agent-header"><span class="agent-icon">📄</span><span class="agent-tier-badge tier-standard">Standard</span></div>
+        <div class="agent-name">FS Compiler</div><div class="agent-id">accounting-fs-compiler</div>
+        <div class="agent-trigger">BK complete + year-end → full-set FS, SFRS compliant</div>
+        <div class="expand-hint">↓ tap for detail</div>
+        <div class="agent-skill-detail">
+          <div class="skill-row"><div class="skill-row-label">Output</div><div class="skill-row-text">Directors' Report · P&amp;L · Balance Sheet · Cash Flow · Notes (8+ standard)</div></div>
+          <ul class="skill-criteria-list"><li>Every line traceable to Xero</li><li>Zero manual figure entry</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rule-callout" style="margin-top:12px"><div class="rule-callout-icon">⚠️</div><div class="rule-callout-text"><strong>The rule:</strong> Agent prepares → accountant authorises → n8n submits. Nothing reaches IRAS, CPF Board, or client without accountant sign-off.</div></div>
+  <div class="connector" style="margin-top:14px"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 4 — MCP · GrofAgent-OS</div>
+  <div class="mcp-grid">
+    <div class="mcp-card"><div class="mcp-card-icon">💬</div><div class="mcp-card-name">Teams</div><div class="mcp-card-sub">Approval pings · escalation alerts</div></div>
+    <div class="mcp-card"><div class="mcp-card-icon">📁</div><div class="mcp-card-name">SharePoint</div><div class="mcp-card-sub">Client docs · output files</div></div>
+    <div class="mcp-card"><div class="mcp-card-icon">📧</div><div class="mcp-card-name">Outlook</div><div class="mcp-card-sub">Client email replies</div></div>
+    <div class="mcp-card"><div class="mcp-card-icon">📅</div><div class="mcp-card-name">Calendar</div><div class="mcp-card-sub">Deadline scheduling</div></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 5 — Data · Notion per client</div>
+  <div class="data-grid">
+    <div class="data-card"><div class="data-card-name">Services scope</div><div class="data-card-sub">Services · fees · deliverables</div></div>
+    <div class="data-card"><div class="data-card-name">Deadline calendar</div><div class="data-card-sub">All deadlines auto-updated</div></div>
+    <div class="data-card"><div class="data-card-name">Document tracker</div><div class="data-card-sub">Checklist by job, received status</div></div>
+    <div class="data-card"><div class="data-card-name">Jobs board</div><div class="data-card-sub">Active jobs, status, agent</div></div>
+    <div class="data-card"><div class="data-card-name">Query log</div><div class="data-card-sub">All queries, escalations</div></div>
+    <div class="data-card"><div class="data-card-name">Filing history</div><div class="data-card-sub">Past GST, tax, payroll</div></div>
+    <div class="data-card"><div class="data-card-name">Anomaly log</div><div class="data-card-sub">Flags over time</div></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 6 — Execution · n8n</div>
+  <div class="infra-bars">
+    <div class="infra-bar"><div class="infra-bar-label amber">⏱ Cron</div><div class="infra-tags"><span class="infra-tag amber">Cron trigger</span><span class="infra-tag amber">Notion read</span><span class="infra-tag amber">Claude API</span><span class="infra-tag amber">Notion write + Teams ping</span></div></div>
+    <div class="infra-bar"><div class="infra-bar-label amber">📤 Execution</div><div class="infra-tags"><span class="infra-tag amber">Xero API</span><span class="infra-tag amber">WhatsApp API</span><span class="infra-tag amber">Outlook</span><span class="infra-tag amber">CPF Board</span><span class="infra-tag amber">IRAS MyTax</span></div></div>
+    <div class="infra-bar"><div class="infra-bar-label subtle">🧠 Memory</div><div class="infra-tags"><span class="infra-tag subtle">services-scope.md</span><span class="infra-tag subtle">deadline-calendar.md</span><span class="infra-tag subtle">document-tracker.md</span><span class="infra-tag subtle">jobs-board.md</span><span class="infra-tag subtle">anomaly-log.md</span></div></div>
+  </div>
+  <div class="page-footer"><span>Accounting Agent Team · Acc Pro Singapore · v1 · March 2026</span></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ CORPSEC ══ -->
+<div id="tab-corpsec" class="tab-section">
+<div class="page">
+  <div class="page-header">
+    <div class="header-tag amber"><span class="hdot amber"></span>CorpSec Agent Team · Grof</div>
+    <h1>Corporate Secretary,<br><span class="hl-amber">Orchestrated by Agents</span></h1>
+    <p>9 agents handling AGM/AR, incorporations, corporate changes, transfers, and strike-offs. Agents coordinate. SAICSA signs off.</p>
+    <div class="header-meta"><span class="meta-pill"><strong>9</strong> agents</span><span class="meta-pill"><strong>4</strong> shared · <strong>5</strong> unique</span><span class="meta-pill">Claude Cowork · n8n · ACRA · Documenso · Odoo</span></div>
+  </div>
+  <div class="layer-label">Layer 1 — Human</div>
+  <div class="human-row"><div class="human-card"><div class="human-icon">👤</div><div class="human-name">CS Officer (SAICSA)</div><div class="human-sub">Reviews · authorises ACRA filings · professional judgment</div></div></div>
+  <div class="human-note">reviews · authorises · escalates to Compliance Team for AML/CDD</div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 2 — Company Sidekick (one per client company)</div>
+  <div class="sidekick-card">
+    <div class="sidekick-header"><div class="sidekick-title">🤖 Company Sidekick</div><div class="cron-badge"><span class="hdot teal"></span>n8n hourly cron</div></div>
+    <div class="sidekick-sub">Knows UEN, FYE, officers, shareholders, active services, all deadlines, outstanding items. Routes all tasks. Never asks what it already knows.</div>
+    <div class="sidekick-features"><span class="sidekick-feat">🧠 Full corporate history</span><span class="sidekick-feat">🔗 Multi-party orchestration</span><span class="sidekick-feat">🔄 Staff turnover proof</span><span class="sidekick-feat">⚠️ AML flags → Compliance</span></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 3 — Specialist Agents</div>
+  <div style="margin-bottom:14px">
+    <div class="agent-section-title">🔁 Shared agents</div>
+    <div class="agent-grid">
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">💬</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">Comms Agent</div><div class="agent-id">shared-client-comms</div><div class="agent-trigger">WhatsApp/email → answers status, deadlines, process questions</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Answers directly</div><div class="skill-row-text">Filing status · deadline questions · process explanations · fee queries</div></div><div class="skill-row"><div class="skill-row-label">Always escalates</div><div class="skill-row-text">Legal judgment · disputes · restructuring · compliance flags → Compliance Team</div></div></div></div>
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📎</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">Document Chaser</div><div class="agent-id">shared-doc-chaser</div><div class="agent-trigger">Daily 9am → D1/D5/D10/D15 per job type</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">CorpSec checklists</div><div class="skill-row-text">Incorporation: NRIC, consent forms · Director change: new director NRIC, consent · Share transfer: instrument, stamp duty · Strike-off: bank closure, IRAS clearance</div></div></div></div>
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">⏰</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">Deadline Monitor</div><div class="agent-id">shared-deadline-monitor</div><div class="agent-trigger">Daily 8am → ACRA, MOM, AGM deadlines all companies</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Covers</div><div class="skill-row-text">AGM (FYE+6mo) · AR (FYE+8mo) · EP renewals · Business profile expiry · ND review → Compliance</div></div></div></div>
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📤</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">Status Updater</div><div class="agent-id">shared-status-updater</div><div class="agent-trigger">Friday 4pm + major changes → combined client digest</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Combined</div><div class="skill-row-text">For clients on both CorpSec + Accounting, one weekly digest covers all service lines.</div></div></div></div>
+    </div>
+  </div>
+  <div>
+    <div class="agent-section-title">🏛️ CorpSec work agents — agent prepares, CS officer authorises, n8n submits</div>
+    <div class="agent-grid">
+      <div class="agent-card amber" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📋</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">AGM/AR Agent</div><div class="agent-id">corpsec-agm-ar</div><div class="agent-trigger">FYE +3 months → AGM doc pack + AR filing prep</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Output</div><div class="skill-row-text">Notice of AGM · Ordinary resolutions · Proxy form · Attendance register · ACRA AR form pre-populated · Filing checklist</div></div><ul class="skill-criteria-list"><li>Correct statutory notice periods</li><li>Never files with ACRA without CS officer sign-off</li></ul></div></div>
+      <div class="agent-card amber" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🔄</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Corporate Changes</div><div class="agent-id">corpsec-corporate-changes</div><div class="agent-trigger">Client request or CS officer → director/share/address/name changes</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Handles</div><div class="skill-row-text">Director appt/resign/change · Share transfer · Share allotment · Address · Company name · FYE · Auditors</div></div><div class="skill-row"><div class="skill-row-label">Always flags</div><div class="skill-row-text">Director below minimum · >25% share transfer → Compliance · Name conflicts</div></div></div></div>
+      <div class="agent-card amber" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🏢</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Incorporation Agent</div><div class="agent-id">corpsec-incorporation</div><div class="agent-trigger">New incorporation via Grof App → full workflow to client handover</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Steps</div><div class="skill-row-text">Grof App data → name check → doc verify → flag Compliance for CDD → ACRA prep → post-inc registers + welcome pack</div></div><ul class="skill-criteria-list"><li>Compliance clears before ACRA filing</li></ul></div></div>
+      <div class="agent-card amber" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">❌</span><span class="agent-tier-badge tier-standard">Standard</span></div><div class="agent-name">Strike-Off Agent</div><div class="agent-id">corpsec-strike-off</div><div class="agent-trigger">Odoo strike-off initiated → multi-party SOP coordination</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Coordinates</div><div class="skill-row-text">Odoo subscription check → outstanding invoices → IRAS clearance (Accounting) → bank closure → DRIW/EGM → Documenso → ACRA → Odoo cancel → Notion update</div></div><ul class="skill-criteria-list"><li>Force strike-off email template for unresponsive ND clients</li></ul></div></div>
+      <div class="agent-card amber" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🔀</span><span class="agent-tier-badge tier-standard">Standard</span></div><div class="agent-name">Transfer Agent</div><div class="agent-id">corpsec-transfer</div><div class="agent-trigger">Grof App transfer-in OR client requests transfer-out</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Transfer-in</div><div class="skill-row-text">Request to prev CSP → collect registers → reconcile vs ACRA BizFile → flag discrepancies → CS officer → file CS change</div></div><div class="skill-row"><div class="skill-row-label">Resign/transfer-out</div><div class="skill-row-text">Prepare docs → confirm new secretary appointed → file resignation → update Odoo + Notion</div></div></div></div>
+    </div>
+  </div>
+  <div class="rule-callout" style="margin-top:12px"><div class="rule-callout-icon">⚠️</div><div class="rule-callout-text"><strong>AML handoff rule:</strong> Any new individual (director, shareholder, UBO) introduced through any CorpSec transaction → CorpSec agent immediately notifies Compliance Team. CorpSec does not proceed with ACRA filing until Compliance clears.</div></div>
+  <div class="connector" style="margin-top:14px"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 4–6 — MCP · Data · Execution</div>
+  <div class="infra-bars">
+    <div class="infra-bar"><div class="infra-bar-label amber">🏛️ ACRA execution</div><div class="infra-tags"><span class="infra-tag amber">BizFile+ via Corppass</span><span class="infra-tag amber">Documenso e-signing</span><span class="infra-tag amber">Odoo subscription</span><span class="infra-tag amber">Notion company page</span><span class="infra-tag amber">Teams alerts</span></div></div>
+    <div class="infra-bar"><div class="infra-bar-label subtle">🧠 Company memory</div><div class="infra-tags"><span class="infra-tag subtle">corporate-profile.md</span><span class="infra-tag subtle">officer-register.md</span><span class="infra-tag subtle">shareholder-register.md</span><span class="infra-tag subtle">deadline-calendar.md</span><span class="infra-tag subtle">filing-history.md</span></div></div>
+  </div>
+  <div class="page-footer"><span>CorpSec Agent Team · Grof · v1 · March 2026</span></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ COMPLIANCE ══ -->
+<div id="tab-compliance" class="tab-section">
+<div class="page">
+  <div class="page-header">
+    <div class="header-tag blue"><span class="hdot" style="background:var(--blue)"></span>Compliance Agent Team · Grof</div>
+    <h1>AML/CTF Compliance,<br><span style="color:var(--blue)">Systematically Monitored</span></h1>
+    <p>8 agents handling ND monitoring, periodic reviews, CDD tracking, and risk assessments. Agents surface and document. Humans make all regulatory decisions.</p>
+    <div class="header-meta"><span class="meta-pill"><strong>8</strong> agents</span><span class="meta-pill"><strong>4</strong> shared · <strong>4</strong> unique</span><span class="meta-pill">AML/CTF · PSMD Act · MAS Notice</span></div>
+  </div>
+  <div class="info-callout" style="margin-bottom:24px"><div class="rule-callout-icon">🛡️</div><div class="info-callout-text"><strong>What agents NEVER do:</strong> File STRs, make risk decisions, approve/reject onboarding, determine if a transaction is suspicious, communicate that a review or escalation is underway (no tipping-off). Agents surface, document, and route. Compliance officer decides everything.</div></div>
+  <div class="layer-label">Layer 1 — Human</div>
+  <div class="human-row"><div class="human-card" style="background:var(--blue-bg);border-color:var(--blue-border)"><div class="human-icon">👤</div><div class="human-name" style="color:var(--blue)">Compliance Officer</div><div class="human-sub">Risk decisions · STR filing · onboarding approvals · regulatory judgment</div></div></div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 2 — Compliance Sidekick</div>
+  <div class="sidekick-card">
+    <div class="sidekick-header"><div class="sidekick-title">🤖 Compliance Sidekick</div><div class="cron-badge"><span class="hdot teal"></span>n8n monthly + daily crons</div></div>
+    <div class="sidekick-sub">Tracks all ND clients by FYE and monitoring quarter, outstanding cases, expiring CDD docs, open flags and pending escalations</div>
+    <div class="sidekick-features"><span class="sidekick-feat">📋 ND monitoring cycles</span><span class="sidekick-feat">🔒 No tipping-off enforced</span><span class="sidekick-feat">📁 Audit trail in Notion</span></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 3 — Agents</div>
+  <div style="margin-bottom:14px">
+    <div class="agent-section-title">🔁 Shared agents (Compliance variants)</div>
+    <div class="agent-grid">
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📅</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">ND Scheduler</div><div class="agent-id">shared-deadline-monitor</div><div class="agent-trigger">Monthly → extract ND client list, create Q monitoring cases with 60-day deadlines</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Deadlines</div><div class="skill-row-text">Q1–Q4 deadlines = FYE-quarter-end +60 days. All ND clients by FYE. Cases created in Notion with reviewer assigned.</div></div></div></div>
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📎</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">Compliance Doc Chaser</div><div class="agent-id">shared-doc-chaser</div><div class="agent-trigger">D1/D7/D14/D21 + min 3 reminders (regulatory requirement)</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Scenarios</div><div class="skill-row-text">Bank account: bank stmts · Crypto: wallet stmts · External: quarterly MA · Dormant: bank stmts or MA · No bank: client declaration</div></div><div class="skill-row"><div class="skill-row-label">Hard rule</div><div class="skill-row-text">Every reminder logged in Notion with date + content (regulatory audit trail). No tipping-off language in any message.</div></div></div></div>
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🪪</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">CDD Doc Tracker</div><div class="agent-id">shared-doc-chaser</div><div class="agent-trigger">Daily 9am → passport/address proof expiry across all ND clients</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Alerts</div><div class="skill-row-text">90 days before expiry → renewal request · 30 days → urgent · Expired → flag to Compliance officer immediately</div></div></div></div>
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📊</span><span class="agent-tier-badge tier-shared">Internal</span></div><div class="agent-name">Compliance Digest</div><div class="agent-id">shared-status-updater</div><div class="agent-trigger">Monday 9am → INTERNAL only, never sent to clients</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">⚠️ Internal only</div><div class="skill-row-text">Cases overdue · Cases in progress · Completed this week · Expiring CDD docs · Upcoming Q start dates. Never client-facing.</div></div></div></div>
+    </div>
+  </div>
+  <div>
+    <div class="agent-section-title">🛡️ Compliance-specific agents</div>
+    <div class="agent-grid">
+      <div class="agent-card blue" onclick="toggleAgent(this)" style="--blue-bg:rgba(79,156,249,0.08)"><div class="agent-header"><span class="agent-icon">🔄</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Periodic Review Agent</div><div class="agent-id">compliance-periodic-review</div><div class="agent-trigger">AGM date −30 days → personal particulars update, in parallel with CorpSec AGM/AR agent</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Requests</div><div class="skill-row-text">Updated NRIC/passport (if expiring) · Updated address proof (if >12 months old) · Confirm no UBO changes · Confirm no business activity changes</div></div><ul class="skill-criteria-list"><li>Runs parallel to CorpSec AGM/AR — neither blocks the other</li><li>Flags significant risk changes to Compliance officer before AGM filed</li></ul></div></div>
+      <div class="agent-card blue" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">⚡</span><span class="agent-tier-badge tier-standard">Standard</span></div><div class="agent-name">Ad-hoc Risk Assessment</div><div class="agent-id">compliance-adhoc-risk</div><div class="agent-trigger">Manual trigger by Compliance officer when client risk profile changes</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">What it does</div><div class="skill-row-text">Compiles existing Notion records (CDD docs, past monitoring cases, transaction flags) before requesting new docs. Prepares factual pre-assessment summary. Compliance officer decides outcome.</div></div></div></div>
+      <div class="agent-card blue" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🔍</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">AML/CDD Monitor</div><div class="agent-id">compliance-aml-cdd</div><div class="agent-trigger">Annual review + triggered by CorpSec when new individual introduced</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Covers</div><div class="skill-row-text">Annual KYC refresh for ND clients · PEP/sanctions screening on new directors/shareholders · Risk rating per client · Document expiry tracking</div></div><ul class="skill-criteria-list"><li>Immediately escalates PEP flags — never silently passes</li><li>Maintains audit trail of all screening results</li></ul></div></div>
+      <div class="agent-card blue" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🚨</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Escalation Router</div><div class="agent-id">compliance-escalation-router</div><div class="agent-trigger">Compliance officer flags case OR sanctioned jurisdiction detected → immediate</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Routes to</div><div class="skill-row-text">str@grof.co with case summary. Documents in Notion escalation log: date · reason · status · pending STR decision.</div></div><ul class="skill-criteria-list"><li>Never communicates escalation to client</li><li>STR filing decision always made by Compliance officer</li><li>Sanctioned jurisdiction → immediate, no waiting</li></ul></div></div>
+    </div>
+  </div>
+  <div class="connector" style="margin-top:14px"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Compliance Memory (Notion, per ND client)</div>
+  <div class="data-grid">
+    <div class="data-card"><div class="data-card-name">ND register</div><div class="data-card-sub">FYE · monitoring schedule · risk rating</div></div>
+    <div class="data-card"><div class="data-card-name">CDD documents</div><div class="data-card-sub">Passport · address · expiry dates</div></div>
+    <div class="data-card"><div class="data-card-name">Monitoring log</div><div class="data-card-sub">Cases · outcomes · sign-off</div></div>
+    <div class="data-card"><div class="data-card-name">Escalation log</div><div class="data-card-sub">Date · reason · STR status</div></div>
+    <div class="data-card"><div class="data-card-name">Reminder log</div><div class="data-card-sub">All reminders (regulatory req)</div></div>
+  </div>
+  <div class="page-footer"><span>Compliance Agent Team · Grof · v1 · March 2026</span></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ CSS ══ -->
+<div id="tab-css" class="tab-section">
+<div class="page">
+  <div class="page-header">
+    <div class="header-tag green"><span class="hdot" style="background:var(--green)"></span>Customer Success Agent Team · Grof</div>
+    <h1>Customer Success,<br><span style="color:var(--green)">Proactively Automated</span></h1>
+    <p>8 agents covering renewals, billing, collections, onboarding guidance, and ad-hoc routing. CSS is the connective tissue — agents handle the volume, humans handle the judgment.</p>
+    <div class="header-meta"><span class="meta-pill"><strong>8</strong> agents</span><span class="meta-pill"><strong>2</strong> shared · <strong>6</strong> unique</span><span class="meta-pill">Odoo · Grof App · WhatsApp · n8n</span></div>
+  </div>
+  <div class="layer-label">Layer 1 — Human</div>
+  <div class="human-row"><div class="human-card" style="background:var(--green-bg);border-color:var(--green-border)"><div class="human-icon">👤</div><div class="human-name" style="color:var(--green)">CSS Officer</div><div class="human-sub">Approves force actions · refunds · discounts · payment extensions · escalations</div></div></div>
+  <div class="human-note">payment before work — always · force actions need CSS lead + management approval</div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 2 — CSS Sidekick (one per client)</div>
+  <div class="sidekick-card">
+    <div class="sidekick-header"><div class="sidekick-title">🤖 CSS Sidekick</div><div class="cron-badge"><span class="hdot teal"></span>n8n daily crons</div></div>
+    <div class="sidekick-sub">Knows all active services (Odoo), renewal dates, outstanding invoices, payment behaviour, open ad-hoc requests</div>
+    <div class="sidekick-features"><span class="sidekick-feat">💳 Odoo subscription data</span><span class="sidekick-feat">📋 Open tickets tracking</span><span class="sidekick-feat">⚠️ No refunds without approval</span></div>
+  </div>
+  <div class="connector"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 3 — Agents</div>
+  <div style="margin-bottom:14px">
+    <div class="agent-section-title">🔁 Shared agents</div>
+    <div class="agent-grid">
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">💬</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">CSS Comms Agent</div><div class="agent-id">shared-client-comms</div><div class="agent-trigger">WhatsApp/email → billing queries, service status, process questions</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Escalates</div><div class="skill-row-text">Refund requests (no-refund policy) · payment extensions (WL) · force resign decisions · compliance flags → Compliance Team</div></div></div></div>
+      <div class="agent-card shared" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📤</span><span class="agent-tier-badge tier-shared">Shared</span></div><div class="agent-name">CSS Status Updater</div><div class="agent-id">shared-status-updater</div><div class="agent-trigger">Friday 4pm → combined digest covering all active services</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">CSS content</div><div class="skill-row-text">Outstanding invoices · upcoming renewals · active ad-hoc requests · paused services</div></div><ul class="skill-criteria-list"><li>Combined with CorpSec + Accounting digest for multi-service clients</li></ul></div></div>
+    </div>
+  </div>
+  <div>
+    <div class="agent-section-title">🌟 CSS-specific agents</div>
+    <div class="agent-grid">
+      <div class="agent-card green" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🔄</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Renewal Agent</div><div class="agent-id">css-renewal</div><div class="agent-trigger">Daily scan Odoo → T-60 to D+180 renewal sequence</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Sequence</div><div class="skill-row-text">T-60 advance notice · T-30 invoice · T-14 reminder · D+14 1st overdue · D+30 2nd + 7-day final · D+45 flag service pause · D+60 (ND) force strike-off · D+90-180 (non-ND) force resign</div></div><ul class="skill-criteria-list"><li>Special handling: Antler (1-month credit), partners (Partner Page)</li><li>Never pauses services without CSS officer confirmation</li></ul></div></div>
+      <div class="agent-card green" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">💸</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Collections Agent</div><div class="agent-id">css-collections</div><div class="agent-trigger">Daily Odoo scan → tiered overdue reminders with borderline case protection</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Borderline flags</div><div class="skill-row-text">Client communicating but struggling · disputed charges · in liquidation · good payment history (2+ years) · formal payment plan request → flag CSS lead for judgment, never auto-escalate</div></div></div></div>
+      <div class="agent-card green" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">📈</span><span class="agent-tier-badge tier-standard">Standard</span></div><div class="agent-name">Overage Detection</div><div class="agent-id">css-overage-detection</div><div class="agent-trigger">On FS completion → check actual expenses vs paid accounting tier</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Logic</div><div class="skill-row-text">Read FS from SharePoint → total business expenses → compare vs paid tier threshold (Odoo) → if overage: prepare top-up invoice for CSS officer approval</div></div><ul class="skill-criteria-list"><li>Never sends invoice without CSS officer approval</li></ul></div></div>
+      <div class="agent-card green" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🎯</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Onboarding Guidance</div><div class="agent-id">css-onboarding</div><div class="agent-trigger">Client stuck in Grof App OR video call required by Compliance</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">What it does</div><div class="skill-row-text">Answers onboarding questions · nudges stalled clients · schedules compliance video call (when Compliance requires it, not by default) · follows up post-call on outstanding items</div></div><ul class="skill-criteria-list"><li>App handles the onboarding flow — agent handles the humans</li><li>Video call only when Compliance or app requires it</li></ul></div></div>
+      <div class="agent-card green" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🔀</span><span class="agent-tier-badge tier-core">Core</span></div><div class="agent-name">Ad-hoc Request Router</div><div class="agent-id">css-adhoc-router</div><div class="agent-trigger">Client ad-hoc request → quote, confirm payment, route to correct team</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Routing matrix</div><div class="skill-row-text">Director/share changes → CorpSec + Compliance KYC · EP/DP/LOC → CSS advises + Anna executes · Accounting queries → CSS quotes first · System errors → Tech/Ops</div></div><ul class="skill-criteria-list"><li>Quotation issued before any work starts — non-negotiable</li><li>Payment confirmed before routing to CorpSec</li></ul></div></div>
+      <div class="agent-card green" onclick="toggleAgent(this)"><div class="agent-header"><span class="agent-icon">🧮</span><span class="agent-tier-badge tier-standard">Standard</span></div><div class="agent-name">Billing Query Handler</div><div class="agent-id">css-billing-query</div><div class="agent-trigger">Inbound billing query → handle within CSS authority or escalate</div><div class="expand-hint">↓ tap for detail</div><div class="agent-skill-detail"><div class="skill-row"><div class="skill-row-label">Handles independently</div><div class="skill-row-text">Invoice explanation · tier calculation · overage explanation · quarterly payment option (>$5k) · standard renewal queries</div></div><div class="skill-row"><div class="skill-row-label">Escalates to management</div><div class="skill-row-text">Refund requests (WL/Selina/Emily) · payment extensions · discounts below CSS authority · complex disputes</div></div></div></div>
+    </div>
+  </div>
+  <div class="rule-callout" style="margin-top:12px"><div class="rule-callout-icon">⚠️</div><div class="rule-callout-text"><strong>CSS billing rules:</strong> No refunds without WL/Selina/Emily approval. No payment extensions without WL. No force actions without CSS lead + management. Payment before work — always.</div></div>
+  <div class="connector" style="margin-top:14px"><div class="connector-arrow">↓</div></div>
+  <div class="layer-label">Layer 4–6 — Infra</div>
+  <div class="infra-bars">
+    <div class="infra-bar"><div class="infra-bar-label amber">💳 Billing</div><div class="infra-tags"><span class="infra-tag amber">Odoo invoicing</span><span class="infra-tag amber">WhatsApp API</span><span class="infra-tag amber">Outlook</span><span class="infra-tag amber">Notion client page</span></div></div>
+    <div class="infra-bar"><div class="infra-bar-label subtle">🧠 Memory</div><div class="infra-tags"><span class="infra-tag subtle">Odoo: subscriptions · invoices · renewal dates</span><span class="infra-tag subtle">Notion: open requests · payment behaviour · escalation history</span></div></div>
+  </div>
+  <div class="divider"></div>
+  <div class="section-heading">Late Payment Escalation Ladder</div>
+  <div class="section-sub">Automated by Collections Agent + Renewal Agent. Force actions always require CSS officer approval.</div>
+  <table class="data-table">
+    <thead><tr><th>Day</th><th>Action</th><th>Agent</th></tr></thead>
+    <tbody>
+      <tr><td class="td-time">D+14</td><td class="td-desc">Soft reminder email</td><td class="td-agent teal">css-collections</td></tr>
+      <tr><td class="td-time">D+30</td><td class="td-desc">2nd reminder + 7-day final warning (services pause notice)</td><td class="td-agent teal">css-collections</td></tr>
+      <tr><td class="td-time">D+45</td><td class="td-desc">Prepare service pause notice → CSS officer approval before sending</td><td class="td-agent teal">css-collections</td></tr>
+      <tr><td class="td-time">D+60 (ND)</td><td class="td-desc">Prepare force strike-off 14-day notice → CSS + management approval</td><td class="td-agent teal">css-collections</td></tr>
+      <tr><td class="td-time">D+90–180 (non-ND)</td><td class="td-desc">Prepare force resign → management for borderline cases</td><td class="td-agent teal">css-collections</td></tr>
+    </tbody>
+  </table>
+  <div class="page-footer"><span>Customer Success Agent Team · Grof · v1 · March 2026</span></div>
+</div>
+</div>
+
+<script>
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else document.querySelectorAll('.nav-tab').forEach(t => { if (t.getAttribute('onclick') && t.getAttribute('onclick').includes(name)) t.classList.add('active'); });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleAgent(card) {
+  card.classList.toggle('expanded');
+  const hint = card.querySelector('.expand-hint');
+  if (hint) hint.textContent = card.classList.contains('expanded') ? '↑ collapse' : '↓ tap for detail';
+}
+
+// Shared skill highlight interaction
+const skillDeptMap = {
+  comms: ['accounting', 'corpsec', 'css'],
+  docchaser: ['accounting', 'corpsec', 'compliance'],
+  deadline: ['accounting', 'corpsec', 'compliance'],
+  status: ['accounting', 'corpsec', 'compliance', 'css']
+};
+
+let activeSkill = null;
+
+function highlightSkill(skillId) {
+  if (activeSkill === skillId) {
+    clearHighlight();
+    return;
+  }
+  activeSkill = skillId;
+  // Reset all
+  document.querySelectorAll('.shared-skill-card').forEach(c => c.classList.remove('highlighted'));
+  document.querySelectorAll('.dept-col').forEach(c => c.classList.remove('highlighted'));
+  // Highlight skill card
+  document.getElementById('skill-' + skillId).classList.add('highlighted');
+  // Highlight matching dept columns
+  const depts = skillDeptMap[skillId] || [];
+  depts.forEach(d => {
+    const col = document.getElementById('dept-' + d);
+    if (col) col.classList.add('highlighted');
+  });
+  // Brighten relevant SVG lines
+  document.querySelectorAll('svg line').forEach(l => {
+    l.style.stroke = 'rgba(0,212,180,0.08)';
+    l.style.strokeWidth = '1';
+  });
+  depts.forEach(d => {
+    const lineId = 'line-' + skillId.replace('docchaser','doc').replace('deadline','dl').replace('status','st') + '-' + d.replace('css','css').replace('compliance','compliance').replace('corpsec','corpsec').replace('accounting','acct');
+    const line = document.getElementById(lineId);
+    if (line) { line.style.stroke = 'rgba(0,212,180,0.6)'; line.style.strokeWidth = '2'; }
+  });
+}
+
+function clearHighlight() {
+  activeSkill = null;
+  document.querySelectorAll('.shared-skill-card').forEach(c => c.classList.remove('highlighted'));
+  document.querySelectorAll('.dept-col').forEach(c => c.classList.remove('highlighted'));
+  document.querySelectorAll('svg line').forEach(l => {
+    l.style.stroke = 'rgba(0,212,180,0.2)';
+    l.style.strokeWidth = '1';
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.shared-skill-card') && !e.target.closest('.dept-col')) clearHighlight();
+});
+</script>
 </body>
 </html>
