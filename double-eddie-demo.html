@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Double Eddie — Interactive Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      background: #0f172a;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Demo control bar ── */
+    #demo-bar {
+      background: #0f172a;
+      border-bottom: 2px solid #3b82f6;
+      padding: 0 20px;
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      flex-shrink: 0;
+      z-index: 100;
+      min-height: 64px;
+    }
+
+    #demo-bar-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      flex: 1;
+      padding: 10px 0;
+    }
+
+    #demo-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 20px;
+      border-left: 1px solid #1e293b;
+      margin-left: 16px;
+    }
+
+    .demo-logo { font-size: 12px; font-weight: 700; color: #60a5fa; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .demo-logo-sep { width: 1px; height: 12px; background: #334155; display: inline-block; }
+
+    .demo-step-counter {
+      font-size: 11px;
+      font-weight: 600;
+      color: #60a5fa;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .demo-step-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f8fafc;
+      line-height: 1.3;
+    }
+
+    .demo-step-hint {
+      font-size: 12px;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .demo-steps { display: flex; gap: 5px; align-items: center; }
+    .demo-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #1e293b; border: 1.5px solid #334155; cursor: pointer; transition: all 0.2s;
+    }
+    .demo-dot.active { background: #3b82f6; border-color: #3b82f6; transform: scale(1.3); }
+    .demo-dot.done   { background: #1d4ed8; border-color: #1d4ed8; }
+
+    .demo-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+      letter-spacing: 0.2px;
+    }
+    .demo-btn:hover { background: #3b82f6; }
+    .demo-btn:disabled { opacity: 0.3; cursor: default; }
+    .demo-btn-ghost {
+      background: transparent;
+      color: #64748b;
+      border: 1px solid #334155;
+      border-radius: 7px;
+      padding: 9px 14px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .demo-btn-ghost:hover { color: #94a3b8; background: #1e293b; }
+    .demo-btn-ghost:disabled { opacity: 0.25; cursor: default; }
+
+    /* ── App frame ── */
+    #app-frame {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      width: 224px;
+      flex-shrink: 0;
+      background: #fff;
+      border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .sidebar-nav { padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13.5px;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.1s;
+      text-decoration: none;
+    }
+    .nav-item:hover { background: #f1f5f9; color: #0f172a; }
+    .nav-item.active { background: #0f172a; color: #fff; }
+
+    .nav-icon { width: 16px; height: 16px; opacity: 0.8; }
+
+    /* ── Main content ── */
+    #main { flex: 1; overflow: auto; display: flex; flex-direction: column; }
+
+    /* ── Page header ── */
+    .page-header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .page-title { font-size: 14px; font-weight: 600; color: #0f172a; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: #0f172a; color: #fff; border-color: #0f172a; }
+    .btn-primary:hover { background: #1e293b; }
+    .btn-outline { background: #fff; color: #374151; border-color: #d1d5db; }
+    .btn-outline:hover { background: #f9fafb; }
+    .btn-sm { padding: 4px 10px; font-size: 11.5px; }
+    .btn-approve { background: #0f172a; color: #fff; border: none; }
+    .btn-reject  { background: #fff; color: #374151; border: 1px solid #d1d5db; }
+    .btn-resolve { background: #fff; color: #374151; border: 1px solid #d1d5db; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .badge-running    { background: #dbeafe; color: #1d4ed8; }
+    .badge-attention  { background: #ffedd5; color: #c2410c; }
+    .badge-complete   { background: #dcfce7; color: #15803d; }
+    .badge-scheduled  { background: #f1f5f9; color: #475569; }
+    .badge-pending    { background: #fef9c3; color: #a16207; }
+    .badge-approved   { background: #dcfce7; color: #15803d; }
+    .badge-rejected   { background: #fee2e2; color: #b91c1c; }
+    .badge-staged     { background: #fef9c3; color: #a16207; }
+    .badge-exc        { background: #ef4444; color: #fff; }
+
+    /* ── Board ── */
+    #board {
+      display: flex;
+      gap: 16px;
+      padding: 24px;
+      overflow-x: auto;
+      flex: 1;
+    }
+
+    .board-col { display: flex; flex-direction: column; gap: 10px; width: 256px; flex-shrink: 0; }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+    .col-title { font-size: 13px; font-weight: 600; color: #0f172a; }
+    .col-count {
+      font-size: 11px;
+      color: #94a3b8;
+      background: #f1f5f9;
+      border-radius: 999px;
+      padding: 1px 7px;
+    }
+
+    .run-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: box-shadow 0.15s;
+    }
+    .run-card:hover { box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+
+    .run-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .run-client { font-size: 13.5px; font-weight: 500; color: #0f172a; line-height: 1.3; }
+    .run-period { font-size: 11.5px; color: #94a3b8; margin-bottom: 4px; }
+    .run-step   { font-size: 11.5px; color: #94a3b8; margin-bottom: 6px; }
+
+    .progress-bar { width: 100%; height: 3px; background: #f1f5f9; border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
+    .progress-fill { height: 100%; background: #0f172a; border-radius: 999px; transition: width 0.4s; }
+
+    .run-card-bottom { display: flex; align-items: center; justify-content: space-between; }
+    .run-progress-text { font-size: 11px; color: #94a3b8; }
+
+    /* ── Session viewer ── */
+    #session-viewer { display: none; flex-direction: column; height: 100%; }
+
+    .session-header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 24px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .back-btn { color: #94a3b8; cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; }
+    .back-btn:hover { color: #0f172a; }
+    .session-client { font-size: 14px; font-weight: 600; color: #0f172a; }
+    .session-period { font-size: 11.5px; color: #94a3b8; }
+
+    /* ── Tabs ── */
+    .tabs-bar {
+      padding: 0 24px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+      display: flex;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .tab {
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: #64748b;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.1s;
+      white-space: nowrap;
+    }
+    .tab:hover { color: #0f172a; }
+    .tab.active { color: #0f172a; border-bottom-color: #0f172a; font-weight: 500; }
+    .tab-badge {
+      background: #f97316;
+      color: #fff;
+      border-radius: 999px;
+      font-size: 10px;
+      padding: 0 5px;
+      line-height: 16px;
+    }
+    .tab-badge-yellow { background: #eab308; }
+
+    .tab-content { flex: 1; overflow: auto; padding: 24px; }
+    .tab-content.hidden { display: none; }
+    .bkapp-body.hidden { display: none; }
+
+    /* ── Event feed ── */
+    .event-list { display: flex; flex-direction: column; gap: 12px; }
+    .event-row { display: flex; gap: 12px; align-items: flex-start; opacity: 0; transform: translateY(6px); transition: opacity 0.35s ease, transform 0.35s ease; }
+    .event-row.visible { opacity: 1; transform: translateY(0); }
+    .event-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .event-dot-green  { background: #22c55e; }
+    .event-dot-blue   { background: #3b82f6; }
+    .event-dot-orange { background: #f97316; }
+    .event-dot-gray   { background: #94a3b8; }
+    .event-body { flex: 1; }
+    .event-agent { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; }
+    .event-msg   { font-size: 13px; color: #0f172a; margin-top: 1px; line-height: 1.4; }
+    .event-time  { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+
+    @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+
+    /* ── Exceptions ── */
+    .exc-list { display: flex; flex-direction: column; }
+    .exc-row { padding: 14px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px; }
+    .exc-body { flex: 1; }
+    .exc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .exc-type { font-size: 12px; font-weight: 500; color: #0f172a; }
+    .exc-agent { font-size: 11.5px; color: #94a3b8; }
+    .exc-desc { font-size: 13px; color: #0f172a; line-height: 1.4; }
+    .exc-amount { font-size: 11.5px; color: #94a3b8; margin-top: 3px; }
+
+    /* ── Resolve modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      width: 480px;
+      max-width: 95vw;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal-title { font-size: 15px; font-weight: 600; color: #0f172a; margin-bottom: 4px; }
+    .modal-sub { font-size: 12.5px; color: #64748b; margin-bottom: 16px; }
+    .modal-exc-detail {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 12.5px;
+      color: #374151;
+      line-height: 1.5;
+    }
+    .radio-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .radio-item { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .radio-item input { accent-color: #0f172a; }
+    .radio-label { font-size: 13px; color: #0f172a; }
+    .textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 12.5px;
+      font-family: inherit;
+      resize: none;
+      margin-bottom: 16px;
+      color: #0f172a;
+    }
+    .textarea:focus { outline: none; border-color: #0f172a; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+    /* ── JE staging ── */
+    .je-list { display: flex; flex-direction: column; gap: 14px; }
+    .je-card { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+    .je-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f9fafb; }
+    .je-narration { font-size: 13.5px; font-weight: 500; color: #0f172a; }
+    .je-meta { font-size: 11.5px; color: #94a3b8; margin-top: 2px; }
+    .je-actions { display: flex; align-items: center; gap: 8px; }
+    .je-table { width: 100%; border-top: 1px solid #e2e8f0; font-size: 12px; }
+    .je-table th { text-align: left; padding: 6px 14px; color: #94a3b8; font-weight: 500; background: #fafafa; }
+    .je-table td { padding: 7px 14px; border-top: 1px solid #f1f5f9; color: #374151; }
+    .je-table td.num { text-align: right; font-family: monospace; }
+    .je-table td.acct-code { color: #94a3b8; }
+    .je-card.approved .je-header { background: #f0fdf4; }
+    .je-card.rejected .je-header { background: #fef2f2; opacity: 0.7; }
+
+    /* ── Variance ── */
+    .variance-summary { background: #f8fafc; border-radius: 8px; padding: 14px; margin-bottom: 20px; font-size: 13px; color: #374151; line-height: 1.5; }
+    .section-title { font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 10px; }
+    .var-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .var-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+    .var-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .var-acct { font-size: 13px; font-weight: 500; color: #0f172a; }
+    .badge-up   { background: #dcfce7; color: #15803d; }
+    .badge-down { background: #fee2e2; color: #b91c1c; }
+    .var-numbers { font-size: 11.5px; color: #94a3b8; margin-bottom: 6px; }
+    .var-commentary { font-size: 12.5px; color: #374151; line-height: 1.4; }
+    .var-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .var-table th { text-align: left; padding: 6px 8px; color: #94a3b8; font-weight: 500; border-bottom: 1px solid #e2e8f0; }
+    .var-table th.r { text-align: right; }
+    .var-table td { padding: 7px 8px; border-bottom: 1px solid #f1f5f9; color: #374151; }
+    .var-table td.r { text-align: right; font-family: monospace; }
+    .var-table td.up { color: #15803d; }
+    .var-table td.dn { color: #b91c1c; }
+
+    /* ── Close Packet ── */
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .metric-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
+    .metric-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; margin-bottom: 6px; }
+    .metric-value { font-size: 22px; font-weight: 700; color: #0f172a; font-variant-numeric: tabular-nums; }
+    .metric-value.green { color: #15803d; }
+    .metrics-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .obs-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+    .obs-title { font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 8px; }
+    .obs-item { font-size: 12.5px; color: #64748b; padding: 4px 0; display: flex; gap: 8px; }
+    .obs-item::before { content: '•'; color: #94a3b8; }
+
+    /* ── Lock state ── */
+    .lock-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; background: #f1f5f9; border-radius: 999px; font-size: 11.5px; color: #475569; }
+
+    /* ── Chat panel ── */
+    #chat-panel {
+      border-top: 1px solid #e2e8f0;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .chat-toggle {
+      padding: 8px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: #64748b;
+    }
+    .chat-toggle:hover { color: #0f172a; }
+    .chat-expanded { display: none; padding: 0 24px 12px; }
+    .chat-expanded.open { display: block; }
+    .chat-messages { max-height: 80px; overflow-y: auto; margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px; }
+    .chat-msg { font-size: 12.5px; line-height: 1.4; }
+    .chat-msg.staff { color: #0f172a; }
+    .chat-msg.agent { color: #2563eb; }
+    .chat-input-row { display: flex; gap: 8px; }
+    .chat-input {
+      flex: 1;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 12.5px;
+      font-family: inherit;
+    }
+    .chat-input:focus { outline: none; border-color: #0f172a; }
+
+    /* ── New run dialog ── */
+    #new-run-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    #new-run-overlay.open { display: flex; }
+    .new-run-modal { background: #fff; border-radius: 12px; width: 440px; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .form-row { margin-bottom: 14px; }
+    .form-label { font-size: 12px; font-weight: 500; color: #374151; margin-bottom: 5px; display: block; }
+    .form-input, .form-select {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #0f172a;
+    }
+    .form-input:focus, .form-select:focus { outline: none; border-color: #0f172a; }
+
+    /* ── Highlight pulse ── */
+    @keyframes pulse-border {
+      0%   { box-shadow: 0 0 0 0 rgba(251,191,36,0.9), 0 0 0 0 rgba(251,191,36,0.4); }
+      50%  { box-shadow: 0 0 0 4px rgba(251,191,36,0.7), 0 0 0 10px rgba(251,191,36,0.15); }
+      100% { box-shadow: 0 0 0 0 rgba(251,191,36,0), 0 0 0 0 rgba(251,191,36,0); }
+    }
+    .highlight {
+      animation: pulse-border 1.2s ease-in-out infinite;
+      outline: 2px solid #fbbf24 !important;
+      outline-offset: 2px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Brighter hover on all clickable cards */
+    .run-card:hover  { box-shadow: 0 4px 16px rgba(59,130,246,0.18); border-color: #93c5fd !important; }
+    .tab:hover       { background: #f1f5f9; }
+    .btn:hover       { filter: brightness(1.08); }
+    .sp-btn:hover    { background: #e5f3ff !important; }
+
+    /* ── Context switch banner ── */
+    .context-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .context-banner-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .context-banner-label { flex: 1; }
+    .context-banner-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── Tooltip hint ── */
+    .demo-hint {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #fef3c7;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: 1px solid #fbbf2444;
+      pointer-events: none;
+      z-index: 300;
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .demo-hint.show { opacity: 1; }
+
+    /* ── Audit log ── */
+    .audit-list { display: flex; flex-direction: column; gap: 0; }
+    .audit-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .audit-time { font-size: 11px; color: #94a3b8; white-space: nowrap; min-width: 50px; margin-top: 1px; }
+    .audit-tag { font-size: 10.5px; font-weight: 600; padding: 1px 6px; border-radius: 4px; white-space: nowrap; margin-top: 1px; }
+    .audit-tag-agent { background: #dbeafe; color: #1d4ed8; }
+    .audit-tag-staff { background: #f0fdf4; color: #15803d; }
+    .audit-tag-system { background: #f1f5f9; color: #475569; }
+    .audit-msg { font-size: 12.5px; color: #374151; line-height: 1.4; flex: 1; }
+
+    /* ── SharePoint screen ── */
+    #sharepoint-screen { display: none; flex-direction: column; height: 100%; }
+    .sp-chrome { background: #0078d4; padding: 8px 16px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .sp-logo { font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px; }
+    .sp-logo svg { opacity: 0.9; }
+    .sp-body { flex: 1; overflow: auto; background: #fff; }
+    .sp-toolbar { display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-bottom: 1px solid #edebe9; }
+    .sp-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border: 1px solid #c8c6c4; border-radius: 3px; font-size: 13px; color: #323130; background: #fff; cursor: pointer; }
+    .sp-btn:hover { background: #f3f2f1; }
+    .sp-btn-primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+    .sp-btn-primary:hover { background: #106ebe; }
+    .sp-breadcrumb { padding: 8px 20px 0; font-size: 12px; color: #605e5c; display: flex; align-items: center; gap: 4px; }
+    .sp-breadcrumb span { color: #0078d4; cursor: pointer; }
+    .sp-breadcrumb span:last-child { color: #323130; cursor: default; }
+    .sp-file-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .sp-file-table thead th { text-align: left; padding: 8px 20px; color: #605e5c; font-weight: 500; border-bottom: 1px solid #edebe9; font-size: 12px; }
+    .sp-file-table tbody tr { border-bottom: 1px solid #f3f2f1; cursor: pointer; }
+    .sp-file-table tbody tr:hover { background: #f3f2f1; }
+    .sp-file-table td { padding: 9px 20px; color: #323130; }
+    .sp-file-icon { display: inline-flex; align-items: center; gap: 8px; }
+    .sp-icon-pdf { color: #d13438; font-size: 14px; }
+    .sp-agent-hint { margin: 12px 20px; padding: 10px 14px; background: #fffbe6; border: 1px solid #ffc83d; border-radius: 4px; font-size: 12.5px; color: #605e5c; display: flex; align-items: flex-start; gap: 8px; }
+    .sp-upload-anim { display: none; padding: 10px 20px; }
+    .sp-upload-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #323130; padding: 6px 0; }
+    .sp-upload-bar { flex: 1; height: 4px; background: #edebe9; border-radius: 2px; overflow: hidden; }
+    .sp-upload-fill { height: 100%; background: #0078d4; border-radius: 2px; transition: width 1s; }
+
+    /* ── BK App screen ── */
+    #bkapp-screen { display: none; flex-direction: column; height: 100%; background: #f8fafc; }
+    .bkapp-header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .bkapp-title { font-size: 14px; font-weight: 600; color: #0f172a; }
+    .bkapp-sub { font-size: 12px; color: #94a3b8; }
+    .bkapp-body { flex: 1; overflow: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .bkapp-pipeline { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; }
+    .bkapp-pipeline-title { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .pipeline-stages { display: flex; gap: 0; }
+    .pipeline-stage { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .pipeline-stage-bar { height: 6px; border-radius: 3px; }
+    .pipeline-stage-label { font-size: 10.5px; color: #6b7280; }
+    .pipeline-stage-pct { font-size: 11px; font-weight: 600; }
+    .stage-done { background: #22c55e; }
+    .stage-done-text { color: #15803d; }
+    .stage-warn { background: #f59e0b; }
+    .stage-warn-text { color: #92400e; }
+    .bkapp-stmts { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; }
+    .bkapp-section-title { font-size: 13px; font-weight: 600; color: #0f172a; margin-bottom: 10px; }
+    .stmt-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 12.5px; }
+    .stmt-row:last-child { border-bottom: none; }
+    .stmt-bank { font-weight: 500; color: #0f172a; min-width: 60px; }
+    .stmt-period { color: #94a3b8; min-width: 100px; }
+    .stmt-count { color: #374151; flex: 1; }
+    .bkapp-txns { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+    .txn-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .txn-table thead th { text-align: left; padding: 9px 14px; background: #f8fafc; color: #6b7280; font-weight: 500; border-bottom: 1px solid #e2e8f0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .txn-table tbody tr { border-bottom: 1px solid #f1f5f9; }
+    .txn-table tbody tr:hover { background: #fafafa; }
+    .txn-table td { padding: 8px 14px; color: #374151; }
+    .txn-table td.mono { font-family: monospace; text-align: right; }
+    .txn-status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+    .dot-approved { background: #22c55e; }
+    .dot-review   { background: #f59e0b; }
+    .dot-flagged  { background: #ef4444; }
+    .conf-bar { display: inline-block; width: 40px; height: 4px; border-radius: 2px; vertical-align: middle; margin-left: 4px; }
+    .conf-high { background: #22c55e; }
+    .conf-mid  { background: #f59e0b; }
+    .conf-low  { background: #ef4444; }
+    .bkapp-footer-note { font-size: 11.5px; color: #94a3b8; padding: 10px 14px; border-top: 1px solid #f1f5f9; background: #fafafa; }
+    .de-badge { display: inline-flex; align-items: center; gap: 4px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 4px; font-size: 10.5px; font-weight: 600; padding: 1px 6px; }
+  </style>
+</head>
+<body>
+
+<!-- Demo control bar -->
+<div id="demo-bar">
+  <div id="demo-bar-left">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="demo-logo">Double Eddie <span class="demo-logo-sep"></span> <span style="color:#94a3b8;font-weight:500;text-transform:none;letter-spacing:0;font-size:11px;">Interactive Demo</span></div>
+      <div class="demo-steps" id="step-dots"></div>
+      <span class="demo-step-counter" id="step-counter">Step 1 / 13</span>
+    </div>
+    <div class="demo-step-label" id="step-label">Loading…</div>
+    <div class="demo-step-hint" id="step-hint" style="display:none;">
+      <span>👆</span><span id="hint-text"></span>
+    </div>
+  </div>
+  <div id="demo-bar-right">
+    <button class="demo-btn-ghost" id="btn-prev" onclick="prevStep()" disabled>← Back</button>
+    <button class="demo-btn" id="btn-next" onclick="nextStep()">Next →</button>
+  </div>
+</div>
+
+<!-- App frame -->
+<div id="app-frame">
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-logo">Double Eddie</div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" id="nav-board" onclick="showBoard()">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Close Board
+      </a>
+      <a class="nav-item" id="nav-skills">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
+        Skills
+      </a>
+      <a class="nav-item" id="nav-clients">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="3"/><path d="M1 14c0-3.314 2.239-5 5-5s5 1.686 5 5"/><circle cx="12" cy="5" r="2"/><path d="M15 13c0-2.209-1.343-3-3-3"/></svg>
+        Clients
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main content -->
+  <div id="main">
+
+    <!-- ── Close Board ── -->
+    <div id="close-board">
+      <div class="page-header">
+        <div class="page-title">Close Board</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm" id="new-run-btn" onclick="openNewRun()">+ New Close Run</button>
+          <button class="btn btn-outline btn-sm">↻ Refresh</button>
+        </div>
+      </div>
+      <div id="board">
+
+        <!-- Queued -->
+        <div class="board-col">
+          <div class="col-header">
+            <span class="col-title">Queued</span>
+            <span class="col-count" id="queued-count">1</span>
+          </div>
+          <div id="queued-cards">
+            <div class="run-card" onclick="goToSession('scheduled')">
+              <div class="run-card-top">
+                <div class="run-client">Sunrise Digital Pte Ltd</div>
+              </div>
+              <div class="run-period">July 2026</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+              <div class="run-card-bottom">
+                <span class="run-progress-text">—</span>
+                <button class="btn btn-outline btn-sm" style="height:24px;font-size:11px;">▶ Start</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Running -->
+        <div class="board-col">
+          <div class="col-header">
+            <span class="col-title">Running</span>
+            <span class="col-count">1</span>
+          </div>
+          <div class="run-card" onclick="goToSession('running')">
+            <div class="run-card-top">
+              <div class="run-client">Brightwell Advisory LLP</div>
+            </div>
+            <div class="run-period">June 2026</div>
+            <div class="run-step">VerificationAgent</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+            <div class="run-card-bottom">
+              <span class="run-progress-text">3/6 steps</span>
+              <span class="badge badge-running">running</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Needs Action -->
+        <div class="board-col">
+          <div class="col-header">
+            <span class="col-title">Needs Action</span>
+            <span class="col-count">1</span>
+          </div>
+          <div class="run-card highlight" id="apex-card" onclick="goToSession('attention')">
+            <div class="run-card-top">
+              <div class="run-client">Apex Holdings Pte Ltd</div>
+              <span class="badge badge-exc" style="font-size:10px;padding:1px 7px;display:flex;align-items:center;gap:3px;">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L9 9H1L5 1Z" fill="currentColor" opacity="0.8"/><path d="M5 4v2M5 7.5v0" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+                1
+              </span>
+            </div>
+            <div class="run-period">June 2026</div>
+            <div class="run-step">Awaiting staff review</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
+            <div class="run-card-bottom">
+              <span class="run-progress-text">4/6 steps</span>
+              <span class="badge badge-attention">needs attention</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review JEs -->
+        <div class="board-col">
+          <div class="col-header">
+            <span class="col-title">Review JEs</span>
+            <span class="col-count">0</span>
+          </div>
+        </div>
+
+        <!-- Done -->
+        <div class="board-col">
+          <div class="col-header">
+            <span class="col-title">Done</span>
+            <span class="col-count">3</span>
+          </div>
+          <div class="run-card">
+            <div class="run-card-top"><div class="run-client">Meridian Labs Pte Ltd</div></div>
+            <div class="run-period">May 2026</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            <div class="run-card-bottom">
+              <span class="run-progress-text">6/6 steps</span>
+              <span class="badge badge-complete">complete</span>
+            </div>
+          </div>
+          <div class="run-card">
+            <div class="run-card-top"><div class="run-client">Apex Holdings Pte Ltd</div></div>
+            <div class="run-period">May 2026</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            <div class="run-card-bottom">
+              <span class="run-progress-text">6/6 steps</span>
+              <span class="badge badge-complete">complete</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /close-board -->
+
+    <!-- ── Session Viewer ── -->
+    <div id="session-viewer">
+
+      <div class="session-header">
+        <span class="back-btn" onclick="showBoard()">←</span>
+        <div style="flex:1;">
+          <div class="session-client">Apex Holdings Pte Ltd</div>
+          <div class="session-period">June 2026</div>
+        </div>
+        <span class="badge badge-attention" id="run-status-badge">needs attention</span>
+        <span style="font-size:12px;color:#94a3b8;margin-left:8px;">4/6 steps</span>
+        <button class="btn btn-outline btn-sm" id="lock-btn" onclick="lockRun()" style="display:none;margin-left:8px;">
+          🔒 Lock Run
+        </button>
+        <span class="lock-badge" id="locked-badge" style="display:none;margin-left:8px;">🔒 Locked 09/06/2026</span>
+      </div>
+
+      <div class="tabs-bar">
+        <div class="tab active" id="tab-events"     onclick="showTab('events')">Event Feed</div>
+        <div class="tab" id="tab-exceptions" onclick="showTab('exceptions')">
+          Exceptions <span class="tab-badge" id="exc-badge">1</span>
+        </div>
+        <div class="tab" id="tab-journals"  onclick="showTab('journals')">
+          Journal Entries <span class="tab-badge tab-badge-yellow" id="je-badge">2</span>
+        </div>
+        <div class="tab" id="tab-variance"  onclick="showTab('variance')">Variance</div>
+        <div class="tab" id="tab-packet"    onclick="showTab('packet')">Close Packet</div>
+        <div class="tab" id="tab-audit"     onclick="showTab('audit')">Audit Log</div>
+      </div>
+
+      <!-- Event Feed -->
+      <div class="tab-content" id="content-events">
+        <div class="event-list" id="event-list-container">
+          <!-- events streamed in by JS -->
+        </div>
+        <div id="event-typing" style="display:none;padding:8px 0;display:none;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#cbd5e1;flex-shrink:0;"></div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span style="font-size:11px;color:#94a3b8;font-style:italic;" id="typing-agent-label">Agent</span>
+              <span style="display:flex;gap:3px;margin-left:2px;" id="typing-dots">
+                <span style="width:4px;height:4px;border-radius:50%;background:#94a3b8;animation:blink 1s infinite 0s;display:inline-block;"></span>
+                <span style="width:4px;height:4px;border-radius:50%;background:#94a3b8;animation:blink 1s infinite 0.2s;display:inline-block;"></span>
+                <span style="width:4px;height:4px;border-radius:50%;background:#94a3b8;animation:blink 1s infinite 0.4s;display:inline-block;"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exceptions -->
+      <div class="tab-content hidden" id="content-exceptions">
+        <div class="exc-list" id="exc-list">
+          <div class="exc-row" id="exc-item-1">
+            <div class="exc-body">
+              <div class="exc-meta">
+                <span class="exc-type">Uncategorised Transaction</span>
+                <span class="badge badge-pending">pending</span>
+                <span class="exc-agent">VerificationAgent</span>
+              </div>
+              <div class="exc-desc">DBS debit SGD 15,200 on 15 Jun 2026 — vendor unrecognised. No matching accrual found. Confidence 0.38. Requires manual GL code assignment before close can proceed.</div>
+              <div class="exc-amount">SGD 15,200.00</div>
+            </div>
+            <button class="btn btn-resolve btn-sm highlight" id="exc-resolve-btn" onclick="openResolveModal()">Resolve</button>
+          </div>
+        </div>
+        <div id="exc-empty" style="display:none;text-align:center;padding:32px 0;color:#94a3b8;font-size:13px;">
+          No exceptions — run will resume automatically.
+        </div>
+      </div>
+
+      <!-- Journal Entries -->
+      <div class="tab-content hidden" id="content-journals">
+        <div id="je-error" style="display:none;margin-bottom:12px;padding:8px 12px;background:#fee2e2;color:#b91c1c;border-radius:6px;font-size:12.5px;"></div>
+        <div class="je-list">
+          <div class="je-card" id="je-card-1">
+            <div class="je-header">
+              <div>
+                <div class="je-narration">Accrual — AWS Cloud Services Jun 2026</div>
+                <div class="je-meta">30 Jun 2026 · DocumentAgent · 92% confidence</div>
+              </div>
+              <div class="je-actions">
+                <span class="badge badge-staged" id="je1-status">staged</span>
+                <button class="btn btn-reject btn-sm" id="je1-reject" onclick="rejectJE(1)">Reject</button>
+                <button class="btn btn-approve btn-sm highlight" id="je1-approve" onclick="approveJE(1)">Approve</button>
+              </div>
+            </div>
+            <table class="je-table">
+              <thead><tr><th>Account</th><th style="text-align:right">Debit</th><th style="text-align:right">Credit</th></tr></thead>
+              <tbody>
+                <tr><td><span class="acct-code">5200</span> Office Expenses</td><td class="num">5,200.00</td><td class="num">—</td></tr>
+                <tr><td><span class="acct-code">800</span> Trade Creditors</td><td class="num">—</td><td class="num">5,200.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="je-card" id="je-card-2">
+            <div class="je-header">
+              <div>
+                <div class="je-narration">Payroll Accrual — Jun 2026</div>
+                <div class="je-meta">30 Jun 2026 · DocumentAgent · 95% confidence</div>
+              </div>
+              <div class="je-actions">
+                <span class="badge badge-staged" id="je2-status">staged</span>
+                <button class="btn btn-reject btn-sm" id="je2-reject" onclick="rejectJE(2)">Reject</button>
+                <button class="btn btn-approve btn-sm" id="je2-approve" onclick="approveJE(2)">Approve</button>
+              </div>
+            </div>
+            <table class="je-table">
+              <thead><tr><th>Account</th><th style="text-align:right">Debit</th><th style="text-align:right">Credit</th></tr></thead>
+              <tbody>
+                <tr><td><span class="acct-code">5000</span> Salary Expense</td><td class="num">28,400.00</td><td class="num">—</td></tr>
+                <tr><td><span class="acct-code">800</span> Salary Payable</td><td class="num">—</td><td class="num">28,400.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Variance -->
+      <div class="tab-content hidden" id="content-variance">
+        <div class="variance-summary">
+          <strong>Apex Holdings Jun 2026:</strong> 2 material variances identified. Revenue +$12,400 (+17.7%) driven by new client onboarding. Directors Fees unchanged. Office expenses up $3,100 (+22%) — possible new SaaS subscriptions.
+        </div>
+        <div class="section-title">Material Variances</div>
+        <div class="var-cards">
+          <div class="var-card">
+            <div class="var-card-top">
+              <span class="var-acct">4000 — Revenue</span>
+              <span class="badge badge-up">+12,400.00 (+17.7%)</span>
+            </div>
+            <div class="var-numbers">Current: $82,400.00 &nbsp;|&nbsp; Prior: $70,000.00</div>
+            <div class="var-commentary">Revenue increased in Jun 2026. Likely driven by new client onboarding or project milestone billing. Recommend confirming with engagement team.</div>
+          </div>
+          <div class="var-card">
+            <div class="var-card-top">
+              <span class="var-acct">5200 — Office Expenses</span>
+              <span class="badge badge-down">+3,100.00 (+22.1%)</span>
+            </div>
+            <div class="var-numbers">Current: $17,100.00 &nbsp;|&nbsp; Prior: $14,000.00</div>
+            <div class="var-commentary">Office expenses increased. New SaaS subscription (AWS SGD 5,200) detected. Net of AWS, other office expenses decreased. Driver is largely one new vendor.</div>
+          </div>
+        </div>
+        <div class="section-title">All Accounts</div>
+        <table class="var-table">
+          <thead>
+            <tr><th>Account</th><th class="r">Current</th><th class="r">Prior</th><th class="r">Delta</th><th class="r">%</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1000 — Cash at Bank (DBS)</td><td class="r">124,800.00</td><td class="r">118,200.00</td><td class="r up">+6,600.00</td><td class="r up">+5.6%</td></tr>
+            <tr><td>1001 — Cash at Bank (OCBC)</td><td class="r">38,200.00</td><td class="r">41,500.00</td><td class="r dn">-3,300.00</td><td class="r dn">-8.0%</td></tr>
+            <tr><td>4000 — Revenue</td><td class="r">82,400.00</td><td class="r">70,000.00</td><td class="r up">+12,400.00</td><td class="r up">+17.7%</td></tr>
+            <tr><td>5000 — Salary Expense</td><td class="r">28,400.00</td><td class="r">28,400.00</td><td class="r">0.00</td><td class="r">0.0%</td></tr>
+            <tr><td>5200 — Office Expenses</td><td class="r">17,100.00</td><td class="r">14,000.00</td><td class="r dn">+3,100.00</td><td class="r dn">+22.1%</td></tr>
+            <tr><td>6500 — Directors Fees</td><td class="r">12,000.00</td><td class="r">12,000.00</td><td class="r">0.00</td><td class="r">0.0%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Close Packet -->
+      <div class="tab-content hidden" id="content-packet">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Revenue</div>
+            <div class="metric-value">$82,400</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Expenses</div>
+            <div class="metric-value">$71,200</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Net Income</div>
+            <div class="metric-value green">$11,200</div>
+          </div>
+        </div>
+        <div class="metrics-grid-2">
+          <div class="metric-card">
+            <div class="metric-label">Auto-Categorised</div>
+            <div class="metric-value">94.8%</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Accruals</div>
+            <div class="metric-value" style="font-size:15px;margin-top:4px;">12 posted · 0 pending</div>
+          </div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-title">Key Observations</div>
+          <div class="obs-item">Large payment SGD 15,200 to unrecognised vendor on 15 Jun — exception raised and resolved</div>
+          <div class="obs-item">New vendor: Amazon Web Services (first appearance this FY)</div>
+          <div class="obs-item">Salary expense unchanged month-on-month (SGD 28,400)</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-title">Statements</div>
+          <table class="var-table">
+            <thead><tr><th>Bank</th><th class="r">Txns</th><th class="r">Status</th></tr></thead>
+            <tbody>
+              <tr><td>DBS</td><td class="r">47</td><td class="r"><span class="badge badge-approved" style="font-size:11px;">done</span></td></tr>
+              <tr><td>OCBC</td><td class="r">23</td><td class="r"><span class="badge badge-approved" style="font-size:11px;">done</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Audit Log -->
+      <div class="tab-content hidden" id="content-audit">
+        <div class="audit-list">
+          <div class="audit-row">
+            <div class="audit-time">14:02</div>
+            <span class="audit-tag audit-tag-agent">agent</span>
+            <div class="audit-msg">DocumentAgent: Uploaded DBS Jun 2026 — 47 transactions extracted</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:03</div>
+            <span class="audit-tag audit-tag-agent">agent</span>
+            <div class="audit-msg">DocumentAgent: Uploaded OCBC Jun 2026 — 23 transactions extracted. Posted 2 accrual JEs.</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:04</div>
+            <span class="audit-tag audit-tag-agent">agent</span>
+            <div class="audit-msg">VerificationAgent: Approved 83/84 transactions. Raised 1 exception — uncategorised debit SGD 15,200.</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:09</div>
+            <span class="audit-tag audit-tag-staff">staff</span>
+            <div class="audit-msg">Exception resolved by staff: Approved. Note: "IT equipment purchase — assign to Capital Expenditure 5500"</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:09</div>
+            <span class="audit-tag audit-tag-system">system</span>
+            <div class="audit-msg">All exceptions resolved. Run resumed.</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:11</div>
+            <span class="audit-tag audit-tag-agent">agent</span>
+            <div class="audit-msg">ReadinessAgent: TB balanced. All statements done. Pipeline 100%. 0 uncategorised transactions.</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:12</div>
+            <span class="audit-tag audit-tag-agent">agent</span>
+            <div class="audit-msg">ReconciliationAgent: Clean — statements SGD 163,000, TB cash SGD 163,000, delta SGD 0.00.</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:13</div>
+            <span class="audit-tag audit-tag-agent">agent</span>
+            <div class="audit-msg">VarianceAgent: 2 material variances — Revenue +$12,400, Office Expenses +$3,100.</div>
+          </div>
+          <div class="audit-row">
+            <div class="audit-time">14:14</div>
+            <span class="audit-tag audit-tag-agent">agent</span>
+            <div class="audit-msg">PackageAgent: Close packet assembled. Revenue $82,400 · Expenses $71,200 · Net Income $11,200.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat panel -->
+      <div id="chat-panel">
+        <div class="chat-toggle" onclick="toggleChat()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h10a1 1 0 011 1v6a1 1 0 01-1 1H5l-3 2V3a1 1 0 011-1z"/></svg>
+          Chat with agent
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" id="chat-chevron"><path d="M2 3l3 3 3-3"/></svg>
+        </div>
+        <div class="chat-expanded" id="chat-expanded">
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-msg agent">Agent: Paused on exception — waiting for your decision on the SGD 15,200 DBS debit.</div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" id="chat-input" placeholder="Message the agent…" onkeydown="if(event.key==='Enter')sendChat()"/>
+            <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /session-viewer -->
+
+    <!-- ── SharePoint screen ── -->
+    <div id="sharepoint-screen">
+      <div class="context-banner" style="background:#eff6ff;border-bottom:2px solid #3b82f6;color:#1d4ed8;">
+        <div class="context-banner-dot" style="background:#3b82f6;"></div>
+        <div class="context-banner-label">You are viewing <strong>Microsoft SharePoint</strong> — staff uploads documents here before starting a close run</div>
+        <span class="context-banner-tag" style="background:#dbeafe;color:#1d4ed8;">External: SharePoint</span>
+      </div>
+      <div class="sp-chrome">
+        <div class="sp-logo">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect width="18" height="18" rx="3" fill="#fff" opacity="0.15"/><path d="M9 3a4 4 0 100 8A4 4 0 009 3zM5 12a4 4 0 108 0H5z" fill="#fff"/></svg>
+          SharePoint
+        </div>
+        <span style="font-size:12px;color:rgba(255,255,255,0.7);margin-left:8px;">Grof Corp</span>
+      </div>
+      <div class="sp-body">
+        <div class="sp-toolbar">
+          <button class="sp-btn sp-btn-primary" onclick="triggerUpload()">⬆ Upload</button>
+          <button class="sp-btn">＋ New</button>
+          <button class="sp-btn">⋯ More</button>
+        </div>
+        <div class="sp-breadcrumb">
+          <span>Grof Corp</span> › <span>Client Files</span> › <span>Apex Holdings Pte Ltd</span> › <span>2026-06</span>
+        </div>
+        <div class="sp-agent-hint" id="sp-agent-hint">
+          <span>🤖</span>
+          <div><strong>DocumentAgent</strong> will fetch all files from this folder automatically when the close run starts. Supported: bank statement PDFs, invoices, bills, payslips.</div>
+        </div>
+        <div class="sp-upload-anim" id="sp-upload-anim">
+          <div class="sp-upload-row">
+            <span style="min-width:200px;color:#323130;">DBS Jun 2026.pdf</span>
+            <div class="sp-upload-bar"><div class="sp-upload-fill" id="upbar-1" style="width:0%"></div></div>
+            <span id="upstat-1" style="min-width:40px;color:#605e5c;font-size:12px;">0%</span>
+          </div>
+          <div class="sp-upload-row">
+            <span style="min-width:200px;color:#323130;">OCBC Jun 2026.pdf</span>
+            <div class="sp-upload-bar"><div class="sp-upload-fill" id="upbar-2" style="width:0%"></div></div>
+            <span id="upstat-2" style="min-width:40px;color:#605e5c;font-size:12px;">0%</span>
+          </div>
+          <div class="sp-upload-row">
+            <span style="min-width:200px;color:#323130;">AWS Invoice Jun 2026.pdf</span>
+            <div class="sp-upload-bar"><div class="sp-upload-fill" id="upbar-3" style="width:0%"></div></div>
+            <span id="upstat-3" style="min-width:40px;color:#605e5c;font-size:12px;">0%</span>
+          </div>
+        </div>
+        <table class="sp-file-table" id="sp-file-table">
+          <thead>
+            <tr><th>Name</th><th>Modified</th><th>Modified By</th><th>File size</th><th>Type</th></tr>
+          </thead>
+          <tbody id="sp-file-tbody">
+            <tr>
+              <td><div class="sp-file-icon"><span class="sp-icon-pdf">📄</span> DBS Jun 2026.pdf</div></td>
+              <td>08 Jun 2026</td><td>Sarah Tan</td><td>2.1 MB</td><td style="color:#605e5c;font-size:12px;">Bank Statement</td>
+            </tr>
+            <tr>
+              <td><div class="sp-file-icon"><span class="sp-icon-pdf">📄</span> OCBC Jun 2026.pdf</div></td>
+              <td>08 Jun 2026</td><td>Sarah Tan</td><td>1.8 MB</td><td style="color:#605e5c;font-size:12px;">Bank Statement</td>
+            </tr>
+            <tr id="sp-invoice-row" style="display:none;">
+              <td><div class="sp-file-icon"><span class="sp-icon-pdf">📄</span> AWS Invoice Jun 2026.pdf</div></td>
+              <td>09 Jun 2026</td><td>Sarah Tan</td><td>0.4 MB</td><td style="color:#605e5c;font-size:12px;">Vendor Invoice</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /sharepoint-screen -->
+
+    <!-- ── BK App screen ── -->
+    <div id="bkapp-screen">
+      <div class="context-banner" style="background:#fff7ed;border-bottom:2px solid #f97316;color:#c2410c;">
+        <div class="context-banner-dot" style="background:#f97316;animation:pulse-border 1.2s ease-in-out infinite;"></div>
+        <div class="context-banner-label">You are now inside <strong>BK App (Bookkeeping Bot)</strong> — this is a separate system. DocumentAgent uploaded statements here; BK App ran its own AI categorisation pipeline.</div>
+        <span class="context-banner-tag" style="background:#ffedd5;color:#c2410c;">External: BK App</span>
+      </div>
+      <div class="bkapp-header">
+        <div>
+          <div class="bkapp-title">Bookkeeping App <span style="font-weight:400;color:#94a3b8;font-size:13px;">/ Apex Holdings Pte Ltd</span></div>
+          <div class="bkapp-sub">FY2026 · June 2026 · BK App Company ID: bk_apex_001</div>
+        </div>
+        <span class="de-badge">🤖 Managed by Double Eddie</span>
+      </div>
+
+      <!-- BK App tab bar -->
+      <div class="tabs-bar" style="background:#fff;">
+        <div class="tab active" id="bktab-txns"   onclick="showBkTab('txns')">Transactions</div>
+        <div class="tab"        id="bktab-tb"      onclick="showBkTab('tb')">Trial Balance</div>
+        <div class="tab"        id="bktab-ma"      onclick="showBkTab('ma')">Management Accounts</div>
+      </div>
+
+      <!-- Transactions panel -->
+      <div class="bkapp-body" id="bkpanel-txns">
+
+        <!-- Pipeline status -->
+        <div class="bkapp-pipeline">
+          <div class="bkapp-pipeline-title">Pipeline Status</div>
+          <div class="pipeline-stages" style="gap:16px;">
+            <div class="pipeline-stage">
+              <div class="pipeline-stage-bar stage-done" style="width:100%"></div>
+              <div class="pipeline-stage-label">Upload</div>
+              <div class="pipeline-stage-pct stage-done-text">100%</div>
+            </div>
+            <div class="pipeline-stage">
+              <div class="pipeline-stage-bar stage-done" style="width:100%"></div>
+              <div class="pipeline-stage-label">Extraction</div>
+              <div class="pipeline-stage-pct stage-done-text">100%</div>
+            </div>
+            <div class="pipeline-stage">
+              <div class="pipeline-stage-bar stage-done" style="width:100%"></div>
+              <div class="pipeline-stage-label">AI Categorisation</div>
+              <div class="pipeline-stage-pct stage-done-text">100%</div>
+            </div>
+            <div class="pipeline-stage" id="pipeline-review-stage">
+              <div class="pipeline-stage-bar stage-warn" style="width:98%"></div>
+              <div class="pipeline-stage-label">Review</div>
+              <div class="pipeline-stage-pct stage-warn-text" id="pipeline-review-pct">98.8%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statements -->
+        <div class="bkapp-stmts">
+          <div class="bkapp-section-title">Bank Statements</div>
+          <div class="stmt-row">
+            <div class="stmt-bank">DBS</div>
+            <div class="stmt-period">Jun 2026</div>
+            <div class="stmt-count">47 transactions extracted</div>
+            <span class="badge badge-approved" style="font-size:11px;">done</span>
+          </div>
+          <div class="stmt-row">
+            <div class="stmt-bank">OCBC</div>
+            <div class="stmt-period">Jun 2026</div>
+            <div class="stmt-count">23 transactions extracted</div>
+            <span class="badge badge-approved" style="font-size:11px;">done</span>
+          </div>
+        </div>
+
+        <!-- Transactions -->
+        <div class="bkapp-txns">
+          <div style="padding:12px 14px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;">
+            <div class="bkapp-section-title" style="margin:0;">Transactions <span style="font-weight:400;font-size:12px;color:#94a3b8;">84 total · 83 approved · 1 needs review</span></div>
+            <div style="display:flex;gap:8px;">
+              <select style="font-size:12px;border:1px solid #e2e8f0;border-radius:5px;padding:4px 8px;color:#374151;">
+                <option>All transactions</option>
+                <option>Needs review</option>
+                <option>Approved</option>
+              </select>
+            </div>
+          </div>
+          <table class="txn-table">
+            <thead>
+              <tr><th>Date</th><th>Description</th><th>Bank</th><th style="text-align:right">Amount (SGD)</th><th>GL Code</th><th>Confidence</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01 Jun</td>
+                <td>GRAB*TRANSPORT</td>
+                <td style="color:#94a3b8">DBS</td>
+                <td class="mono">-42.30</td>
+                <td>5200 Office Exp.</td>
+                <td><span style="font-size:11px;color:#15803d;font-weight:600;">97%</span><span class="conf-bar conf-high"></span></td>
+                <td><span class="txn-status-dot dot-approved"></span><span style="font-size:11.5px;color:#15803d;">approved</span></td>
+              </tr>
+              <tr>
+                <td>03 Jun</td>
+                <td>SINGTEL MOBILE</td>
+                <td style="color:#94a3b8">DBS</td>
+                <td class="mono">-128.00</td>
+                <td>5200 Office Exp.</td>
+                <td><span style="font-size:11px;color:#15803d;font-weight:600;">95%</span><span class="conf-bar conf-high"></span></td>
+                <td><span class="txn-status-dot dot-approved"></span><span style="font-size:11.5px;color:#15803d;">approved</span></td>
+              </tr>
+              <tr>
+                <td>05 Jun</td>
+                <td>AWS CLOUD SERVICES — INV-AWS-0614</td>
+                <td style="color:#94a3b8">DBS</td>
+                <td class="mono">-5,200.00</td>
+                <td>5200 Office Exp.</td>
+                <td><span style="font-size:11px;color:#15803d;font-weight:600;">92%</span><span class="conf-bar conf-high"></span></td>
+                <td><span class="txn-status-dot dot-approved"></span><span style="font-size:11.5px;color:#15803d;">accrual cleared</span></td>
+              </tr>
+              <tr>
+                <td>10 Jun</td>
+                <td>TRANSFER — CLIENT A</td>
+                <td style="color:#94a3b8">DBS</td>
+                <td class="mono">+25,000.00</td>
+                <td>4000 Revenue</td>
+                <td><span style="font-size:11px;color:#15803d;font-weight:600;">91%</span><span class="conf-bar conf-high"></span></td>
+                <td><span class="txn-status-dot dot-approved"></span><span style="font-size:11.5px;color:#15803d;">approved</span></td>
+              </tr>
+              <tr style="background:#fffbeb;">
+                <td>15 Jun</td>
+                <td style="font-weight:500;color:#92400e;">FAST PAYMENT 123456789</td>
+                <td style="color:#94a3b8">DBS</td>
+                <td class="mono" style="color:#92400e;">-15,200.00</td>
+                <td style="color:#94a3b8;">—</td>
+                <td><span style="font-size:11px;color:#dc2626;font-weight:600;">38%</span><span class="conf-bar conf-low"></span></td>
+                <td><span class="txn-status-dot dot-flagged"></span><span style="font-size:11.5px;color:#dc2626;">needs review</span></td>
+              </tr>
+              <tr>
+                <td>18 Jun</td>
+                <td>FOOD EMPIRE HOLDINGS</td>
+                <td style="color:#94a3b8">OCBC</td>
+                <td class="mono">+18,400.00</td>
+                <td>4000 Revenue</td>
+                <td><span style="font-size:11px;color:#15803d;font-weight:600;">88%</span><span class="conf-bar conf-high"></span></td>
+                <td><span class="txn-status-dot dot-approved"></span><span style="font-size:11.5px;color:#15803d;">approved</span></td>
+              </tr>
+              <tr>
+                <td>28 Jun</td>
+                <td>SALARY JUNE 2026</td>
+                <td style="color:#94a3b8">DBS</td>
+                <td class="mono">-28,400.00</td>
+                <td>5000 Salary Exp.</td>
+                <td><span style="font-size:11px;color:#15803d;font-weight:600;">99%</span><span class="conf-bar conf-high"></span></td>
+                <td><span class="txn-status-dot dot-approved"></span><span style="font-size:11.5px;color:#15803d;">approved</span></td>
+              </tr>
+              <tr style="color:#94a3b8;font-style:italic;">
+                <td colspan="7" style="text-align:center;padding:10px;font-size:11.5px;">+ 77 more approved transactions…</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="bkapp-footer-note">
+            ⚡ AI categorisation by BK App · Vendor mappings + learning loop · 1 transaction flagged for Double Eddie VerificationAgent review
+          </div>
+        </div>
+
+      </div><!-- /bkpanel-txns -->
+
+      <!-- Trial Balance panel -->
+      <div class="bkapp-body hidden" id="bkpanel-tb">
+        <div class="bkapp-pipeline" style="margin-bottom:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div class="bkapp-section-title" style="margin:0;">Closing Trial Balance — June 2026</div>
+            <span class="badge badge-approved" style="font-size:11px;">✓ Balanced</span>
+          </div>
+          <div style="font-size:11.5px;color:#6b7280;margin-bottom:14px;">PackageAgent read this TB to assemble the close packet. ReadinessAgent verified debits = credits before allowing close to proceed.</div>
+        </div>
+        <div class="bkapp-txns">
+          <table class="txn-table">
+            <thead>
+              <tr>
+                <th>Code</th><th>Account Name</th><th>Type</th>
+                <th style="text-align:right">Debit (SGD)</th>
+                <th style="text-align:right">Credit (SGD)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f0fdf4;">
+                <td colspan="5" style="padding:6px 14px;font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.5px;">Assets</td>
+              </tr>
+              <tr><td>1000</td><td>Cash at Bank (DBS)</td><td style="color:#94a3b8">Asset</td><td class="mono">124,800.00</td><td class="mono">—</td></tr>
+              <tr><td>1001</td><td>Cash at Bank (OCBC)</td><td style="color:#94a3b8">Asset</td><td class="mono">38,200.00</td><td class="mono">—</td></tr>
+              <tr><td>1500</td><td>Capital Expenditure</td><td style="color:#94a3b8">Asset</td><td class="mono">15,200.00</td><td class="mono">—</td></tr>
+              <tr style="background:#f0fdf4;">
+                <td colspan="5" style="padding:6px 14px;font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.5px;">Liabilities &amp; Equity</td>
+              </tr>
+              <tr><td>800</td><td>Trade Creditors</td><td style="color:#94a3b8">Liability</td><td class="mono">—</td><td class="mono">33,600.00</td></tr>
+              <tr><td>3000</td><td>Retained Earnings</td><td style="color:#94a3b8">Equity</td><td class="mono">—</td><td class="mono">133,400.00</td></tr>
+              <tr style="background:#f0fdf4;">
+                <td colspan="5" style="padding:6px 14px;font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.5px;">Income &amp; Expenses</td>
+              </tr>
+              <tr><td>4000</td><td>Revenue</td><td style="color:#94a3b8">Income</td><td class="mono">—</td><td class="mono">82,400.00</td></tr>
+              <tr><td>5000</td><td>Salary Expense</td><td style="color:#94a3b8">Expense</td><td class="mono">28,400.00</td><td class="mono">—</td></tr>
+              <tr><td>5200</td><td>Office Expenses</td><td style="color:#94a3b8">Expense</td><td class="mono">17,100.00</td><td class="mono">—</td></tr>
+              <tr><td>5500</td><td>Other Expenses</td><td style="color:#94a3b8">Expense</td><td class="mono">13,700.00</td><td class="mono">—</td></tr>
+              <tr><td>6500</td><td>Directors Fees</td><td style="color:#94a3b8">Expense</td><td class="mono">12,000.00</td><td class="mono">—</td></tr>
+              <tr style="background:#0f172a;color:#f8fafc;font-weight:700;">
+                <td colspan="3" style="padding:10px 14px;font-size:12.5px;">TOTAL</td>
+                <td class="mono" style="color:#f8fafc;padding:10px 14px;">249,400.00</td>
+                <td class="mono" style="color:#4ade80;padding:10px 14px;">249,400.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /bkpanel-tb -->
+
+      <!-- Management Accounts panel -->
+      <div class="bkapp-body hidden" id="bkpanel-ma">
+        <div class="bkapp-pipeline" style="margin-bottom:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <div class="bkapp-section-title" style="margin:0;">Management Accounts (P&amp;L) — June 2026</div>
+            <span class="de-badge">🤖 Compiled by PackageAgent</span>
+          </div>
+          <div style="font-size:11.5px;color:#6b7280;">Derived from the closing Trial Balance. Reviewed and locked by staff.</div>
+        </div>
+        <div class="bkapp-txns" style="margin-top:16px;">
+          <table class="txn-table">
+            <thead>
+              <tr><th>Line</th><th></th><th style="text-align:right">SGD</th><th style="text-align:right">Prior Month</th><th style="text-align:right">Variance</th></tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f0fdf4;">
+                <td colspan="5" style="padding:7px 14px;font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.5px;">Revenue</td>
+              </tr>
+              <tr>
+                <td style="color:#94a3b8;font-size:11.5px;">4000</td>
+                <td>Revenue</td>
+                <td class="mono">82,400.00</td><td class="mono" style="color:#94a3b8;">70,000.00</td>
+                <td class="mono" style="color:#15803d;">+12,400</td>
+              </tr>
+              <tr style="font-weight:600;background:#fafafa;">
+                <td colspan="2" style="padding:8px 14px;">Gross Profit</td>
+                <td class="mono" style="font-weight:700;">82,400.00</td><td class="mono" style="color:#94a3b8;">70,000.00</td>
+                <td class="mono" style="color:#15803d;font-weight:600;">+12,400</td>
+              </tr>
+              <tr style="background:#fff7ed;">
+                <td colspan="5" style="padding:7px 14px;font-size:11px;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:0.5px;">Operating Expenses</td>
+              </tr>
+              <tr>
+                <td style="color:#94a3b8;font-size:11.5px;">5000</td>
+                <td>Salary Expense</td>
+                <td class="mono">(28,400.00)</td><td class="mono" style="color:#94a3b8;">(28,400.00)</td>
+                <td class="mono" style="color:#94a3b8;">—</td>
+              </tr>
+              <tr>
+                <td style="color:#94a3b8;font-size:11.5px;">5200</td>
+                <td>Office Expenses</td>
+                <td class="mono">(17,100.00)</td><td class="mono" style="color:#94a3b8;">(14,000.00)</td>
+                <td class="mono" style="color:#b91c1c;">+3,100</td>
+              </tr>
+              <tr>
+                <td style="color:#94a3b8;font-size:11.5px;">5500</td>
+                <td>Other Expenses</td>
+                <td class="mono">(13,700.00)</td><td class="mono" style="color:#94a3b8;">(12,600.00)</td>
+                <td class="mono" style="color:#b91c1c;">+1,100</td>
+              </tr>
+              <tr>
+                <td style="color:#94a3b8;font-size:11.5px;">6500</td>
+                <td>Directors Fees</td>
+                <td class="mono">(12,000.00)</td><td class="mono" style="color:#94a3b8;">(12,000.00)</td>
+                <td class="mono" style="color:#94a3b8;">—</td>
+              </tr>
+              <tr style="font-weight:600;background:#fafafa;">
+                <td colspan="2" style="padding:8px 14px;">Total Expenses</td>
+                <td class="mono" style="font-weight:700;">(71,200.00)</td><td class="mono" style="color:#94a3b8;">(67,000.00)</td>
+                <td class="mono" style="color:#b91c1c;font-weight:600;">+4,200</td>
+              </tr>
+              <tr style="background:#0f172a;">
+                <td colspan="2" style="padding:12px 14px;font-size:14px;font-weight:700;color:#f8fafc;">Net Profit</td>
+                <td class="mono" style="font-size:15px;font-weight:700;color:#4ade80;padding:12px 14px;">11,200.00</td>
+                <td class="mono" style="color:#6b7280;padding:12px 14px;">3,000.00</td>
+                <td class="mono" style="color:#4ade80;font-weight:600;padding:12px 14px;">+8,200</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /bkpanel-ma -->
+
+    </div><!-- /bkapp-screen -->
+
+  </div><!-- /main -->
+</div><!-- /app-frame -->
+
+<!-- Resolve modal -->
+<div class="modal-overlay" id="resolve-overlay">
+  <div class="modal">
+    <div class="modal-title">Resolve Exception</div>
+    <div class="modal-sub">Uncategorised Transaction · VerificationAgent</div>
+    <div class="modal-exc-detail">
+      <strong>DBS debit SGD 15,200 · 15 Jun 2026</strong><br/>
+      Vendor unrecognised. No matching accrual. Confidence 0.38. Requires manual GL assignment.
+    </div>
+    <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:8px;">Decision</div>
+    <div class="radio-group">
+      <label class="radio-item"><input type="radio" name="resolution" value="approved" checked/><span class="radio-label">Approved — accept and assign GL manually</span></label>
+      <label class="radio-item"><input type="radio" name="resolution" value="overridden"/><span class="radio-label">Overridden — proceed with agent's best-guess category</span></label>
+      <label class="radio-item"><input type="radio" name="resolution" value="dismissed"/><span class="radio-label">Dismissed — ignore this exception</span></label>
+    </div>
+    <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:6px;">Notes</div>
+    <textarea class="textarea" rows="3" id="resolution-notes" placeholder="IT equipment purchase — assign to Capital Expenditure 5500"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeResolveModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="confirmResolve()">Confirm Resolution</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Run dialog -->
+<div id="new-run-overlay">
+  <div class="new-run-modal">
+    <div style="font-size:15px;font-weight:600;color:#0f172a;margin-bottom:16px;">New Close Run</div>
+    <div class="form-row">
+      <label class="form-label">Client</label>
+      <select class="form-select">
+        <option>Apex Holdings Pte Ltd</option>
+        <option>Sunrise Digital Pte Ltd</option>
+        <option>Brightwell Advisory LLP</option>
+        <option>Meridian Labs Pte Ltd</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Period</label>
+      <input class="form-input" value="2026-07" placeholder="e.g. 2026-07"/>
+    </div>
+    <div class="form-row">
+      <label class="form-label">SharePoint Folder URL <span style="color:#94a3b8;font-weight:400;">(optional)</span></label>
+      <input class="form-input" placeholder="https://grof.sharepoint.com/…"/>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
+      <button class="btn btn-outline btn-sm" onclick="closeNewRun()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="createRun()">Create &amp; Start</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hint tooltip -->
+<div class="demo-hint" id="demo-hint"></div>
+
+<script>
+// ── Demo steps ──────────────────────────────────────────────────────────────
+const STEPS = [
+  {
+    label: 'SharePoint — staff uploads bank statements and invoices before starting the close.',
+    hint: 'Click Upload to add the AWS invoice, then proceed',
+    setup() {
+      showSharePoint();
+    }
+  },
+  {
+    label: 'Close Board — create the close run now that documents are ready.',
+    hint: 'Click "+ New Close Run" to create a run for Apex Holdings',
+    setup() {
+      showBoard();
+      document.getElementById('new-run-btn').classList.add('highlight');
+    }
+  },
+  {
+    label: 'Event Feed — DocumentAgent fetches files from SharePoint and uploads them to BK App.',
+    hint: 'Watch the live agent stream — events appear as they happen',
+    setup() {
+      resetEventFeed();
+      streamDone = false;
+      goToSession('attention');
+      showTab('events');
+      setTimeout(streamEvents, 400);
+    }
+  },
+  {
+    label: 'BK App — AI categorisation pipeline runs on the uploaded statements.',
+    hint: 'See how BK App assigned GL codes and flagged the unrecognised SGD 15,200 debit',
+    setup() {
+      showBkApp();
+    }
+  },
+  {
+    label: 'VerificationAgent reviews BK App\'s output — 83 approved, 1 flagged as exception.',
+    hint: 'Click the Exceptions tab — the orange badge shows 1 pending issue',
+    setup() {
+      goToSession('attention');
+      resetExcPending();
+      // Show all events already done (stream complete at this point)
+      if (!streamDone) {
+        resetEventFeed();
+        streamDone = false;
+        setTimeout(() => { streamEvents(); }, 200);
+      }
+      showTab('events');
+      document.getElementById('tab-exceptions').classList.add('highlight');
+    }
+  },
+  {
+    label: 'Exceptions — run is paused. Agent flagged an unrecognised SGD 15,200 debit.',
+    hint: 'Click the Resolve button to make a decision',
+    setup() {
+      goToSession('attention');
+      resetExcPending();
+      showTab('exceptions');
+      const btn = document.getElementById('exc-resolve-btn');
+      if (btn) btn.classList.add('highlight');
+    }
+  },
+  {
+    label: 'Resolve Modal — choose Approved / Overridden / Dismissed and add a note.',
+    hint: 'Fill in the notes field, then click Confirm Resolution',
+    setup() {
+      goToSession('attention');
+      resetExcPending();
+      showTab('exceptions');
+      openResolveModal();
+    }
+  },
+  {
+    label: 'Exception resolved — run resumes automatically. Remaining agents pick up where they left off.',
+    hint: 'Watch the event stream — agents resume',
+    setup() {
+      closeResolveModal();
+      excResolved = true;
+      applyExcResolved();
+      goToSession('attention');
+      showTab('events');
+      setTimeout(streamResumeEvents, 400);
+      document.getElementById('tab-journals').classList.add('highlight');
+    }
+  },
+  {
+    label: 'Journal Entries — review AI-proposed JEs before they\'re posted to BK App.',
+    hint: 'Click Approve on both journal entries',
+    setup() {
+      showTab('journals');
+      const btn = document.getElementById('je1-approve');
+      if (btn) btn.classList.add('highlight');
+    }
+  },
+  {
+    label: 'Variance — VarianceAgent\'s current vs prior period commentary.',
+    hint: 'Click the Variance tab',
+    setup() { showTab('variance'); }
+  },
+  {
+    label: 'Close Packet — PackageAgent\'s summary: revenue, expenses, net income, observations.',
+    hint: 'Click the Close Packet tab',
+    setup() { showTab('packet'); }
+  },
+  {
+    label: 'Lock Run — snapshots the closing TB and prevents further changes.',
+    hint: 'Click Lock Run to complete the close',
+    setup() {
+      showRunComplete();
+      document.getElementById('lock-btn').classList.add('highlight');
+    }
+  },
+  {
+    label: '✓ Run locked. Returning to BK App to verify the closing Trial Balance.',
+    hint: 'Click the Trial Balance tab',
+    setup() {
+      lockRun();
+      showBkApp();
+      showBkTab('txns');
+      document.getElementById('bktab-tb').classList.add('highlight');
+    }
+  },
+  {
+    label: 'Trial Balance — books are balanced (Debits = Credits = SGD 249,400). PackageAgent read this TB to build the close packet.',
+    hint: 'Click Management Accounts to see the P&L',
+    setup() {
+      showBkApp();
+      showBkTab('tb');
+      document.getElementById('bktab-ma').classList.add('highlight');
+    }
+  },
+  {
+    label: '✓ Management Accounts — PackageAgent compiled the P&L from the closing TB. Revenue $82,400 · Net Profit $11,200. Month-end close complete.',
+    hint: '',
+    setup() {
+      showBkApp();
+      showBkTab('ma');
+    }
+  }
+];
+
+let step = 0;
+
+function initDots() {
+  const el = document.getElementById('step-dots');
+  el.innerHTML = '';
+  STEPS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'demo-dot';
+    d.onclick = () => gotoStep(i);
+    el.appendChild(d);
+  });
+}
+
+function updateBar() {
+  const dots = document.querySelectorAll('.demo-dot');
+  dots.forEach((d, i) => {
+    d.className = 'demo-dot' + (i === step ? ' active' : i < step ? ' done' : '');
+  });
+  document.getElementById('step-counter').textContent = `Step ${step + 1} / ${STEPS.length}`;
+  document.getElementById('step-label').textContent = STEPS[step].label;
+  document.getElementById('btn-prev').disabled = step === 0;
+  document.getElementById('btn-next').textContent = step === STEPS.length - 1 ? '✓ Done' : 'Next →';
+
+  // Clear all highlights
+  document.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
+
+  STEPS[step].setup();
+
+  // Show persistent hint in bar
+  const hint = STEPS[step].hint;
+  const hintRow = document.getElementById('step-hint');
+  const hintText = document.getElementById('hint-text');
+  if (hint) {
+    hintText.textContent = hint;
+    hintRow.style.display = 'flex';
+  } else {
+    hintRow.style.display = 'none';
+  }
+}
+
+function nextStep() { if (step < STEPS.length - 1) { step++; updateBar(); } }
+function prevStep() { if (step > 0) { step--; updateBar(); } }
+function gotoStep(i) { step = i; updateBar(); }
+
+// ── Event feed streaming ─────────────────────────────────────────────────────
+const EVENT_DATA = [
+  { dot: 'green',  agent: 'DocumentAgent',     time: '14:02:11', msg: 'Found 3 documents in SharePoint. Uploading DBS Jun 2026 statement…' },
+  { dot: 'green',  agent: 'DocumentAgent',     time: '14:02:38', msg: 'DBS statement uploaded. 47 transactions extracted. Processing OCBC statement…' },
+  { dot: 'green',  agent: 'DocumentAgent',     time: '14:03:05', msg: 'All statements done. Posted accrual: AWS Cloud Services Jun 2026 — SGD 5,200 (Trade Creditors ↔ Office Expenses).' },
+  { dot: 'blue',   agent: 'VerificationAgent', time: '14:04:22', msg: 'Reviewing 84 transactions. Bulk-approved 83 high-confidence items. Accrual cleared: AWS invoice → DBS debit 05 Jun SGD 5,200 (exact match).' },
+  { dot: 'orange', agent: 'VerificationAgent', time: '14:04:30', msg: '⚠ Exception raised: DBS debit SGD 15,200 on 15 Jun — vendor unrecognised. Confidence 0.38. Requires manual GL assignment. Run paused.' },
+];
+// Gaps between events in ms
+const EVENT_DELAYS = [0, 1400, 1600, 2200, 1000];
+
+// Events that stream after exception is resolved
+const RESUME_EVENT_DATA = [
+  { dot: 'green',  agent: 'System',              time: '14:09:03', msg: '▶ Run resumed. All exceptions resolved. Continuing from ReadinessAgent…' },
+  { dot: 'blue',   agent: 'ReadinessAgent',      time: '14:09:05', msg: 'Pipeline 100%. TB balanced. 0 uncategorised transactions. Close can proceed.' },
+  { dot: 'blue',   agent: 'ReconciliationAgent', time: '14:10:18', msg: 'Bank statements SGD 163,000 · TB cash SGD 163,000 · Delta SGD 0.00. Reconciliation clean.' },
+  { dot: 'blue',   agent: 'VarianceAgent',       time: '14:11:42', msg: '2 material variances: Revenue +$12,400 (+17.7%) · Office Expenses +$3,100 (+22.1%). Commentary written.' },
+  { dot: 'green',  agent: 'PackageAgent',        time: '14:12:55', msg: '✓ Close packet assembled. Revenue $82,400 · Expenses $71,200 · Net Income $11,200. Run complete.' },
+];
+const RESUME_EVENT_DELAYS = [0, 800, 2200, 2800, 2600];
+
+let streamTimer = null;
+let streamDone = false;
+let resumeTimer = null;
+
+function resetEventFeed() {
+  if (streamTimer) { clearTimeout(streamTimer); streamTimer = null; }
+  if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
+  streamDone = false;
+  const container = document.getElementById('event-list-container');
+  container.innerHTML = '';
+  document.getElementById('event-typing').style.display = 'none';
+}
+
+function streamEvents() {
+  if (streamDone) return;        // already fully streamed — don't replay
+  resetEventFeed();
+
+  const container = document.getElementById('event-list-container');
+  const typing    = document.getElementById('event-typing');
+  const typingLabel = document.getElementById('typing-agent-label');
+
+  // Pre-build all rows, hidden
+  const rows = EVENT_DATA.map(ev => {
+    const row = document.createElement('div');
+    row.className = 'event-row';
+    row.innerHTML = `
+      <div class="event-dot event-dot-${ev.dot}"></div>
+      <div class="event-body">
+        <div class="event-agent">${ev.agent}</div>
+        <div class="event-msg">${ev.msg}</div>
+        <div class="event-time">${ev.time}</div>
+      </div>`;
+    container.appendChild(row);
+    return row;
+  });
+
+  let cumDelay = 0;
+  EVENT_DATA.forEach((ev, i) => {
+    cumDelay += EVENT_DELAYS[i];
+
+    // Show typing indicator before each event (except the first)
+    if (i > 0) {
+      const typingDelay = cumDelay - 600;
+      streamTimer = setTimeout(() => {
+        typingLabel.textContent = ev.agent + ' is thinking';
+        typing.style.display = 'block';
+      }, typingDelay);
+    }
+
+    // Reveal the row
+    streamTimer = setTimeout(() => {
+      typing.style.display = 'none';
+      rows[i].classList.add('visible');
+      // Scroll into view
+      rows[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (i === EVENT_DATA.length - 1) streamDone = true;
+    }, cumDelay);
+  });
+}
+
+function streamResumeEvents() {
+  if (resumeTimer) clearTimeout(resumeTimer);
+  const container = document.getElementById('event-list-container');
+  const typing    = document.getElementById('event-typing');
+  const typingLabel = document.getElementById('typing-agent-label');
+
+  const rows = RESUME_EVENT_DATA.map(ev => {
+    const row = document.createElement('div');
+    row.className = 'event-row';
+    row.innerHTML = `
+      <div class="event-dot event-dot-${ev.dot}"></div>
+      <div class="event-body">
+        <div class="event-agent">${ev.agent}</div>
+        <div class="event-msg">${ev.msg}</div>
+        <div class="event-time">${ev.time}</div>
+      </div>`;
+    container.appendChild(row);
+    return row;
+  });
+
+  let cumDelay = 0;
+  RESUME_EVENT_DATA.forEach((ev, i) => {
+    cumDelay += RESUME_EVENT_DELAYS[i];
+    if (i > 0) {
+      const td = cumDelay - 600;
+      resumeTimer = setTimeout(() => {
+        typingLabel.textContent = ev.agent + ' is thinking';
+        typing.style.display = 'block';
+      }, td);
+    }
+    resumeTimer = setTimeout(() => {
+      typing.style.display = 'none';
+      rows[i].classList.add('visible');
+      rows[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, cumDelay);
+  });
+}
+
+// ── Navigation ───────────────────────────────────────────────────────────────
+function hideAll() {
+  ['close-board','session-viewer','sharepoint-screen','bkapp-screen'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+}
+
+function showBoard() {
+  hideAll();
+  const el = document.getElementById('close-board');
+  el.style.display = 'flex';
+  el.style.flexDirection = 'column';
+  document.getElementById('nav-board').classList.add('active');
+}
+
+function goToSession(status) {
+  hideAll();
+  const sv = document.getElementById('session-viewer');
+  sv.style.display = 'flex';
+  sv.style.flexDirection = 'column';
+  document.getElementById('nav-board').classList.add('active');
+}
+
+function showSharePoint() {
+  hideAll();
+  const el = document.getElementById('sharepoint-screen');
+  el.style.display = 'flex';
+  el.style.flexDirection = 'column';
+}
+
+function showBkApp() {
+  hideAll();
+  const el = document.getElementById('bkapp-screen');
+  el.style.display = 'flex';
+  el.style.flexDirection = 'column';
+}
+
+function showBkTab(name) {
+  ['txns','tb','ma'].forEach(t => {
+    document.getElementById('bktab-' + t).classList.toggle('active', t === name);
+    document.getElementById('bkpanel-' + t).classList.toggle('hidden', t !== name);
+  });
+}
+
+// ── SharePoint upload animation ───────────────────────────────────────────────
+let uploadDone = false;
+function triggerUpload() {
+  if (uploadDone) return;
+  uploadDone = true;
+  const anim = document.getElementById('sp-upload-anim');
+  anim.style.display = 'block';
+  // Animate three bars sequentially
+  animBar(1, 0, () => animBar(2, 300, () => animBar(3, 600, () => {
+    document.getElementById('sp-invoice-row').style.display = '';
+    showHint('All 3 files uploaded. Ready to start the close run.');
+    if (step === 0) { setTimeout(() => { step = 1; updateBar(); }, 1200); }
+  })));
+}
+function animBar(n, delay, cb) {
+  setTimeout(() => {
+    const bar = document.getElementById('upbar-' + n);
+    const stat = document.getElementById('upstat-' + n);
+    let pct = 0;
+    const iv = setInterval(() => {
+      pct = Math.min(pct + 8, 100);
+      bar.style.width = pct + '%';
+      stat.textContent = pct + '%';
+      if (pct >= 100) { clearInterval(iv); stat.textContent = '✓'; stat.style.color = '#107c10'; cb && cb(); }
+    }, 40);
+  }, delay);
+}
+
+function showTab(name) {
+  ['events','exceptions','journals','variance','packet','audit'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    document.getElementById('content-' + t).classList.toggle('hidden', t !== name);
+  });
+}
+
+// ── Exception resolve ────────────────────────────────────────────────────────
+let excResolved = false;
+
+function openResolveModal() {
+  document.getElementById('resolve-overlay').classList.add('open');
+}
+function closeResolveModal() {
+  document.getElementById('resolve-overlay').classList.remove('open');
+}
+function confirmResolve() {
+  closeResolveModal();
+  excResolved = true;
+  applyExcResolved();
+  if (step === 7) { step = 8; updateBar(); }
+}
+
+function applyExcResolved() {
+  const item = document.getElementById('exc-item-1');
+  if (!item) return;
+  const badge = item.querySelector('.badge');
+  if (badge) { badge.className = 'badge badge-approved'; badge.textContent = 'approved'; }
+  const resolveBtn = document.getElementById('exc-resolve-btn');
+  if (resolveBtn) resolveBtn.style.display = 'none';
+  document.getElementById('exc-badge').style.display = 'none';
+  document.getElementById('exc-empty').style.display = 'block';
+  item.style.opacity = '0.5';
+  document.getElementById('run-status-badge').className = 'badge badge-running';
+  document.getElementById('run-status-badge').textContent = 'running';
+}
+
+function resetExcPending() {
+  excResolved = false;
+  const item = document.getElementById('exc-item-1');
+  if (!item) return;
+  item.style.display = '';
+  item.style.opacity = '1';
+  const badge = item.querySelector('.badge');
+  if (badge) { badge.className = 'badge badge-pending'; badge.textContent = 'pending'; }
+  const resolveBtn = document.getElementById('exc-resolve-btn');
+  if (resolveBtn) resolveBtn.style.display = '';
+  document.getElementById('exc-badge').style.display = '';
+  document.getElementById('exc-empty').style.display = 'none';
+  document.getElementById('run-status-badge').className = 'badge badge-attention';
+  document.getElementById('run-status-badge').textContent = 'needs attention';
+}
+
+// kept for backward compat with old confirmResolve calls
+function resolveException() { excResolved = true; applyExcResolved(); }
+
+// ── JE actions ───────────────────────────────────────────────────────────────
+let je1done = false, je2done = false;
+function approveJE(n) {
+  const card = document.getElementById('je-card-' + n);
+  const status = document.getElementById('je' + n + '-status');
+  const approve = document.getElementById('je' + n + '-approve');
+  const reject  = document.getElementById('je' + n + '-reject');
+  status.className = 'badge badge-approved';
+  status.textContent = 'approved';
+  approve.style.display = 'none';
+  reject.style.display = 'none';
+  card.classList.add('approved');
+  if (n === 1) je1done = true;
+  if (n === 2) je2done = true;
+  checkJEsDone();
+}
+function rejectJE(n) {
+  const card = document.getElementById('je-card-' + n);
+  const status = document.getElementById('je' + n + '-status');
+  const approve = document.getElementById('je' + n + '-approve');
+  const reject  = document.getElementById('je' + n + '-reject');
+  status.className = 'badge badge-rejected';
+  status.textContent = 'rejected';
+  approve.style.display = 'none';
+  reject.style.display = 'none';
+  card.classList.add('rejected');
+  if (n === 1) je1done = true;
+  if (n === 2) je2done = true;
+  checkJEsDone();
+}
+function checkJEsDone() {
+  if (je1done && je2done) {
+    document.getElementById('je-badge').style.display = 'none';
+    if (step === 5) { setTimeout(() => { step = 6; updateBar(); }, 600); }
+  }
+}
+
+// ── Lock run ─────────────────────────────────────────────────────────────────
+function showRunComplete() {
+  document.getElementById('run-status-badge').className = 'badge badge-complete';
+  document.getElementById('run-status-badge').textContent = 'complete';
+  document.getElementById('lock-btn').style.display = 'inline-flex';
+  document.getElementById('locked-badge').style.display = 'none';
+  showTab('packet');
+}
+function lockRun() {
+  document.getElementById('lock-btn').style.display = 'none';
+  document.getElementById('locked-badge').style.display = 'inline-flex';
+  document.getElementById('run-status-badge').className = 'badge badge-complete';
+  document.getElementById('run-status-badge').textContent = 'complete';
+
+  // Add locked card to Done on board
+  const done = document.querySelector('#close-board .board-col:last-child');
+  const cards = done.querySelectorAll('.run-card');
+  cards[0] && cards[0].insertAdjacentHTML('beforebegin', `
+    <div class="run-card">
+      <div class="run-card-top"><div class="run-client">Apex Holdings Pte Ltd</div></div>
+      <div class="run-period">June 2026</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+      <div class="run-card-bottom">
+        <span class="run-progress-text" style="display:flex;align-items:center;gap:4px;">🔒 Locked</span>
+        <span class="badge badge-complete">complete</span>
+      </div>
+    </div>`);
+}
+
+// ── New run dialog ────────────────────────────────────────────────────────────
+function openNewRun() {
+  document.getElementById('new-run-overlay').classList.add('open');
+}
+function closeNewRun() {
+  document.getElementById('new-run-overlay').classList.remove('open');
+}
+function createRun() {
+  closeNewRun();
+  // Add to queued
+  const queued = document.getElementById('queued-cards');
+  queued.insertAdjacentHTML('beforeend', `
+    <div class="run-card highlight">
+      <div class="run-card-top"><div class="run-client">Apex Holdings Pte Ltd</div></div>
+      <div class="run-period">July 2026</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+      <div class="run-card-bottom">
+        <span class="run-progress-text">—</span>
+        <button class="btn btn-outline btn-sm" style="height:24px;font-size:11px;">▶ Start</button>
+      </div>
+    </div>`);
+  document.getElementById('queued-count').textContent = '2';
+  showHint('Run created! Click Start when documents are in SharePoint.');
+}
+
+// ── Chat ─────────────────────────────────────────────────────────────────────
+function toggleChat() {
+  const exp = document.getElementById('chat-expanded');
+  const chev = document.getElementById('chat-chevron');
+  exp.classList.toggle('open');
+  chev.style.transform = exp.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="chat-msg staff">You: ${msg}</div>`;
+  input.value = '';
+  setTimeout(() => {
+    msgs.innerHTML += `<div class="chat-msg agent">Agent: Understood. I'll note that and adjust my approach.</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 800);
+}
+
+function showHint(msg) {
+  const el = document.getElementById('demo-hint');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+initDots();
+showBoard();
+updateBar();
+</script>
+</body>
+</html>
