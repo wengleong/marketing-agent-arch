@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Double Eddie — Architecture & Operations Guide</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #181c25;
+      --surface2: #1f2433;
+      --border: #2a3040;
+      --accent: #4f7fff;
+      --accent2: #7c5cbf;
+      --green: #34c97a;
+      --yellow: #f5c842;
+      --red: #e05555;
+      --orange: #f5894a;
+      --teal: #3ac6c6;
+      --text: #e4e8f0;
+      --muted: #7a8499;
+      --code-bg: #141720;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .page { max-width: 1100px; margin: 0 auto; }
+
+    /* Header */
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 28px;
+      margin-bottom: 40px;
+    }
+    .header-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    h1 { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .header-sub { color: var(--muted); font-size: 15px; max-width: 700px; }
+    .badges { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    .badge {
+      font-size: 11px; font-weight: 600; padding: 3px 10px;
+      border-radius: 20px; letter-spacing: 0.04em;
+    }
+    .badge-green { background: rgba(52,201,122,0.15); color: var(--green); border: 1px solid rgba(52,201,122,0.3); }
+    .badge-blue { background: rgba(79,127,255,0.15); color: var(--accent); border: 1px solid rgba(79,127,255,0.3); }
+    .badge-yellow { background: rgba(245,200,66,0.15); color: var(--yellow); border: 1px solid rgba(245,200,66,0.3); }
+    .badge-orange { background: rgba(245,137,74,0.15); color: var(--orange); border: 1px solid rgba(245,137,74,0.3); }
+
+    /* Navigation */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+    }
+    .toc h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 12px; }
+    .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; }
+    .toc a {
+      color: var(--accent); text-decoration: none; font-size: 13px;
+      padding: 4px 0; display: block;
+    }
+    .toc a:hover { text-decoration: underline; }
+
+    /* Sections */
+    .section { margin-bottom: 56px; }
+    h2 {
+      font-size: 20px; font-weight: 700; color: #fff;
+      margin-bottom: 16px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    h2 .section-num {
+      background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; padding: 2px 7px;
+      border-radius: 4px; letter-spacing: 0.05em;
+    }
+    h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 20px 0 10px; }
+    h4 { font-size: 13px; font-weight: 600; color: var(--muted); margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    p { color: #c0c8d8; margin-bottom: 10px; }
+
+    /* Cards grid */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 16px 0; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .card-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .card-title { font-weight: 600; color: #fff; font-size: 14px; }
+    .card-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .card p { font-size: 13px; color: #9aa3b5; margin: 0; }
+    .card ul { list-style: none; padding: 0; }
+    .card ul li { font-size: 13px; color: #9aa3b5; padding: 3px 0; padding-left: 14px; position: relative; }
+    .card ul li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+
+    /* Flow diagram */
+    .flow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .flow-steps { display: flex; align-items: flex-start; gap: 0; flex-wrap: nowrap; }
+    .flow-step {
+      display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+    }
+    .flow-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      min-width: 130px;
+      max-width: 150px;
+    }
+    .flow-box .step-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .flow-box .step-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .flow-box .step-detail { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .flow-arrow {
+      align-self: center;
+      color: var(--muted); font-size: 18px;
+      padding: 0 8px; flex-shrink: 0;
+    }
+    .flow-box.blue { border-color: rgba(79,127,255,0.4); background: rgba(79,127,255,0.08); }
+    .flow-box.green { border-color: rgba(52,201,122,0.4); background: rgba(52,201,122,0.08); }
+    .flow-box.yellow { border-color: rgba(245,200,66,0.4); background: rgba(245,200,66,0.08); }
+    .flow-box.orange { border-color: rgba(245,137,74,0.4); background: rgba(245,137,74,0.08); }
+    .flow-box.red { border-color: rgba(224,85,85,0.4); background: rgba(224,85,85,0.08); }
+    .flow-box.teal { border-color: rgba(58,198,198,0.4); background: rgba(58,198,198,0.08); }
+    .flow-box.purple { border-color: rgba(124,92,191,0.4); background: rgba(124,92,191,0.08); }
+
+    /* Vertical flow */
+    .vflow { display: flex; flex-direction: column; gap: 0; margin: 16px 0; }
+    .vflow-step { display: flex; gap: 16px; align-items: flex-start; }
+    .vflow-line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 24px; }
+    .vflow-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid var(--accent); background: var(--bg);
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .vflow-dot.green { border-color: var(--green); }
+    .vflow-dot.yellow { border-color: var(--yellow); }
+    .vflow-dot.orange { border-color: var(--orange); }
+    .vflow-dot.red { border-color: var(--red); }
+    .vflow-dot.teal { border-color: var(--teal); }
+    .vflow-connector { width: 2px; background: var(--border); flex: 1; min-height: 20px; }
+    .vflow-content { padding-bottom: 20px; flex: 1; }
+    .vflow-title { font-weight: 600; font-size: 14px; color: #fff; margin-bottom: 4px; }
+    .vflow-body { font-size: 13px; color: #9aa3b5; }
+    .vflow-api { font-size: 11px; font-family: monospace; background: var(--code-bg); color: var(--teal); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+
+    /* Code blocks */
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--teal);
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+    pre code { background: none; padding: 0; color: #c8d0e0; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th {
+      background: var(--surface2); color: var(--muted);
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 8px 12px; text-align: left; font-weight: 600;
+    }
+    td { padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: #c0c8d8; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    td code { font-size: 11px; }
+
+    /* Alert boxes */
+    .alert {
+      border-radius: 8px; padding: 14px 18px; margin: 14px 0;
+      border-left: 3px solid; font-size: 13px;
+    }
+    .alert-yellow { background: rgba(245,200,66,0.08); border-color: var(--yellow); color: #c8b86a; }
+    .alert-red { background: rgba(224,85,85,0.08); border-color: var(--red); color: #c08080; }
+    .alert-green { background: rgba(52,201,122,0.08); border-color: var(--green); color: #6ac090; }
+    .alert-blue { background: rgba(79,127,255,0.08); border-color: var(--accent); color: #8099cc; }
+    .alert strong { color: #fff; display: block; margin-bottom: 4px; }
+
+    /* Agent cards */
+    .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin: 16px 0; }
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .agent-header {
+      padding: 14px 18px 12px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .agent-avatar {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .agent-name { font-weight: 700; color: #fff; font-size: 14px; }
+    .agent-model { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .agent-role { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; margin-left: auto; }
+    .role-coordinator { background: rgba(79,127,255,0.2); color: var(--accent); }
+    .role-specialist { background: rgba(124,92,191,0.2); color: #b08de0; }
+    .agent-body { padding: 14px 18px; }
+    .agent-section { margin-bottom: 10px; }
+    .agent-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 5px; font-weight: 600; }
+    .agent-tools { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tool-tag {
+      font-size: 11px; background: var(--code-bg); color: var(--teal);
+      padding: 2px 8px; border-radius: 4px; font-family: monospace;
+    }
+
+    /* Two-column layout */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+    @media (max-width: 720px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Status pill */
+    .pill {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 2px 10px; border-radius: 20px;
+    }
+    .pill-green { background: rgba(52,201,122,0.15); color: var(--green); }
+    .pill-yellow { background: rgba(245,200,66,0.15); color: var(--yellow); }
+    .pill-blue { background: rgba(79,127,255,0.15); color: var(--accent); }
+    .pill-orange { background: rgba(245,137,74,0.15); color: var(--orange); }
+    .pill-red { background: rgba(224,85,85,0.15); color: var(--red); }
+
+    /* Comparison block */
+    .compare {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--border); border-radius: 10px; overflow: hidden;
+      margin: 16px 0;
+    }
+    .compare-col { background: var(--surface); padding: 18px 20px; }
+    .compare-col h3 { margin: 0 0 10px; font-size: 14px; }
+
+    footer {
+      margin-top: 60px; padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-eyebrow">Grof Internal — Agentic Finance Ops</div>
+    <h1>Double Eddie</h1>
+    <p class="header-sub">Architecture &amp; Operations Guide — how the close engine works, what each agent does, what gets logged where, and what to watch out for.</p>
+    <div class="badges">
+      <span class="badge badge-green">Phase 2 Complete</span>
+      <span class="badge badge-green">Phase 3A Complete</span>
+      <span class="badge badge-green">Phase 3B Complete</span>
+      <span class="badge badge-yellow">Phase 4: Railway Deploy</span>
+      <span class="badge badge-orange">Chaser Bot: Future Build</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <h2>Contents</h2>
+    <div class="toc-grid">
+      <a href="#what">1. What Is Double Eddie</a>
+      <a href="#start">2. Starting a Close Run</a>
+      <a href="#notion-setup">3. Notion Setup (FE/BE)</a>
+      <a href="#agents">4. The Agents</a>
+      <a href="#apps">5. Apps &amp; Integrations</a>
+      <a href="#categorization">6. Categorization: Two Pipelines</a>
+      <a href="#learning">7. Learning Loops</a>
+      <a href="#logging">8. Notion Logging</a>
+      <a href="#comms">9. Communications Sent</a>
+      <a href="#chaser">10. Chaser Bot (Future Build)</a>
+      <a href="#watchouts">11. Watch-Outs</a>
+      <a href="#next-steps">12. Next Steps</a>
+      <a href="#envvars">13. Environment Variables</a>
+    </div>
+  </div>
+
+  <!-- 1. What Is Double Eddie -->
+  <div class="section" id="what">
+    <h2><span class="section-num">01</span> What Is Double Eddie</h2>
+    <p>Double Eddie is an agentic finance ops engine that runs month-end close cycles autonomously. It uses Claude Managed Agents to coordinate specialist AI agents — document processing, transaction categorisation, reconciliation — against client data in accounting backends (BK App, Xero, QBO) and SharePoint/Dropbox.</p>
+    <p>The name: <em>two Eddies</em> — the AI does the grunt work, the human stays in control at review gates.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,127,255,0.15)">&#127381;</div>
+          <div><div class="card-title">Orchestration Layer</div><div class="card-sub">Fastify 5 + Prisma 7 + TypeScript</div></div>
+        </div>
+        <p>Double Eddie is middleware. It creates sessions, tracks state in PG, syncs to Notion, and fires Teams alerts. Agents run in Claude's cloud — the server never processes transactions directly.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(52,201,122,0.15)">&#129504;</div>
+          <div><div class="card-title">Claude Managed Agents</div><div class="card-sub">Sessions persist across review gates</div></div>
+        </div>
+        <p>Sessions live in Anthropic's cloud. A close run is a single long-running session — agents pause when they hit a review gate, then resume when staff resolve the exceptions.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(124,92,191,0.15)">&#128279;</div>
+          <div><div class="card-title">AgentOS as Gateway</div><div class="card-sub">80+ MCP tools, no direct API calls</div></div>
+        </div>
+        <p>Agents never call Xero or SharePoint directly. Everything routes through AgentOS MCP tools. Double Eddie doesn't need to manage OAuth tokens.</p>
+      </div>
+    </div>
+
+    <!-- Architecture diagram -->
+    <h3>Architecture Overview</h3>
+    <div class="flow" style="padding:20px">
+      <pre style="background:none;border:none;padding:0;margin:0;color:#c0c8d8;font-family:'SF Mono',monospace;font-size:12px;line-height:1.7">
+ ┌──────────────────────────────────────────────────────────────┐
+ │                      Double Eddie API                         │
+ │                  Fastify 5 · Prisma 7 · PG                   │
+ │   ┌────────────┐  ┌──────────────┐  ┌───────────────────┐   │
+ │   │ SessionMgr │  │ NotionWriter │  │   ReviewGate       │   │
+ │   │  (SDK +    │  │ (PG → Notion │  │ (Teams notifs +   │   │
+ │   │  events)   │  │  via AgentOS)│  │  error alerts)    │   │
+ │   └─────┬──────┘  └──────────────┘  └───────────────────┘   │
+ └─────────┼────────────────────────────────────────────────────┘
+           │  Claude Managed Agents API (beta)
+ ┌─────────▼────────────────────────────────────────────────────┐
+ │    CloseManager  (coordinator · claude-opus-4-7)              │
+ │     ├─▶  DocumentAgent    (claude-sonnet-4-6)                 │
+ │     └─▶  CategorizationAgent  (claude-sonnet-4-6)             │
+ └─────────────────────────────┬────────────────────────────────┘
+                               │  AgentOS MCP tools
+ ┌─────────────────────────────▼────────────────────────────────┐
+ │   BK App  ·  Xero  ·  QBO  ·  SharePoint  ·  Notion  ·  Teams│
+ └──────────────────────────────────────────────────────────────┘</pre>
+    </div>
+  </div>
+
+  <!-- 2. Starting a Close Run -->
+  <div class="section" id="start">
+    <h2><span class="section-num">02</span> Starting a Close Run</h2>
+    <p>A close run moves through a clear lifecycle. Each state change is persisted to PG first, then synced to Notion.</p>
+
+    <div class="vflow">
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot blue"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">1. Create <span class="pill pill-blue">scheduled</span></div>
+          <div class="vflow-api">POST /api/close-runs</div>
+          <div class="vflow-body" style="margin-top:8px">Body: <code>clientWorkflowId</code>, <code>period</code>, <code>closeType</code>, <code>fyYear</code>, <code>fye</code>, <code>assignedTo</code>, <code>deadline</code>.<br>
+          Creates a <code>CloseRun</code> record in PG. Immediately creates a Notion page in the Close Tracker database — this is staff's first visibility. Page includes client name, period, backend, SharePoint link, Close Type, FY Year, FY End.<br>
+          If <code>closeType</code>/<code>fyYear</code>/<code>fye</code> are omitted, they fall back to <code>clientWorkflow.overrides.defaultCloseType</code> etc.</div>
+        </div>
+      </div>
+
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--accent)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">2. Start <span class="pill pill-blue">running</span></div>
+          <div class="vflow-api">POST /api/close-runs/:id/start</div>
+          <div class="vflow-body" style="margin-top:8px">
+          Updates Notion status → Running.<br>
+          Resolves <code>CloseManager</code> agent ID from <code>AgentConfig</code> DB table.<br>
+          Builds a 4-layer prompt:<br>
+          &nbsp;&nbsp;1) Base: "Execute the monthly close workflow."<br>
+          &nbsp;&nbsp;2) Workflow instructions: template name + steps JSON<br>
+          &nbsp;&nbsp;3) Client overrides: <code>clientWorkflow.overrides</code> JSON<br>
+          &nbsp;&nbsp;4) Backend context: backend, bkappCompanyId, Close Type, FY Year, FY End<br>
+          Attaches memory stores: client-specific (read/write) + firm-wide (read-only).<br>
+          Calls <code>ManagedAgentRuntime.startSession()</code> → Anthropic <code>client.beta.sessions.create()</code>.<br>
+          Sends initial task as <code>user.message</code>.<br>
+          Launches async <code>processEvents()</code> loop — API returns immediately.</div>
+        </div>
+      </div>
+
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--accent)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">3. Session running — event stream</div>
+          <div class="vflow-body" style="margin-top:4px">
+          <code>processEvents()</code> iterates <code>streamEvents()</code> — async for-await over Managed Agents SSE:<br>
+          &nbsp;&nbsp;• <code>agent.message</code> → written to EventLog; last message tracked for exception context<br>
+          &nbsp;&nbsp;• <code>session.thread_status_idle + requires_action</code> → triggers review gate<br>
+          &nbsp;&nbsp;• <code>session.thread_status_idle + end_turn</code> → marks complete, sends Teams summary</div>
+        </div>
+      </div>
+
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot yellow"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">4. Review Gate <span class="pill pill-yellow">awaiting_review</span></div>
+          <div class="vflow-body" style="margin-top:4px">
+          Agent emits <code>requires_action</code>. SessionManager:<br>
+          &nbsp;&nbsp;1) Creates <code>Exception</code> row in PG (step, agent, description from last message)<br>
+          &nbsp;&nbsp;2) Creates Notion exception queue row (linked to close run page)<br>
+          &nbsp;&nbsp;3) Updates Notion close run status → Awaiting Review, increments exception count<br>
+          &nbsp;&nbsp;4) Sends Teams alert to configured channel<br>
+          Session stays paused. Staff review in Notion.</div>
+        </div>
+      </div>
+
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--accent)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">5. Staff resolves exceptions</div>
+          <div class="vflow-api">PUT /api/exceptions/:id/resolve</div>
+          <div class="vflow-body" style="margin-top:8px">
+          Staff sets decision: <code>approved</code> / <code>overridden</code> / <code>dismissed</code> + <code>staffDecision</code> note.<br>
+          Syncs to Notion exception row (status + Staff Decision field).<br>
+          When 0 pending exceptions remain → <code>SessionManager.resumeClose()</code> fires automatically.</div>
+        </div>
+      </div>
+
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--accent)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">6. Auto-resume <span class="pill pill-blue">running</span></div>
+          <div class="vflow-body" style="margin-top:4px">
+          Collects all staff decisions into a <code>StaffDecision[]</code> summary.<br>
+          Sends <code>user.message</code> to paused session: "Staff review complete. Decisions: [...]"<br>
+          <code>processEvents()</code> loop restarted. Close run status → running.<br>
+          Session resumes from exactly where it paused.</div>
+        </div>
+      </div>
+
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot green"></div><div class="vflow-connector" style="background:transparent"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">7. Complete <span class="pill pill-green">complete</span></div>
+          <div class="vflow-body" style="margin-top:4px">
+          Agent emits <code>end_turn</code>. SessionManager marks PG record complete, updates Notion → Complete.<br>
+          Sends Teams completion message: client, period, duration, exception count resolved.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Notion Setup -->
+  <div class="section" id="notion-setup">
+    <h2><span class="section-num">03</span> Notion Setup — FE / BE Split</h2>
+    <p>Notion is the <strong>staff-facing frontend</strong>. PostgreSQL is the <strong>source of truth</strong>. Every Notion write is a best-effort sync from PG — if Notion goes down, PG holds all state and the close continues. Staff can force a resync at any time.</p>
+
+    <div class="alert alert-blue">
+      <strong>Setup: one-time (already done)</strong>
+      Run <code>NOTION_PARENT_PAGE_ID=&lt;page_id&gt; npx tsx scripts/setup-notion.ts</code> once to create all 4 databases. The resulting database IDs are stored as env vars.<br><br>
+      <strong>Live Notion databases (created 2026-05-12, parent: Grof › AI)</strong><br>
+      Close Tracker: <code>35d7be08-83d2-81f3-be96-c65a45f91a27</code> · <a href="https://www.notion.so/35d7be0883d281f3be96c65a45f91a27" style="color:var(--accent)">Open ↗</a><br>
+      Exception Queue: <code>35d7be08-83d2-8154-aae3-c931a163e9ab</code><br>
+      Workflow Templates: <code>35d7be08-83d2-8139-bc65-c649b648d50a</code><br>
+      Client Assignments: <code>35d7be08-83d2-8145-8fb8-e43d68844968</code>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Notion Database</th><th>Env Var</th><th>Purpose</th><th>Key Properties</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Close Tracker</strong></td>
+          <td><code>NOTION_CLOSE_TRACKER_DB_ID</code></td>
+          <td>One row per close run. Staff primary dashboard.</td>
+          <td>Close Run, Period, Status, Backend, SharePoint URL, Assigned To, Session ID, Close Type, FY Year, FY End, Exceptions count, Current Step, Progress</td>
+        </tr>
+        <tr>
+          <td><strong>Exception Queue</strong></td>
+          <td><code>NOTION_EXCEPTION_QUEUE_DB_ID</code></td>
+          <td>One row per exception. Staff review interface.</td>
+          <td>Exception, Step, Agent, Confidence, Status (Pending/Approved/Overridden/Dismissed), Agent Reasoning, Staff Decision, Source Doc</td>
+        </tr>
+        <tr>
+          <td><strong>Workflow Templates</strong></td>
+          <td><code>NOTION_WORKFLOW_TEMPLATES_DB_ID</code></td>
+          <td>Master template library (reference only).</td>
+          <td>Template Name, Steps, Schedule, Status</td>
+        </tr>
+        <tr>
+          <td><strong>Client Assignments</strong></td>
+          <td><code>NOTION_CLIENT_ASSIGNMENTS_DB_ID</code></td>
+          <td>Client-to-template mapping (reference only).</td>
+          <td>Client, Template, Backend, Last Close</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Resync — recovering from Notion outages</h3>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(58,198,198,0.15)">&#128257;</div>
+          <div><div class="card-title">API endpoint</div></div>
+        </div>
+        <div class="vflow-api" style="margin-bottom:8px">POST /api/close-runs/:id/resync-notion</div>
+        <p>Re-syncs one close run + all its exceptions from PG → Notion. Creates pages that are missing, updates pages that exist. Returns <code>{ synced, notionPageId, exceptionsSynced, exceptionErrors }</code>.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(124,92,191,0.15)">&#128187;</div>
+          <div><div class="card-title">CLI script</div></div>
+        </div>
+        <pre style="background:var(--code-bg);border:none;padding:10px;font-size:11px"><code># All active runs (excludes scheduled)
+npx tsx scripts/resync-notion.ts
+
+# One specific run
+npx tsx scripts/resync-notion.ts --run-id cr_abc
+
+# Everything including completed
+npx tsx scripts/resync-notion.ts --all</code></pre>
+      </div>
+    </div>
+
+    <div class="alert alert-yellow">
+      <strong>Notion failure policy</strong>
+      Synchronous API paths (POST, start, exception resolve) include a <code>notionError</code> or <code>notionSyncError</code> field in the response if Notion sync fails. Async event paths (review gate, completion) cannot return HTTP errors — instead they send a Teams <code>notifyError</code> alert so staff know to check the system DB directly. PG is always written first.
+    </div>
+  </div>
+
+  <!-- 4. The Agents -->
+  <div class="section" id="agents">
+    <h2><span class="section-num">04</span> The Agents</h2>
+    <p>Three agents form a coordinator-specialist hierarchy. All are defined in <code>src/agents/definitions.ts</code> and registered with the Managed Agents API via <code>scripts/sync-agents.ts</code>.</p>
+
+    <div class="agent-grid">
+      <!-- CloseManager -->
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-avatar" style="background:rgba(79,127,255,0.2)">&#127381;</div>
+          <div>
+            <div class="agent-name">CloseManager</div>
+            <div class="agent-model">claude-opus-4-7 · Most capable</div>
+          </div>
+          <span class="agent-role role-coordinator">Coordinator</span>
+        </div>
+        <div class="agent-body">
+          <div class="agent-section">
+            <div class="agent-section-label">Role</div>
+            <p style="font-size:13px;color:#9aa3b5;margin:0">Senior accounting supervisor. Follows the workflow template step-by-step, dispatches specialists, checks their output, pauses for review when exceptions exceed threshold. Adapts when issues arise.</p>
+          </div>
+          <div class="agent-section">
+            <div class="agent-section-label">BK App tools used</div>
+            <div class="agent-tools">
+              <span class="tool-tag">bkapp_get_pipeline</span>
+              <span class="tool-tag">bkapp_get_trial_balance</span>
+              <span class="tool-tag">bkapp_list_statements</span>
+            </div>
+          </div>
+          <div class="agent-section">
+            <div class="agent-section-label">Watch-outs</div>
+            <ul class="card ul">
+              <li style="font-size:12px;color:#9aa3b5;padding-left:14px;position:relative">Needs <code>CloseManager</code> row in <code>AgentConfig</code> table with <code>managedAgentId</code> — run <code>sync-agents</code> script</li>
+              <li style="font-size:12px;color:#9aa3b5;padding-left:14px;position:relative">Jurisdiction defaults to Singapore (SFRS, ACRA, IRAS)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- DocumentAgent -->
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-avatar" style="background:rgba(58,198,198,0.2)">&#128196;</div>
+          <div>
+            <div class="agent-name">DocumentAgent</div>
+            <div class="agent-model">claude-sonnet-4-6</div>
+          </div>
+          <span class="agent-role role-specialist">Specialist</span>
+        </div>
+        <div class="agent-body">
+          <div class="agent-section">
+            <div class="agent-section-label">Role</div>
+            <p style="font-size:13px;color:#9aa3b5;margin:0">Fetches documents from client Dropbox/SharePoint folders, classifies each (invoice, receipt, bank statement, contract, payslip, unknown), routes to the correct system.</p>
+          </div>
+          <div class="agent-section">
+            <div class="agent-section-label">Bank statement workflow</div>
+            <p style="font-size:12px;color:#9aa3b5;margin:0">1. List files → 2. <code>dropbox_create_shared_link</code> + <code>?dl=1</code> → 3. <code>bkapp_upload_statement</code> (AgentOS fetches &amp; uploads multipart) → 4. Confirm via <code>bkapp_list_statements</code></p>
+          </div>
+          <div class="agent-section">
+            <div class="agent-section-label">Confidence threshold</div>
+            <p style="font-size:12px;color:#9aa3b5;margin:0">Any doc it cannot classify with confidence &gt; 0.7 is flagged as an exception for human review.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CategorizationAgent -->
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-avatar" style="background:rgba(245,137,74,0.2)">&#128200;</div>
+          <div>
+            <div class="agent-name">CategorizationAgent</div>
+            <div class="agent-model">claude-sonnet-4-6</div>
+          </div>
+          <span class="agent-role role-specialist">Specialist</span>
+        </div>
+        <div class="agent-body">
+          <div class="agent-section">
+            <div class="agent-section-label">BK App workflow (6 steps)</div>
+            <ol style="font-size:12px;color:#9aa3b5;padding-left:16px;line-height:1.8">
+              <li>Call <code>bkapp_get_coa</code> → load Chart of Accounts</li>
+              <li>Call <code>bkapp_list_transactions(filter=needs_review)</code> → fetch uncategorized transactions (paginate)</li>
+              <li>For each: check memory store for known vendor mappings</li>
+              <li>Call <code>bkapp_update_transactions</code> in batches with category + confidence + rationale</li>
+              <li>Confidence &lt; 0.5 → do NOT write, flag as exception instead</li>
+              <li>Report summary: total processed, auto-categorized, flagged</li>
+            </ol>
+          </div>
+          <div class="agent-section">
+            <div class="agent-section-label">Confidence routing</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span class="pill pill-green">&ge;0.8 auto-categorize</span>
+              <span class="pill pill-yellow">0.5–0.79 flag for review</span>
+              <span class="pill pill-red">&lt;0.5 exception</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Memory Architecture</h3>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,127,255,0.15)">&#129504;</div>
+          <div><div class="card-title">Client Memory Store</div><div class="card-sub">Per-client · Read/Write</div></div>
+        </div>
+        <p>Attached to each session via <code>clientWorkflow.memoryStoreId</code>. Agents write vendor mappings, quirks, and categorization learnings back after each close. These persist across monthly runs — the agent gets smarter over time without manual updates.</p>
+        <p style="margin-top:8px;padding:8px 10px;background:rgba(245,136,74,0.12);border-left:3px solid var(--orange);border-radius:4px;font-size:12px"><strong>⚠ Not yet provisioned:</strong> All 64 <code>ClientWorkflow</code> rows have <code>memoryStoreId = null</code>. Until memory stores are created and linked, every close run starts with no memory — the agent re-learns from scratch each month. Use <code>MemoryManager.createStore()</code> per client and save the ID to PG before the first live run.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(124,92,191,0.15)">&#128218;</div>
+          <div><div class="card-title">Firm Memory Store</div><div class="card-sub">Shared · Read-Only</div></div>
+        </div>
+        <p>Attached to all sessions via <code>FIRM_MEMORY_STORE_ID</code> env var. Contains firm-wide accounting standards, SFRS rules, GST treatment rules. All agents reference it but cannot write to it.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Apps & Integrations -->
+  <div class="section" id="apps">
+    <h2><span class="section-num">05</span> Apps &amp; Integrations</h2>
+    <p>All integrations flow through <strong>AgentOS MCP tools</strong>. Double Eddie itself calls no external APIs except AgentOS and the Managed Agents API.</p>
+
+    <table>
+      <thead>
+        <tr><th>App / System</th><th>Agent that uses it</th><th>What it does</th><th>How accessed</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>BK App</strong> (Bookkeeping Bot)</td>
+          <td>CloseManager, CategorizationAgent, DocumentAgent</td>
+          <td>Read/write transactions, COA, trial balance, pipeline status, upload statements</td>
+          <td><code>bkapp_*</code> MCP tools in AgentOS → REST API with <code>x-api-key</code> service auth</td>
+        </tr>
+        <tr>
+          <td><strong>Xero / QBO</strong></td>
+          <td>CloseManager, specialist agents</td>
+          <td>Read journals, create entries, reconcile (future)</td>
+          <td>AgentOS xero_* / qbo_* MCP tools (OAuth managed by AgentOS vault)</td>
+        </tr>
+        <tr>
+          <td><strong>SharePoint / Dropbox</strong></td>
+          <td>DocumentAgent</td>
+          <td>List client document folders, fetch files, create shared links</td>
+          <td><code>dropbox_list_folder</code>, <code>dropbox_create_shared_link</code>, <code>sharepoint_*</code> MCP tools</td>
+        </tr>
+        <tr>
+          <td><strong>Notion</strong></td>
+          <td>Double Eddie server (not agents)</td>
+          <td>Job tracking — close run pages, exception queue rows</td>
+          <td><code>NotionWriter</code> calls AgentOS <code>notion_create_db_row</code> / <code>notion_update_page_props</code></td>
+        </tr>
+        <tr>
+          <td><strong>Teams</strong></td>
+          <td>Double Eddie server (not agents)</td>
+          <td>Review gate alerts, completion messages, error alerts</td>
+          <td><code>ReviewGate</code> calls AgentOS <code>teams_send_message</code></td>
+        </tr>
+        <tr>
+          <td><strong>Grof Inbox Manager</strong></td>
+          <td>CloseManager (future)</td>
+          <td>Chase clients for missing documents via WhatsApp/email</td>
+          <td><code>chase_client</code> AgentOS tool → Inbox Manager <code>/api/chase</code> endpoint (not yet built)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Categorization: Two Pipelines -->
+  <div class="section" id="categorization">
+    <h2><span class="section-num">06</span> Categorization: Two Separate Pipelines</h2>
+
+    <div class="alert alert-yellow">
+      <strong>Key architectural nuance</strong>
+      There are two independent categorization systems that both write to the same BK App transaction table. They don't talk to each other — they cover different scenarios.
+    </div>
+
+    <div class="compare">
+      <div class="compare-col">
+        <h3 style="color:var(--teal)">BK App Built-In Pipeline</h3>
+        <table style="margin:0">
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Trigger</td><td style="font-size:12px">Human uploads statement in BK App UI</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Runtime</td><td style="font-size:12px">Agent SDK <code>query()</code> inside BK App Node.js process</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Agents</td><td style="font-size:12px">CategorizationAgent → EvalAgent → (LearningLoopAgent post-close)</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Context</td><td style="font-size:12px">Vendor mappings, GL history, correction rules from BK App DB</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Learning</td><td style="font-size:12px">LearningLoopAgent proposes vendor map promotions + corrections (PENDING_HUMAN_REVIEW)</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Output</td><td style="font-size:12px">Writes to BK App Transaction table directly</td></tr>
+        </table>
+      </div>
+      <div class="compare-col">
+        <h3 style="color:var(--orange)">Double Eddie Pipeline</h3>
+        <table style="margin:0">
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Trigger</td><td style="font-size:12px">CloseManager dispatches as a workflow step</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Runtime</td><td style="font-size:12px">Claude Managed Agents — runs in Anthropic's cloud</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Agents</td><td style="font-size:12px">CategorizationAgent (Managed Agent with memory store)</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Context</td><td style="font-size:12px">Managed Agents memory store (persists vendor mappings across months)</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Learning</td><td style="font-size:12px">Writes learnings back to memory store automatically — no approval needed</td></tr>
+          <tr><td style="color:var(--muted);font-size:11px;padding:4px 0">Output</td><td style="font-size:12px">Writes via <code>PATCH /api/companies/:id/transactions</code> with service auth</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <h3>How they co-exist without double-writing</h3>
+    <p>The BK App's built-in pipeline runs first (on upload). Double Eddie's agent only picks up transactions that the BK App pipeline didn't resolve with confidence — it queries with <code>filter=needs_review</code>, which returns: <code>status != 'reviewed' AND (confidence &lt; 0.85 OR confidence IS NULL)</code>. So there's no double-write: BK App categorizes what it can, Double Eddie cleans up what's left.</p>
+
+    <h3>The learning gap (watch-out)</h3>
+    <div class="alert alert-red">
+      <strong>Two isolated learning loops — not reconciled yet</strong>
+      BK App's LearningLoopAgent generates vendor map promotions and correction rules stored in the BK App DB. Double Eddie's agent writes learnings to the Managed Agents memory store. Neither feeds the other. If you use both systems for the same company, their learning diverges over time. A future integration task: either (a) expose BK App vendor maps via a <code>bkapp_get_vendor_mappings</code> tool that Double Eddie reads at start of each run, or (b) push BK App's approved learning proposals into the Managed Agents memory store.
+    </div>
+
+    <h3>BK App's 3-agent categorization pipeline (detail)</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,127,255,0.15)">1</div>
+          <div><div class="card-title">CategorizationAgent</div><div class="card-sub">claude-sonnet-4-6 · Agent SDK</div></div>
+        </div>
+        <ul class="card ul">
+          <li>Runs in batches of 30 transactions</li>
+          <li>Checks vendor mappings (hard rules, 100% confidence) first</li>
+          <li>For unknowns: uses web search to identify vendor</li>
+          <li>Assigns COA code + confidence + rationale per transaction</li>
+          <li>Returns <code>vendorResolved</code> flag if web search was needed</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(124,92,191,0.15)">2</div>
+          <div><div class="card-title">EvalAgent</div><div class="card-sub">claude-haiku-4-5 · cheaper</div></div>
+        </div>
+        <ul class="card ul">
+          <li>Calibrates confidence scores from pass 1</li>
+          <li>Compares against vendor history (prior period accuracy)</li>
+          <li>Sets <code>needsReview</code> flags</li>
+          <li>Final confidence &ge;0.85 → auto-approved in UI</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(52,201,122,0.15)">3</div>
+          <div><div class="card-title">LearningLoopAgent</div><div class="card-sub">claude-sonnet-4-6 · post-close only</div></div>
+        </div>
+        <ul class="card ul">
+          <li>Runs after an accountant approves a period</li>
+          <li>Analyses closed-period transactions vs final assignments</li>
+          <li>Proposes: vendor map promotions (3+ consistent correct), correction rules (2+ same mis-category)</li>
+          <li>All proposals are PENDING_HUMAN_REVIEW — accountant approves before applying</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Learning Loops -->
+  <div class="section" id="learning">
+    <h2><span class="section-num">07</span> Learning Loops</h2>
+
+    <table>
+      <thead>
+        <tr><th>System</th><th>Learning mechanism</th><th>Approval</th><th>Scope</th><th>Persistence</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>BK App</strong></td>
+          <td>LearningLoopAgent analyses closed period → proposes vendor map promotions + correction rules + notes updates</td>
+          <td>PENDING_HUMAN_REVIEW — accountant approves each proposal</td>
+          <td>Per-company DB tables: VendorMapping, CategorizationNotes</td>
+          <td>BK App PostgreSQL</td>
+        </tr>
+        <tr>
+          <td><strong>Double Eddie</strong></td>
+          <td>CategorizationAgent writes vendor learnings directly to Managed Agents memory store after each run</td>
+          <td>Automatic — no human approval step</td>
+          <td>Per-client memory store (Anthropic cloud)</td>
+          <td>Managed Agents memory store — persists across sessions</td>
+        </tr>
+        <tr>
+          <td><strong>Firm-wide</strong></td>
+          <td>Manually curated firm rules (SFRS, GST treatment, director transaction caps)</td>
+          <td>Manual (engineering / ops)</td>
+          <td>All clients</td>
+          <td>Firm memory store (read-only to agents)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 8. Notion Logging -->
+  <div class="section" id="logging">
+    <h2><span class="section-num">08</span> Notion Logging — What Gets Written Where</h2>
+
+    <h3>Close Tracker row (one per close run)</h3>
+    <table>
+      <thead><tr><th>Property</th><th>When written</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Close Run (title)</td><td>On create (POST)</td><td><code>{clientName} — {period}</code></td></tr>
+        <tr><td>Period</td><td>On create</td><td>e.g. <code>2026-06</code></td></tr>
+        <tr><td>Status</td><td>Every state change</td><td>Scheduled → Running → Awaiting Review → Complete / Failed</td></tr>
+        <tr><td>Backend</td><td>On create</td><td><code>xero</code> / <code>qbo</code> / <code>bkapp</code></td></tr>
+        <tr><td>SharePoint URL</td><td>On create</td><td>Direct link to client's document folder</td></tr>
+        <tr><td>Close Type</td><td>On create</td><td>Monthly / Quarterly / Annual</td></tr>
+        <tr><td>FY Year</td><td>On create</td><td>e.g. <code>2026</code></td></tr>
+        <tr><td>FY End</td><td>On create</td><td>ISO date e.g. <code>2026-03-31</code></td></tr>
+        <tr><td>Assigned To</td><td>On create (optional)</td><td>Staff name</td></tr>
+        <tr><td>Exceptions</td><td>Each review gate</td><td>Incremented count</td></tr>
+        <tr><td>Current Step</td><td>Agent progress updates</td><td>Step name from workflow</td></tr>
+        <tr><td>Progress</td><td>Agent progress updates</td><td>e.g. <code>3/7 steps complete</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Exception Queue row (one per exception)</h3>
+    <table>
+      <thead><tr><th>Property</th><th>When written</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Exception (title)</td><td>On review gate</td><td><code>{clientName} — {first 80 chars of description}</code></td></tr>
+        <tr><td>Step</td><td>On create</td><td>document / categorize / reconcile / anomaly</td></tr>
+        <tr><td>Agent</td><td>On create</td><td>Which agent flagged it (DocumentAgent / CategorizationAgent etc.)</td></tr>
+        <tr><td>Confidence</td><td>On create (optional)</td><td>Agent's confidence score 0–1</td></tr>
+        <tr><td>Status</td><td>On create → on resolve</td><td>Pending → Approved / Overridden / Dismissed</td></tr>
+        <tr><td>Agent Reasoning</td><td>On create</td><td>Full last agent message (up to 2000 chars)</td></tr>
+        <tr><td>Staff Decision</td><td>On resolve</td><td>Free text from staff</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-blue">
+      <strong>PG EventLog</strong> Every <code>agent.message</code> event from the session stream is also written to the <code>EventLog</code> table in PG. This gives a full audit trail of every agent action regardless of Notion status. Notion rows are the human-readable view; EventLog is the raw record.
+    </div>
+  </div>
+
+  <!-- 9. Communications -->
+  <div class="section" id="comms">
+    <h2><span class="section-num">09</span> Communications Sent (Teams Messages)</h2>
+    <p>All Teams messages are sent to the channel ID configured in <code>clientWorkflow.notifications.teamsChannelId</code>. Each message type has a distinct format.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(245,200,66,0.15)">&#9888;&#65039;</div>
+          <div><div class="card-title">Review Required</div><div class="card-sub">When: review gate fires</div></div>
+        </div>
+        <pre style="background:var(--code-bg);border:none;padding:10px;font-size:11px;margin:0"><code>Double Eddie — Review Required
+{clientName} · {period}
+
+1 exception requires your attention:
+  • [{step}] {description} (agent: {agentName})
+
+Review and resolve in Notion, then the close will resume automatically.</code></pre>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(52,201,122,0.15)">&#9989;</div>
+          <div><div class="card-title">Close Complete</div><div class="card-sub">When: end_turn fires</div></div>
+        </div>
+        <pre style="background:var(--code-bg);border:none;padding:10px;font-size:11px;margin:0"><code>Double Eddie — Close Complete
+{clientName} · {period}
+
+Duration: {N}m
+Exceptions resolved: {N}</code></pre>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(224,85,85,0.15)">&#128680;</div>
+          <div><div class="card-title">Sync Error Alert</div><div class="card-sub">When: Notion sync fails in async path</div></div>
+        </div>
+        <pre style="background:var(--code-bg);border:none;padding:10px;font-size:11px;margin:0"><code>Double Eddie — Sync Error
+{subject}
+
+{detail}
+
+Action required: Check Notion connection.
+Job state is still tracked in the system database.</code></pre>
+      </div>
+
+      <div class="card" style="border-color:rgba(245,137,74,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(245,137,74,0.15)">&#128203;</div>
+          <div><div class="card-title">Chase Initiated (future)</div><div class="card-sub">When: CloseManager calls chase_client tool</div></div>
+        </div>
+        <p>Staff are notified when the agent initiates a client chase so they're not surprised by an automated message going out. Message includes: what document is missing, which client, the deadline given, and the source ref.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Chaser Bot -->
+  <div class="section" id="chaser">
+    <h2><span class="section-num">10</span> Chaser Bot — Inbox Manager Integration <span class="badge badge-orange" style="font-size:11px;vertical-align:middle">Future Build</span></h2>
+
+    <p>When CloseManager discovers a document is missing, it should be able to chase the client directly through the <strong>Grof Inbox Manager</strong> chaser system — without waiting for a human. The agent decides when to chase; staff are notified but don't need to act.</p>
+
+    <h3>Inbox Manager chaser system (existing)</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(58,198,198,0.15)">&#128140;</div>
+          <div><div class="card-title">ChaseChain</div><div class="card-sub">One chain per outstanding item</div></div>
+        </div>
+        <ul class="card ul">
+          <li>Strategy: gentle (3/7/14/21/30 days), firm (2/5/10/17/25), urgent (1/3/7/12/18)</li>
+          <li>Up to 20 steps per chain</li>
+          <li>Approval modes: approve_each, auto, first_only</li>
+          <li>Auto-stop on reply or attachment</li>
+          <li>ChaseStepAgent writes the draft email/message</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,127,255,0.15)">&#128269;</div>
+          <div><div class="card-title">Response Detection</div><div class="card-sub">Auto-stops chain when resolved</div></div>
+        </div>
+        <ul class="card ul">
+          <li><code>chaser-response-detector</code> inspects replies for document received / confirmed / resolved signals</li>
+          <li>Attachment detection: chain stops when the awaited file arrives</li>
+          <li>Cron checks chains every N minutes for next scheduled step</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Proposed integration flow</h3>
+    <div class="vflow">
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--orange)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">1. CloseManager detects missing document</div>
+          <div class="vflow-body">During document step, <code>bkapp_list_statements</code> shows no DBS statement for June 2026. Workflow template says this is required.</div>
+        </div>
+      </div>
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--orange)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">2. Calls <code>chase_client</code> AgentOS tool</div>
+          <div class="vflow-body">
+            <pre style="background:var(--code-bg);border:none;padding:10px;font-size:11px;margin-top:6px"><code>{
+  "clientId": "...",
+  "subject": "Missing bank statement — June 2026",
+  "body": "Please upload your DBS statement for June 2026 to: &lt;SharePoint link&gt;",
+  "dueDate": "2026-07-10",
+  "sourceRef": "double-eddie:close-run:cr_abc"
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--orange)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">3. Inbox Manager creates chase chain</div>
+          <div class="vflow-body">Sends via WhatsApp or email. ChaseStepAgent writes the draft. Strategy defaults to <code>urgent</code> for missing close documents.</div>
+        </div>
+      </div>
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot" style="border-color:var(--orange)"></div><div class="vflow-connector"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">4. Client uploads document</div>
+          <div class="vflow-body">Inbox Manager response detector picks up the attachment. Chain stops. Calls Double Eddie webhook: <code>POST /api/close-runs/:id/document-received</code> with document URL + client reply.</div>
+        </div>
+      </div>
+      <div class="vflow-step">
+        <div class="vflow-line"><div class="vflow-dot green"></div><div class="vflow-connector" style="background:transparent"></div></div>
+        <div class="vflow-content">
+          <div class="vflow-title">5. Double Eddie resumes</div>
+          <div class="vflow-body"><code>SessionManager.notifyDocumentReceived()</code> sends <code>user.message</code> with the document URL to the paused session. CloseManager continues the workflow using the received document.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>What needs to be built</h3>
+    <table>
+      <thead><tr><th>Component</th><th>Where</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>chase_client</code> MCP tool</td><td>AgentOS</td><td>Calls Inbox Manager <code>POST /api/chase</code> with client ID, subject, body, due date, source ref</td></tr>
+        <tr><td><code>POST /api/chase</code> endpoint</td><td>Inbox Manager</td><td>Creates a ChaseChain linked to the client conversation, returns chain ID. Accepts <code>sourceRef</code> for callback routing.</td></tr>
+        <tr><td><code>POST /api/close-runs/:id/document-received</code></td><td>Double Eddie</td><td>Webhook called by Inbox Manager when document is received. Sends <code>user.message</code> to paused session.</td></tr>
+        <tr><td><code>SessionManager.notifyDocumentReceived()</code></td><td>Double Eddie</td><td>Looks up session by closeRunId, sends event to Managed Agents session.</td></tr>
+        <tr><td>Staff notify on chase</td><td>Double Eddie</td><td>ReviewGate sends Teams message when agent initiates a chase: what's missing, which client, deadline set.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 11. Watch-Outs -->
+  <div class="section" id="watchouts">
+    <h2><span class="section-num">11</span> Watch-Outs</h2>
+
+    <div class="cards">
+      <div class="card" style="border-color:rgba(224,85,85,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(224,85,85,0.15)">&#128683;</div>
+          <div><div class="card-title">sync-agents must run before first start</div></div>
+        </div>
+        <p>If <code>AgentConfig</code> has no row for <code>CloseManager</code> with a valid <code>managedAgentId</code>, <code>POST /:id/start</code> returns 500. Run <code>npx tsx scripts/sync-agents.ts</code> first.</p>
+      </div>
+
+      <div class="card" style="border-color:rgba(245,200,66,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(245,200,66,0.15)">&#128276;</div>
+          <div><div class="card-title">Notion failures don't stop the close</div></div>
+        </div>
+        <p>If Notion is unreachable during async events (review gate, completion), staff will <em>not see the job update</em>. They'll get a Teams error alert instead. Always use <code>resync-notion</code> after an outage. PG is always the source of truth.</p>
+      </div>
+
+      <div class="card" style="border-color:rgba(245,200,66,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(245,200,66,0.15)">&#128200;</div>
+          <div><div class="card-title">Dual categorization pipeline</div></div>
+        </div>
+        <p>BK App's built-in pipeline runs first on upload. Double Eddie's agent only picks up <code>needs_review</code> transactions. If both run for the same company, their learning systems are isolated — see Section 6.</p>
+      </div>
+
+      <div class="card" style="border-color:rgba(245,200,66,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(245,200,66,0.15)">&#127981;</div>
+          <div><div class="card-title">Managed Agents beta access required</div></div>
+        </div>
+        <p>The Anthropic API key must have Managed Agents beta access enabled (<code>anthropic-beta: agents-2025-05-15</code>). Check in Claude platform console under Org Settings → Beta programs. Without it, session create returns 403.</p>
+      </div>
+
+      <div class="card" style="border-color:rgba(245,200,66,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(245,200,66,0.15)">&#128272;</div>
+          <div><div class="card-title">Three Railway env vars needed</div></div>
+        </div>
+        <ul class="card ul">
+          <li>BK App: <code>BK_INTERNAL_API_KEY</code></li>
+          <li>AgentOS: <code>BK_INTERNAL_API_KEY</code> (same value) + <code>BK_APP_URL</code></li>
+          <li>Both must match — service auth uses exact key comparison</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-color:rgba(124,92,191,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(124,92,191,0.15)">&#129504;</div>
+          <div><div class="card-title">Memory store must exist before first run</div></div>
+        </div>
+        <p>Each <code>ClientWorkflow</code> should have a <code>memoryStoreId</code>. Create it via Managed Agents API before scheduling the first close. If missing, the session runs without client memory — the agent will re-learn from scratch every month.</p>
+      </div>
+
+      <div class="card" style="border-color:rgba(224,85,85,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(224,85,85,0.15)">&#128204;</div>
+          <div><div class="card-title">Session resume requires active session</div></div>
+        </div>
+        <p>If the Managed Agents session expires before staff resolve exceptions, <code>resumeClose()</code> will fail. Session lifetime needs to be confirmed for long-running review gates (multi-day review periods).</p>
+      </div>
+
+      <div class="card" style="border-color:rgba(58,198,198,0.3)">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(58,198,198,0.15)">&#128196;</div>
+          <div><div class="card-title">DocumentAgent needs Dropbox path in overrides</div></div>
+        </div>
+        <p>The agent knows to list <code>dropbox_list_folder</code> — but it needs to know the path. This should be in <code>clientWorkflow.overrides.dropboxFolderPath</code> or injected in the backend context. Without it, the agent will try to guess.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="section" id="next-steps">
+    <h2><span class="section-num">12</span> Next Steps — Phase 4 &amp; Beyond</h2>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>What</th><th>Why it blocks</th><th>How</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1</strong></td>
+          <td>Provision per-client memory stores</td>
+          <td>Without <code>memoryStoreId</code> set, every close starts with zero memory — the agent re-learns from scratch each month. All 64 clients currently have <code>null</code>.</td>
+          <td>Call <code>memoryManager.createStore(name, description)</code> per client, write the returned ID to <code>clientWorkflow.memoryStoreId</code>. Add a <code>provision-memory-stores</code> script.</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td>Set per-client overrides (<code>bkappCompanyId</code>)</td>
+          <td>Without it the agent cannot call <code>bkapp_*</code> tools — it has no company context for BK App clients. All BK App work is blocked.</td>
+          <td>Update <code>clientWorkflow.overrides.bkappCompanyId</code> for each BK App client. Can be done via a seed script that reads company IDs from BK App API.</td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td>Deploy to Railway (Phase 4)</td>
+          <td>Currently local only. Scheduler, seeder, and watcher only run when the local machine is on.</td>
+          <td>Add Railway service. Set all env vars (see Section 13). Run <code>prisma migrate deploy</code> + seed scripts on first deploy. Enable always-on.</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td>Fill remaining Close Tracker rows</td>
+          <td>~95 rows not yet created (Notion rate limit hit on first bulk seed). Daily cron will fill them in over 1–2 days.</td>
+          <td>Wait for daily cron, or trigger <code>POST /api/scheduler/seed</code> again after rate limit cools (~1 hour).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-blue" style="margin-top:20px">
+      <strong>Memory architecture — how memories carry across monthly closes</strong><br><br>
+      Each <code>ClientWorkflow</code> has one <code>memoryStoreId</code> (Anthropic Managed Agents memory store). The <em>same store ID</em> is attached to every session for that client. After each close, CategorizationAgent writes vendor mappings and learnings back into the store. The next month's close picks them up automatically — no manual work.<br><br>
+      One CloseManager coordinator per close run (isolated session). Multiple clients can close in parallel — each gets its own session and memory store attachment. There is no cross-client memory leakage.
+    </div>
+  </div>
+
+  <!-- 13. Env Vars -->
+  <div class="section" id="envvars">
+    <h2><span class="section-num">13</span> Environment Variables</h2>
+
+    <div class="two-col">
+      <div>
+        <h3>Double Eddie</h3>
+        <table>
+          <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>DATABASE_URL</code></td><td><span class="pill pill-red">Required</span></td><td>PostgreSQL connection string</td></tr>
+            <tr><td><code>ANTHROPIC_API_KEY</code></td><td><span class="pill pill-red">Required</span></td><td>Must have Managed Agents beta access</td></tr>
+            <tr><td><code>DOUBLE_EDDIE_API_KEY</code></td><td><span class="pill pill-red">Required</span></td><td>Internal API auth for incoming requests</td></tr>
+            <tr><td><code>AGENT_OS_URL</code></td><td><span class="pill pill-red">Required</span></td><td>AgentOS base URL</td></tr>
+            <tr><td><code>AGENT_OS_API_KEY</code></td><td><span class="pill pill-red">Required</span></td><td>AgentOS API key</td></tr>
+            <tr><td><code>MANAGED_AGENTS_ENVIRONMENT_ID</code></td><td><span class="pill pill-red">Required</span></td><td>Pre-created cloud environment ID</td></tr>
+            <tr><td><code>MANAGED_AGENTS_VAULT_ID</code></td><td><span class="pill pill-red">Required</span></td><td>Vault holding AgentOS MCP credential</td></tr>
+            <tr><td><code>NOTION_CLOSE_TRACKER_DB_ID</code></td><td><span class="pill pill-yellow">Optional</span></td><td>Notion Close Tracker DB</td></tr>
+            <tr><td><code>NOTION_EXCEPTION_QUEUE_DB_ID</code></td><td><span class="pill pill-yellow">Optional</span></td><td>Notion Exception Queue DB</td></tr>
+            <tr><td><code>NOTION_WORKFLOW_TEMPLATES_DB_ID</code></td><td><span class="pill pill-yellow">Optional</span></td><td>Notion Templates DB</td></tr>
+            <tr><td><code>NOTION_CLIENT_ASSIGNMENTS_DB_ID</code></td><td><span class="pill pill-yellow">Optional</span></td><td>Notion Client Assignments DB</td></tr>
+            <tr><td><code>FIRM_MEMORY_STORE_ID</code></td><td><span class="pill pill-yellow">Optional</span></td><td>Shared firm-wide Managed Agents memory</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>BK App (new for Phase 3A)</h3>
+        <table>
+          <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>BK_INTERNAL_API_KEY</code></td><td><span class="pill pill-red">Required</span></td><td>Shared secret — must match value set in AgentOS</td></tr>
+          </tbody>
+        </table>
+        <br>
+        <h3>AgentOS (new for Phase 3A)</h3>
+        <table>
+          <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>BK_INTERNAL_API_KEY</code></td><td><span class="pill pill-red">Required</span></td><td>Same value as BK App</td></tr>
+            <tr><td><code>BK_APP_URL</code></td><td><span class="pill pill-yellow">Optional</span></td><td>Defaults to Railway prod URL if unset</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Double Eddie — Internal Architecture Guide · Grof &amp; Acc Pro Singapore</span>
+    <span>Updated 2026-05-12 · Phase 3B Complete · Phase 4 (Railway) Next</span>
+  </footer>
+
+</div>
+</body>
+</html>
