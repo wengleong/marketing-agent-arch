@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Accounting Team Restructure",
+  "schemaVersion": 1,
+  "description": "Accounting team restructure plan for Grof/Acc Pro — covers the two-practice model (Delivery & Automation vs Advisory & Assurance), client communication tiers, 6-month pilot program phases, success metrics, risks, and workflow IP framework."
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accounting Team Restructure — Grof / Acc Pro</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --border: #e4e8ef;
+    --text: #1a1f2e;
+    --text-muted: #6b7280;
+    --text-light: #9ca3af;
+    --accent-da: #2563eb;
+    --accent-da-light: #eff6ff;
+    --accent-da-mid: #bfdbfe;
+    --accent-aa: #7c3aed;
+    --accent-aa-light: #f5f3ff;
+    --accent-aa-mid: #ddd6fe;
+    --green: #059669;
+    --green-light: #ecfdf5;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --pill-1: #0ea5e9;
+    --pill-2: #8b5cf6;
+    --pill-3: #f59e0b;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left h1 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .header-left p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .header-badge {
+    background: linear-gradient(135deg, var(--accent-da), var(--accent-aa));
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Nav tabs ── */
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+  }
+  .nav-tab {
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--accent-da); border-bottom-color: var(--accent-da); }
+
+  /* ── Content ── */
+  .content { padding: 28px 32px; max-width: 1100px; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 16px; }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  /* ── Two-team grid ── */
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .team-card {
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1.5px solid;
+  }
+  .team-card.da {
+    background: var(--accent-da-light);
+    border-color: var(--accent-da-mid);
+  }
+  .team-card.aa {
+    background: var(--accent-aa-light);
+    border-color: var(--accent-aa-mid);
+  }
+  .team-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .team-label.da { color: var(--accent-da); }
+  .team-label.aa { color: var(--accent-aa); }
+  .team-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .da .team-dot { background: var(--accent-da); }
+  .aa .team-dot { background: var(--accent-aa); }
+  .team-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .team-tagline {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .team-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin: 14px 0 6px;
+  }
+  .responsibility-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .responsibility-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .responsibility-list li::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .da .responsibility-list li::before { background: var(--accent-da); }
+  .aa .responsibility-list li::before { background: var(--accent-aa); }
+
+  .profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .profile-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .da .profile-tag { background: var(--accent-da-mid); color: var(--accent-da); }
+  .aa .profile-tag { background: var(--accent-aa-mid); color: var(--accent-aa); }
+
+  /* ── Feedback loop arrow ── */
+  .feedback-loop {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .loop-node {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+  }
+  .loop-node.da-node { background: var(--accent-da-light); }
+  .loop-node.aa-node { background: var(--accent-aa-light); }
+  .loop-node .node-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .loop-node.da-node .node-label { color: var(--accent-da); }
+  .loop-node.aa-node .node-label { color: var(--accent-aa); }
+  .loop-node .node-text { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .loop-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 8px;
+    gap: 4px;
+    min-width: 80px;
+  }
+  .arrow-line {
+    width: 100%;
+    height: 2px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .arrow-line.right::after {
+    content: '▶';
+    position: absolute;
+    right: -2px;
+    font-size: 10px;
+  }
+  .arrow-line.left::before {
+    content: '◀';
+    position: absolute;
+    left: -2px;
+    font-size: 10px;
+  }
+  .arrow-line.right { background: var(--accent-aa); }
+  .arrow-line.right::after { color: var(--accent-aa); }
+  .arrow-line.left { background: var(--accent-da); }
+  .arrow-line.left::before { color: var(--accent-da); }
+  .arrow-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-align: center; }
+
+  /* ── Client tiers ── */
+  .tier-list { display: flex; flex-direction: column; gap: 12px; }
+  .tier-card {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 18px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .tier-id { display: flex; align-items: center; gap: 10px; }
+  .tier-badge {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .tier-1 .tier-badge { background: var(--green-light); color: var(--green); }
+  .tier-2 .tier-badge { background: var(--amber-light); color: var(--amber); }
+  .tier-3 .tier-badge { background: var(--red-light); color: var(--red); }
+  .tier-name { font-size: 13px; font-weight: 700; }
+  .tier-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .tier-who-label, .tier-scope-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+  .tier-who-value, .tier-scope-value {
+    font-size: 12px;
+    color: var(--text);
+  }
+  .owner-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .owner-pill.da { background: var(--accent-da-light); color: var(--accent-da); }
+  .owner-pill.aa { background: var(--accent-aa-light); color: var(--accent-aa); }
+  .owner-pill.both {
+    background: linear-gradient(135deg, var(--accent-da-light), var(--accent-aa-light));
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Pilot timeline ── */
+  .phase-list { display: flex; flex-direction: column; gap: 0; }
+  .phase-item {
+    display: grid;
+    grid-template-columns: 140px 32px 1fr;
+    gap: 0 16px;
+    align-items: start;
+    padding-bottom: 28px;
+    position: relative;
+  }
+  .phase-item:last-child { padding-bottom: 0; }
+  .phase-meta { text-align: right; padding-top: 2px; }
+  .phase-months { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+  .phase-duration { font-size: 10px; color: var(--text-light); margin-top: 2px; }
+  .phase-line { display: flex; flex-direction: column; align-items: center; }
+  .phase-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+  .phase-connector {
+    width: 2px;
+    flex: 1;
+    min-height: 28px;
+    background: var(--border);
+    margin-top: 2px;
+  }
+  .phase-item:last-child .phase-connector { display: none; }
+  .phase-content { padding-top: 4px; }
+  .phase-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .phase-body { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .task-list li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; color: var(--text);
+  }
+  .task-check {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .phase-0 .phase-dot { background: #f1f5f9; color: #64748b; }
+  .phase-1 .phase-dot { background: #dbeafe; color: var(--accent-da); }
+  .phase-1 .task-check { background: #dbeafe; color: var(--accent-da); }
+  .phase-2 .phase-dot { background: #fef3c7; color: var(--amber); }
+  .phase-2 .task-check { background: #fef3c7; color: var(--amber); }
+  .phase-3 .phase-dot { background: #dcfce7; color: var(--green); }
+  .phase-3 .task-check { background: #dcfce7; color: var(--green); }
+  .phase-scale .phase-dot { background: #f3e8ff; color: var(--accent-aa); }
+  .phase-scale .task-check { background: #f3e8ff; color: var(--accent-aa); }
+
+  .owner-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .owner-tag {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 9px; border-radius: 20px;
+  }
+  .owner-tag.da { background: var(--accent-da-light); color: var(--accent-da); }
+  .owner-tag.aa { background: var(--accent-aa-light); color: var(--accent-aa); }
+  .owner-tag.both { background: #f1f5f9; color: var(--text-muted); }
+
+  /* ── Metrics ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .metric-icon { font-size: 24px; margin-bottom: 8px; }
+  .metric-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .metric-target { font-size: 22px; font-weight: 800; color: var(--text); margin: 4px 0; }
+  .metric-desc { font-size: 11px; color: var(--text-muted); }
+
+  .risk-list { display: flex; flex-direction: column; gap: 10px; }
+  .risk-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .risk-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .risk-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .risk-mitigation { font-size: 12px; color: var(--text-muted); }
+  .risk-item.high { border-left: 3px solid var(--red); background: var(--red-light); }
+  .risk-item.med { border-left: 3px solid var(--amber); background: var(--amber-light); }
+  .risk-item.low { border-left: 3px solid var(--green); background: var(--green-light); }
+
+  /* ── Workflow IP ── */
+  .ip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .ip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .ip-icon { font-size: 22px; margin-bottom: 10px; }
+  .ip-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .ip-desc { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+  /* ── Section heading ── */
+  .section-heading {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .section-subheading {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .content { padding: 16px; }
+    .team-grid { grid-template-columns: 1fr; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+    .tier-card { grid-template-columns: 1fr; }
+    .ip-grid { grid-template-columns: 1fr; }
+    .nav { overflow-x: auto; }
+    .nav-tab { font-size: 12px; padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Practice Team Restructure</h1>
+    <p>Grof &amp; Acc Pro Singapore &nbsp;·&nbsp; Accounting · CorpSec · Compliance</p>
+  </div>
+  <div class="header-badge">In Design · 2026</div>
+</div>
+
+<div class="nav" id="nav">
+  <div class="nav-tab active" onclick="showSection('model')">Team Model</div>
+  <div class="nav-tab" onclick="showSection('clients')">Client Tiers</div>
+  <div class="nav-tab" onclick="showSection('pilot')">Pilot Program</div>
+  <div class="nav-tab" onclick="showSection('metrics')">Metrics &amp; Risks</div>
+  <div class="nav-tab" onclick="showSection('ip')">Workflow IP</div>
+  <div class="nav-tab" onclick="showSection('corpsec')">CorpSec</div>
+  <div class="nav-tab" onclick="showSection('compliance')">Compliance</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SECTION: MODEL ═══ -->
+<div class="content">
+<div class="section active" id="model">
+  <div class="section-heading">Two-Practice Model</div>
+  <div class="section-subheading">Same firm. Two distinct orientations — execution and judgment. Both staffed by trained accountants.</div>
+
+  <div class="team-grid">
+
+    <!-- D&A -->
+    <div class="team-card da">
+      <div class="team-label da"><span class="team-dot"></span>Team 1</div>
+      <div class="team-name">Delivery &amp; Automation</div>
+      <div class="team-tagline">"We build and run the machine. The machine does the accounting."</div>
+
+      <div class="team-section-label">1 · Agent Building &amp; Development</div>
+      <ul class="responsibility-list">
+        <li>Build new agent workflows for each service line</li>
+        <li>Refine prompts, templates, and extraction logic</li>
+        <li>Test and version-control workflow updates before go-live</li>
+        <li>Maintain the Workflow IP library</li>
+      </ul>
+
+      <div class="team-section-label">2 · Workflow Monitoring</div>
+      <ul class="responsibility-list">
+        <li>Monitor job queues, output dashboards, and exception flags</li>
+        <li>Review agent-flagged items before A&amp;A handoff</li>
+        <li>Ensure turnaround SLAs and completeness targets are met</li>
+        <li>Own Tier 1 client comms — document intake, status, routine queries</li>
+      </ul>
+
+      <div class="team-section-label">3 · Error Resolution (Agent-First)</div>
+      <ul class="responsibility-list">
+        <li>When an error surfaces: ask "can the agent learn this?" — if yes, fix the workflow</li>
+        <li>If the error could recur → always fix the agent, never patch manually</li>
+        <li>If it's a genuine one-off edge case → escalate to A&amp;A, don't burn time on a workflow fix</li>
+        <li>Log all resolutions to the Workflow Performance Log</li>
+      </ul>
+
+      <div class="team-section-label">Who Fits Here</div>
+      <div class="profile-tags">
+        <span class="profile-tag">Trained accountant</span>
+        <span class="profile-tag">Builder mentality</span>
+        <span class="profile-tag">Loves automation</span>
+        <span class="profile-tag">Systems thinker</span>
+        <span class="profile-tag">Iterates fast</span>
+        <span class="profile-tag">Low ego on manual work</span>
+      </div>
+    </div>
+
+    <!-- A&A -->
+    <div class="team-card aa">
+      <div class="team-label aa"><span class="team-dot"></span>Team 2</div>
+      <div class="team-name">Advisory &amp; Assurance</div>
+      <div class="team-tagline">"AI prepares. We conclude, advise, and sign off."</div>
+
+      <div class="team-section-label">1 · AI-Assisted QC &amp; Review</div>
+      <ul class="responsibility-list">
+        <li>Review AI-prepared exception reports and variance analysis — not every line manually</li>
+        <li>AI pre-flags anomalies, prior-year movements, and completeness gaps before A&amp;A sees the file</li>
+        <li>Make judgment calls on flagged items; sign off on final outputs</li>
+        <li>Own and update QC checklists and escalation criteria</li>
+      </ul>
+
+      <div class="team-section-label">2 · Technical Research &amp; Advisory</div>
+      <ul class="responsibility-list">
+        <li>AI researches FRS standards, IRAS rulings, ACRA requirements and drafts a technical brief</li>
+        <li>A&amp;A reviews the brief, makes the technical call, and signs off on the treatment</li>
+        <li>AI drafts advisory memos, letters, and client recommendations — A&amp;A edits and delivers</li>
+        <li>Non-standard GST, tax, and payroll treatment decisions remain with A&amp;A</li>
+      </ul>
+
+      <div class="team-section-label">3 · Client &amp; Account Management</div>
+      <ul class="responsibility-list">
+        <li>AI prepares pre-meeting briefs — client history, open matters, upcoming deadlines</li>
+        <li>AI drafts correspondence and follow-ups; A&amp;A personalises and sends</li>
+        <li>AI monitors regulatory changes relevant to each key account and alerts A&amp;A</li>
+        <li>A&amp;A owns the relationship, delivers advice, and manages Tier 2–3 accounts directly</li>
+      </ul>
+
+      <div class="team-section-label">Who Fits Here</div>
+      <div class="profile-tags">
+        <span class="profile-tag">Qualified accountant</span>
+        <span class="profile-tag">Technically deep</span>
+        <span class="profile-tag">Client-facing</span>
+        <span class="profile-tag">Judgment-driven</span>
+        <span class="profile-tag">Delegates prep to AI</span>
+        <span class="profile-tag">Advisory-minded</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- D&A Operating Philosophy -->
+  <div style="background: var(--accent-da-light); border: 1px solid var(--accent-da-mid); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+      <span style="font-size:18px;">⚙️</span>
+      <p style="font-size:14px; font-weight:700; color:var(--accent-da);">D&A Operating Philosophy — "Vibe Accounting"</p>
+    </div>
+    <p style="font-size:13px; color:var(--text); margin-bottom:12px;">D&A staff are <strong>accountants who have taken on a workflow engineering role</strong>. Their accounting background gives them the intuition to recognise when something looks wrong — a balance that doesn't make sense, a GST figure that's oddly high. But their <em>job</em> is building and running the system that produces the work, not doing the accounting themselves.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+      <div style="background:white; border-radius:var(--radius-sm); padding:14px 16px; border:1px solid var(--accent-da-mid);">
+        <p style="font-size:11px; font-weight:700; color:var(--accent-da); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">✅ The Job</p>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:5px;">
+          <li style="font-size:12px; color:var(--text);">→ Build and improve agent workflows</li>
+          <li style="font-size:12px; color:var(--text);">→ Monitor outputs and catch anomalies</li>
+          <li style="font-size:12px; color:var(--text);">→ Fix the agent when it gets something wrong</li>
+          <li style="font-size:12px; color:var(--text);">→ Escalate genuine edge cases to A&amp;A</li>
+          <li style="font-size:12px; color:var(--text);">→ Own client comms for Tier 1</li>
+        </ul>
+      </div>
+      <div style="background:white; border-radius:var(--radius-sm); padding:14px 16px; border:1px solid var(--accent-da-mid);">
+        <p style="font-size:11px; font-weight:700; color:#dc2626; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">✗ Not the Job</p>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:5px;">
+          <li style="font-size:12px; color:var(--text-muted);">✗ Manually preparing journal entries</li>
+          <li style="font-size:12px; color:var(--text-muted);">✗ Coding transactions by hand</li>
+          <li style="font-size:12px; color:var(--text-muted);">✗ Patching one-off errors without fixing the agent</li>
+          <li style="font-size:12px; color:var(--text-muted);">✗ Making technical accounting judgments</li>
+          <li style="font-size:12px; color:var(--text-muted);">✗ Being the last line of quality defence</li>
+        </ul>
+      </div>
+    </div>
+    <!-- Error decision rule -->
+    <div style="background: #1e3a5f; border-radius:var(--radius-sm); padding:14px 16px; display:flex; align-items:flex-start; gap:12px;">
+      <span style="font-size:16px; flex-shrink:0;">🔧</span>
+      <div>
+        <p style="font-size:12px; font-weight:700; color:#93c5fd; margin-bottom:6px;">When D&A hits an error or discrepancy</p>
+        <div style="display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap;">
+          <div style="background:#0f2d4a; border-radius:6px; padding:8px 12px; flex:1; min-width:160px;">
+            <p style="font-size:11px; font-weight:700; color:#60a5fa; margin-bottom:3px;">Could this recur?</p>
+            <p style="font-size:11px; color:#93c5fd;">→ Fix the agent. Document it. Never patch manually.</p>
+          </div>
+          <div style="background:#0f2d4a; border-radius:6px; padding:8px 12px; flex:1; min-width:160px;">
+            <p style="font-size:11px; font-weight:700; color:#60a5fa; margin-bottom:3px;">Genuine one-off edge case?</p>
+            <p style="font-size:11px; color:#93c5fd;">→ Escalate to A&amp;A. Don't waste a workflow fix on something the agent will never see again.</p>
+          </div>
+          <div style="background:#0f2d4a; border-radius:6px; padding:8px 12px; flex:1; min-width:160px;">
+            <p style="font-size:11px; font-weight:700; color:#60a5fa; margin-bottom:3px;">Not sure what's wrong?</p>
+            <p style="font-size:11px; color:#93c5fd;">→ Escalate to A&amp;A. D&A "vibes" the output — A&amp;A makes the call.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px; color:var(--text-muted); margin-top:12px; font-style:italic;">⚠ Note: Early on, D&A will need to do some manual work to understand what the agent should be producing. This front-loads the accounting knowledge requirement — it fades as workflows mature and the agent accumulates edge-case handling.</p>
+  </div>
+
+  <!-- A&A Operating Philosophy -->
+  <div style="background: var(--accent-aa-light); border: 1px solid var(--accent-aa-mid); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+      <span style="font-size:18px;">🎯</span>
+      <p style="font-size:14px; font-weight:700; color:var(--accent-aa);">A&A Operating Philosophy — "AI Prepares, I Conclude"</p>
+    </div>
+    <p style="font-size:13px; color:var(--text); margin-bottom:14px;">A&A staff use AI heavily — but differently from D&A. Where D&A uses AI to <em>produce</em> work, A&A uses AI to <em>prepare</em> for their judgment. Every hour spent on research, assembly, or first drafts is an hour taken from advising clients and making professional calls. AI handles the preparation; A&A owns the conclusion.</p>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px;">
+      <div style="background:white; border-radius:var(--radius-sm); padding:14px 16px; border:1px solid var(--accent-aa-mid);">
+        <p style="font-size:11px; font-weight:700; color:var(--accent-aa); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">📋 QC Review</p>
+        <p style="font-size:12px; color:var(--text-muted); line-height:1.6;">AI pre-flags anomalies and variance movements. A&A reviews the flags — not every line. Judgment on what matters; AI handles what's mechanical.</p>
+      </div>
+      <div style="background:white; border-radius:var(--radius-sm); padding:14px 16px; border:1px solid var(--accent-aa-mid);">
+        <p style="font-size:11px; font-weight:700; color:var(--accent-aa); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">📚 Technical Research</p>
+        <p style="font-size:12px; color:var(--text-muted); line-height:1.6;">AI researches FRS standards, IRAS rulings, ACRA requirements and drafts the brief. A&A reads, concludes, and signs off the treatment. Never starts from a blank page.</p>
+      </div>
+      <div style="background:white; border-radius:var(--radius-sm); padding:14px 16px; border:1px solid var(--accent-aa-mid);">
+        <p style="font-size:11px; font-weight:700; color:var(--accent-aa); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">🤝 Client Advisory</p>
+        <p style="font-size:12px; color:var(--text-muted); line-height:1.6;">AI prepares meeting briefs, drafts advisory letters, monitors regulatory updates. A&A walks in informed, personalises the advice, and delivers it.</p>
+      </div>
+    </div>
+    <div style="background: #2d1b69; border-radius:var(--radius-sm); padding:14px 16px;">
+      <p style="font-size:12px; font-weight:700; color:#c4b5fd; margin-bottom:6px;">What A&A should never do manually if AI can prepare it first</p>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <span style="background:#1e1154; color:#a78bfa; font-size:11px; padding:4px 10px; border-radius:20px;">Research FRS standards from scratch</span>
+        <span style="background:#1e1154; color:#a78bfa; font-size:11px; padding:4px 10px; border-radius:20px;">Manually compile QC review files</span>
+        <span style="background:#1e1154; color:#a78bfa; font-size:11px; padding:4px 10px; border-radius:20px;">Write first-draft advisory letters</span>
+        <span style="background:#1e1154; color:#a78bfa; font-size:11px; padding:4px 10px; border-radius:20px;">Manually compile client history pre-meeting</span>
+        <span style="background:#1e1154; color:#a78bfa; font-size:11px; padding:4px 10px; border-radius:20px;">Assemble filing packages by hand</span>
+        <span style="background:#1e1154; color:#a78bfa; font-size:11px; padding:4px 10px; border-radius:20px;">Draft routine client correspondence</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ratio callout -->
+  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px;">
+    <div style="font-size: 28px; font-weight: 800; color: #16a34a; white-space: nowrap;">2–3 : 1</div>
+    <div>
+      <p style="font-size: 13px; font-weight: 600; color: var(--text);">D&A to A&A ratio — middle of the three practices</p>
+      <p style="font-size: 12px; color: var(--text-muted);">More judgment-embedded than CorpSec, but no hard regulatory floor like Compliance. Ratio shifts by service line — bookkeeping and payroll sit closer to 3:1; FS/MA and tax sit closer to 2:1. Blended across a typical portfolio: <strong>~2–2.5:1</strong>.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Work Flow Diagram -->
+  <div class="card" style="margin-bottom: 20px;">
+    <div class="card-title">Work Flow</div>
+    <div style="overflow-x:auto;">
+    <svg viewBox="0 0 820 248" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;display:block;">
+      <defs>
+        <marker id="wf-arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L8,3.5 Z" fill="#94a3b8"/>
+        </marker>
+        <marker id="wf-da" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L8,3.5 Z" fill="#2563eb"/>
+        </marker>
+        <marker id="wf-aa" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L8,3.5 Z" fill="#7c3aed"/>
+        </marker>
+        <marker id="wf-esc" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L8,3.5 Z" fill="#dc2626"/>
+        </marker>
+      </defs>
+
+      <!-- Lane backgrounds -->
+      <rect x="0"  y="0"   width="820" height="50"  fill="#e0f2fe"/>
+      <rect x="0"  y="50"  width="820" height="100" fill="#eff6ff"/>
+      <rect x="0"  y="150" width="820" height="98"  fill="#f5f3ff"/>
+
+      <!-- Lane label strips -->
+      <rect x="0" y="0"   width="54" height="50"  fill="#bae6fd"/>
+      <rect x="0" y="50"  width="54" height="100" fill="#dbeafe"/>
+      <rect x="0" y="150" width="54" height="98"  fill="#ede9fe"/>
+
+      <!-- Lane separators -->
+      <line x1="0" y1="50"  x2="820" y2="50"  stroke="#d1d5db" stroke-width="1"/>
+      <line x1="0" y1="150" x2="820" y2="150" stroke="#d1d5db" stroke-width="1"/>
+
+      <!-- Lane label text -->
+      <text x="27" y="29" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" font-weight="700" fill="#0369a1" letter-spacing="0.8">CLIENT</text>
+      <text x="27" y="96" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" font-weight="700" fill="#1d4ed8" letter-spacing="0.8">D&amp;A</text>
+      <text x="27" y="194" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" font-weight="700" fill="#6d28d9" letter-spacing="0.8">A&amp;A</text>
+
+      <!-- ── CLIENT boxes ── -->
+      <rect x="62"  y="11" width="128" height="30" rx="6" fill="#7dd3fc" stroke="#38bdf8" stroke-width="1"/>
+      <text x="126" y="30" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11" font-weight="600" fill="#0c4a6e">Doc Submission</text>
+
+      <rect x="628" y="11" width="130" height="30" rx="6" fill="#7dd3fc" stroke="#38bdf8" stroke-width="1"/>
+      <text x="693" y="30" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11" font-weight="600" fill="#0c4a6e">Receives Output</text>
+
+      <!-- ── D&A boxes ── -->
+      <!-- Agent Intake & Processing -->
+      <rect x="62"  y="65" width="128" height="40" rx="6" fill="#2563eb" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="126" y="81" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" font-weight="700" fill="#ffffff">Agent Intake</text>
+      <text x="126" y="96" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" fill="#bfdbfe">&amp; Processing</text>
+
+      <!-- D&A Review & Validation -->
+      <rect x="240" y="65" width="128" height="40" rx="6" fill="#2563eb" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="304" y="81" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" font-weight="700" fill="#ffffff">D&amp;A Review</text>
+      <text x="304" y="96" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" fill="#bfdbfe">&amp; Validation</text>
+
+      <!-- Output Prepared -->
+      <rect x="462" y="65" width="120" height="40" rx="6" fill="#2563eb" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="522" y="81" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" font-weight="700" fill="#ffffff">Output</text>
+      <text x="522" y="96" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" fill="#bfdbfe">Prepared</text>
+
+      <!-- ── A&A boxes ── -->
+      <!-- A&A Resolves (dashed — escalation path) -->
+      <rect x="240" y="163" width="128" height="40" rx="6" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="304" y="179" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" font-weight="700" fill="#6d28d9">A&amp;A Resolves</text>
+      <text x="304" y="194" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" fill="#7c3aed">escalation</text>
+
+      <!-- QC Review & Sign-off -->
+      <rect x="462" y="163" width="120" height="40" rx="6" fill="#7c3aed" stroke="#6d28d9" stroke-width="1"/>
+      <text x="522" y="179" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" font-weight="700" fill="#ffffff">QC Review</text>
+      <text x="522" y="194" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" fill="#ddd6fe">&amp; Sign-off</text>
+
+      <!-- File & Deliver -->
+      <rect x="628" y="163" width="128" height="40" rx="6" fill="#7c3aed" stroke="#6d28d9" stroke-width="1"/>
+      <text x="692" y="179" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" font-weight="700" fill="#ffffff">File &amp;</text>
+      <text x="692" y="194" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="10" fill="#ddd6fe">Deliver</text>
+
+      <!-- ── ARROWS ── -->
+
+      <!-- Client → D&A (doc in) -->
+      <line x1="126" y1="41" x2="126" y2="65" stroke="#0369a1" stroke-width="1.5" marker-end="url(#wf-arr)"/>
+
+      <!-- D&A: Agent Intake → D&A Review -->
+      <line x1="190" y1="85" x2="240" y2="85" stroke="#2563eb" stroke-width="1.5" marker-end="url(#wf-da)"/>
+
+      <!-- D&A: D&A Review → Output Prepared (standard path, right) -->
+      <line x1="368" y1="80" x2="462" y2="80" stroke="#2563eb" stroke-width="1.5" marker-end="url(#wf-da)"/>
+      <text x="414" y="73" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" fill="#2563eb" font-style="italic">standard</text>
+
+      <!-- D&A Review → A&A Resolves (non-standard, down) -->
+      <line x1="304" y1="105" x2="304" y2="163" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#wf-esc)"/>
+      <text x="322" y="137" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" fill="#dc2626" font-style="italic">non-standard</text>
+
+      <!-- Output Prepared → QC Review (down) -->
+      <line x1="522" y1="105" x2="522" y2="163" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#wf-aa)"/>
+      <text x="534" y="137" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" fill="#6d28d9" font-style="italic">for QC</text>
+
+      <!-- A&A Resolves → QC Review (right) -->
+      <line x1="368" y1="183" x2="462" y2="183" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#wf-aa)"/>
+
+      <!-- QC Review → File & Deliver (right) -->
+      <line x1="582" y1="183" x2="628" y2="183" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#wf-aa)"/>
+
+      <!-- File & Deliver → Client Receives (up) -->
+      <line x1="692" y1="163" x2="692" y2="41" stroke="#0369a1" stroke-width="1.5" marker-end="url(#wf-arr)"/>
+    </svg>
+    </div>
+    <!-- Legend -->
+    <div style="display:flex;gap:20px;margin-top:12px;flex-wrap:wrap;padding-left:4px;">
+      <span style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted);">
+        <span style="width:20px;height:3px;background:#2563eb;display:inline-block;border-radius:2px;"></span>D&amp;A flow
+      </span>
+      <span style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted);">
+        <span style="width:20px;height:3px;background:#7c3aed;display:inline-block;border-radius:2px;"></span>A&amp;A flow
+      </span>
+      <span style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted);">
+        <span style="width:20px;height:2px;border-top:2px dashed #dc2626;display:inline-block;"></span>Escalation (non-standard)
+      </span>
+      <span style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted);">
+        <span style="width:20px;height:2px;border-top:2px dashed #2563eb;display:inline-block;"></span>Dashed box = conditional path
+      </span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card">
+    <div class="card-title">The Weekly Feedback Loop</div>
+    <div class="feedback-loop">
+      <div class="loop-node da-node">
+        <div class="node-label">D&amp;A Builds &amp; Delivers</div>
+        <div class="node-text">Runs agents, processes client work, drafts outputs</div>
+      </div>
+      <div class="loop-arrow">
+        <div class="arrow-label" style="color: var(--accent-aa)">QC Findings</div>
+        <div class="arrow-line right" style="background: var(--accent-aa); color: var(--accent-aa);"></div>
+      </div>
+      <div class="loop-node aa-node">
+        <div class="node-label">A&amp;A Reviews &amp; Classifies</div>
+        <div class="node-text">Workflow fix · Template update · One-off judgment</div>
+      </div>
+      <div class="loop-arrow">
+        <div class="arrow-label" style="color: var(--accent-da)">Process Updates</div>
+        <div class="arrow-line left" style="background: var(--accent-da); color: var(--accent-da);"></div>
+      </div>
+      <div class="loop-node da-node" style="background: #e0f2fe; border-radius: 8px;">
+        <div class="node-label">D&amp;A Improves Workflow</div>
+        <div class="node-text">Fewer errors each cycle — shrinking QC burden over time</div>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px;">⏱ &nbsp;Weekly 30-min cadence. As the workflow matures, this meeting gets shorter — that's the metric.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ SECTION: CLIENTS ═══ -->
+<div class="section" id="clients">
+  <div class="section-heading">Client Communication Tiers</div>
+  <div class="section-subheading">Ownership model by client value and complexity. Most clients are Tier 1 — this is where AI leverage is highest.</div>
+
+  <div class="tier-list">
+    <div class="tier-card tier-1">
+      <div class="tier-id">
+        <div class="tier-badge">1</div>
+        <div>
+          <div class="tier-name">Standard</div>
+          <div class="tier-desc">High-volume, cookie-cutter</div>
+        </div>
+      </div>
+      <div>
+        <div class="tier-who-label">Relationship Owner</div>
+        <span class="owner-pill da">D&amp;A owns end-to-end</span>
+        <div class="tier-who-value" style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">Agents handle document chasing, status updates, delivery. D&amp;A staff manage exceptions. A&amp;A only appears if technical issue surfaces.</div>
+      </div>
+      <div>
+        <div class="tier-scope-label">Defining Criteria</div>
+        <div class="tier-scope-value" style="font-size: 12px; color: var(--text-muted);">Single entity · Standard transactions · Below fee threshold · No advisory needs · Clean history</div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-2">
+      <div class="tier-id">
+        <div class="tier-badge">2</div>
+        <div>
+          <div class="tier-name">Complex</div>
+          <div class="tier-desc">Growth clients, multi-entity</div>
+        </div>
+      </div>
+      <div>
+        <div class="tier-who-label">Relationship Owner</div>
+        <span class="owner-pill both">Shared — D&amp;A + A&amp;A</span>
+        <div class="tier-who-value" style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">D&amp;A handles operational comms. A&amp;A is named account lead and handles anything advisory, scope-related, or requiring professional judgment.</div>
+      </div>
+      <div>
+        <div class="tier-scope-label">Defining Criteria</div>
+        <div class="tier-scope-value" style="font-size: 12px; color: var(--text-muted);">Multiple entities · Non-standard transactions · Mid-range fee · Occasional advisory touchpoints · Growing complexity</div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-3">
+      <div class="tier-id">
+        <div class="tier-badge">3</div>
+        <div>
+          <div class="tier-name">Strategic</div>
+          <div class="tier-desc">High-value, key accounts</div>
+        </div>
+      </div>
+      <div>
+        <div class="tier-who-label">Relationship Owner</div>
+        <span class="owner-pill aa">A&amp;A owns fully</span>
+        <div class="tier-who-value" style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">A&amp;A is the face of the firm. D&amp;A remains the execution engine behind the scenes. Client's primary relationship is with a qualified, senior person. Advisory revenue lives here.</div>
+      </div>
+      <div>
+        <div class="tier-scope-label">Defining Criteria</div>
+        <div class="tier-scope-value" style="font-size: 12px; color: var(--text-muted);">High annual fee · Complex structure · Regulatory sensitivity · M&amp;A or advisory needs · Strategic relationship value</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: #f8faff; border: 1px solid var(--accent-da-mid); border-radius: var(--radius-sm); padding: 14px 18px; margin-top: 20px;">
+    <p style="font-size: 12px; color: var(--text-muted);"><strong style="color: var(--accent-da);">Operationalising tiers:</strong>&nbsp; Define thresholds in the Ops DB — e.g. Tier 1 = annual fee &lt;$X, single entity, no advisory flag. Auto-classify on client onboarding. A&amp;A can manually upgrade any client to Tier 2/3 at any point.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SECTION: PILOT ═══ -->
+<div class="section" id="pilot">
+  <div class="section-heading">Pilot Program</div>
+  <div class="section-subheading">One cross-functional pod. Prove the model on bookkeeping + GST first. Build the playbook. Then scale.</div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <div class="card-title">Pilot Pod Setup</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px;">
+      <div>
+        <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Composition — keep it lean</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 5px;">
+          <li style="font-size: 13px; color: var(--text-muted);">• 1–2 accountants → D&amp;A (builder role)</li>
+          <li style="font-size: 13px; color: var(--text-muted);">• 1 accountant → A&amp;A (technical/QC role)</li>
+          <li style="font-size: 13px; color: var(--text-muted);">• Tech support on-call — not dedicated</li>
+        </ul>
+        <p style="font-size: 11px; color: var(--text-light); margin-top: 8px;">2–3 people total. Prove the model small before scaling headcount.</p>
+      </div>
+      <div>
+        <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Service Lines to Pilot</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 5px;">
+          <li style="font-size: 13px; color: var(--green);">✓ Bookkeeping (Phase 1)</li>
+          <li style="font-size: 13px; color: var(--green);">✓ GST computations (Phase 2)</li>
+          <li style="font-size: 13px; color: var(--amber);">→ Payroll (Phase 2)</li>
+          <li style="font-size: 13px; color: var(--red);">✗ FS/MA — after model is proven</li>
+        </ul>
+      </div>
+    </div>
+    <div style="background: var(--amber-light); border: 1px solid #fde68a; border-radius: var(--radius-sm); padding: 10px 14px;">
+      <p style="font-size: 12px; color: var(--amber);">⚠ &nbsp;Run on a clean cohort of standard Tier 1 clients first. Not your highest-value accounts.</p>
+    </div>
+  </div>
+
+  <div class="phase-list">
+
+    <div class="phase-item phase-0">
+      <div class="phase-meta">
+        <div class="phase-months">Pre-kick</div>
+        <div class="phase-duration">2 weeks</div>
+      </div>
+      <div class="phase-line">
+        <div class="phase-dot">0</div>
+        <div class="phase-connector"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-name">Setup &amp; Selection</div>
+        <div class="phase-body">Select the pod. Define the pilot client cohort. Align on success metrics. Set up the feedback loop cadence calendar.</div>
+        <ul class="task-list">
+          <li><span class="task-check" style="background: #f1f5f9; color: #64748b;">→</span>Identify 4–6 staff for the pod based on interest + aptitude</li>
+          <li><span class="task-check" style="background: #f1f5f9; color: #64748b;">→</span>Select 15–20 Tier 1 clients as pilot cohort</li>
+          <li><span class="task-check" style="background: #f1f5f9; color: #64748b;">→</span>Document current manual bookkeeping workflow end-to-end</li>
+          <li><span class="task-check" style="background: #f1f5f9; color: #64748b;">→</span>Baseline metrics: avg time per job, error rate</li>
+        </ul>
+        <div class="owner-tags">
+          <span class="owner-tag both">All pilot staff</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-item phase-1">
+      <div class="phase-meta">
+        <div class="phase-months">Months 1–2</div>
+        <div class="phase-duration">Design &amp; Build</div>
+      </div>
+      <div class="phase-line">
+        <div class="phase-dot">1</div>
+        <div class="phase-connector"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-name">Build the First Workflows</div>
+        <div class="phase-body">D&amp;A maps and automates the bookkeeping pipeline. A&amp;A defines the QC checklist and escalation criteria.</div>
+        <ul class="task-list">
+          <li><span class="task-check">→</span>Map every step and decision point in the current bookkeeping flow</li>
+          <li><span class="task-check">→</span>Identify agent-ownable steps vs. human touchpoints</li>
+          <li><span class="task-check">→</span>Build: document intake → categorisation → extraction → BK App → exception flagging</li>
+          <li><span class="task-check">→</span>A&amp;A: define QC checklist v1 and escalation decision tree</li>
+          <li><span class="task-check">→</span>Document workflow in Workflow IP library (v0.1)</li>
+        </ul>
+        <div class="owner-tags">
+          <span class="owner-tag da">D&amp;A builds agents</span>
+          <span class="owner-tag aa">A&amp;A defines QC criteria</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-item phase-2">
+      <div class="phase-meta">
+        <div class="phase-months">Months 3–4</div>
+        <div class="phase-duration">Shadow Mode</div>
+      </div>
+      <div class="phase-line">
+        <div class="phase-dot">2</div>
+        <div class="phase-connector"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-name">Run in Parallel</div>
+        <div class="phase-body">Agent workflows run alongside the existing process. Measure everything. Refine before going live.</div>
+        <ul class="task-list">
+          <li><span class="task-check">→</span>Run agent workflow on pilot cohort in parallel with manual process</li>
+          <li><span class="task-check">→</span>D&amp;A monitors outputs, catches errors, logs issues</li>
+          <li><span class="task-check">→</span>A&amp;A reviews both outputs — track discrepancies</li>
+          <li><span class="task-check">→</span>Weekly feedback loop begins (30 min, A&amp;A → D&amp;A findings)</li>
+          <li><span class="task-check">→</span>Track: time per job, error rate, escalation frequency</li>
+          <li><span class="task-check">→</span>Begin GST workflow design (parallel track)</li>
+        </ul>
+        <div class="owner-tags">
+          <span class="owner-tag da">D&amp;A monitors + refines</span>
+          <span class="owner-tag aa">A&amp;A QC + feedback</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-item phase-3">
+      <div class="phase-meta">
+        <div class="phase-months">Months 5–6</div>
+        <div class="phase-duration">Live with Guardrails</div>
+      </div>
+      <div class="phase-line">
+        <div class="phase-dot">3</div>
+        <div class="phase-connector"></div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-name">Go Live — Primary + Fallback</div>
+        <div class="phase-body">Agent workflows become primary. Manual process is fallback only. D&amp;A owns the pilot client portfolio. A&amp;A signs off all outputs.</div>
+        <ul class="task-list">
+          <li><span class="task-check">→</span>Agent workflow = primary; manual = fallback only</li>
+          <li><span class="task-check">→</span>D&amp;A owns Tier 1 client communications for pilot cohort</li>
+          <li><span class="task-check">→</span>A&amp;A signs off final outputs, owns any Tier 3 from cohort</li>
+          <li><span class="task-check">→</span>GST workflow goes into shadow mode</li>
+          <li><span class="task-check">→</span>Measure vs. baseline: jobs per person, QC catch rate, client satisfaction</li>
+          <li><span class="task-check">→</span>Document the playbook — good enough to onboard a new D&amp;A hire in 2 weeks</li>
+        </ul>
+        <div class="owner-tags">
+          <span class="owner-tag da">D&amp;A runs the machine</span>
+          <span class="owner-tag aa">A&amp;A assures + advises</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-item phase-scale">
+      <div class="phase-meta">
+        <div class="phase-months">Month 7+</div>
+        <div class="phase-duration">Scale</div>
+      </div>
+      <div class="phase-line">
+        <div class="phase-dot">↑</div>
+      </div>
+      <div class="phase-content">
+        <div class="phase-name">Roll Out to Full Team</div>
+        <div class="phase-body">Pilot playbook is proven. Use it to transition the rest of the accounting team. Add payroll, then FS/MA when templates are locked.</div>
+        <ul class="task-list">
+          <li><span class="task-check">→</span>Transition remaining accountants through the same self-selection process</li>
+          <li><span class="task-check">→</span>Payroll workflow goes live</li>
+          <li><span class="task-check">→</span>FS/MA templates finalised by A&amp;A — draft workflow handed to D&amp;A</li>
+          <li><span class="task-check">→</span>Workflow IP library becomes the standard onboarding resource</li>
+          <li><span class="task-check">→</span>Client tiers formally assigned in Ops DB for all clients</li>
+        </ul>
+        <div class="owner-tags">
+          <span class="owner-tag both">Full team transition</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ SECTION: METRICS ═══ -->
+<div class="section" id="metrics">
+  <div class="section-heading">KPIs &amp; Key Risks</div>
+  <div class="section-subheading">Three KPIs per practice. Distinct, measurable, owned.</div>
+
+  <!-- D&A KPIs -->
+  <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-da);"></span>
+    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-da);">Delivery &amp; Automation</span>
+  </div>
+  <div class="metrics-grid" style="margin-bottom: 24px;">
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-label">Jobs Throughput</div>
+      <div class="metric-target">2–3×</div>
+      <div class="metric-desc">Jobs completed per person vs. manual baseline. Primary measure of AI leverage.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">🚦</div>
+      <div class="metric-label">Escalation Rate</div>
+      <div class="metric-target">&lt;15%</div>
+      <div class="metric-desc">% of jobs escalated to A&amp;A. Low = agents handling standard cases. Not zero = escalation discipline intact.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">⏱</div>
+      <div class="metric-label">Turnaround Time</div>
+      <div class="metric-target">↓ vs. baseline</div>
+      <div class="metric-desc">Avg days from document receipt to output ready for A&amp;A review. Baseline set in pre-kick phase.</div>
+    </div>
+  </div>
+
+  <!-- A&A KPIs -->
+  <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-aa);"></span>
+    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-aa);">Advisory &amp; Assurance</span>
+  </div>
+  <div class="metrics-grid" style="margin-bottom: 24px;">
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">📉</div>
+      <div class="metric-label">QC Defect Rate</div>
+      <div class="metric-target">↓ Monthly</div>
+      <div class="metric-desc">Errors caught per 10 jobs reviewed. Should trend down each month as D&amp;A workflows mature.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">🎯</div>
+      <div class="metric-label">Advisory Time %</div>
+      <div class="metric-target">↑ over time</div>
+      <div class="metric-desc">Share of A&amp;A hours on advisory vs. QC. Rising % means the machine is working — less checking, more advising.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">📅</div>
+      <div class="metric-label">On-Time Filing</div>
+      <div class="metric-target">100%</div>
+      <div class="metric-desc">% of regulatory filings (IRAS, ACRA, CPF) submitted on or before deadline. Non-negotiable.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Key Risks to Manage</div>
+    <div class="risk-list">
+      <div class="risk-item high">
+        <div class="risk-icon">⚠️</div>
+        <div>
+          <div class="risk-title">Knowledge gap at escalation</div>
+          <div class="risk-mitigation">D&amp;A builders need enough accounting literacy to know what to escalate. Deliberate upskilling + a clear escalation decision tree from A&amp;A. Don't assume it'll be obvious to them.</div>
+        </div>
+      </div>
+      <div class="risk-item high">
+        <div class="risk-icon">⚠️</div>
+        <div>
+          <div class="risk-title">Piloting the wrong service line first</div>
+          <div class="risk-mitigation">Start with bookkeeping — not FS, not tax advisory. High volume, most standardisable, errors are correctable. Add complexity only after the model is proven.</div>
+        </div>
+      </div>
+      <div class="risk-item med">
+        <div class="risk-icon">⚡</div>
+        <div>
+          <div class="risk-title">D&amp;A builders getting stuck in pure tech</div>
+          <div class="risk-mitigation">They're accountants who build, not developers. Ensure a tech/ops support person is available for the integrations work. Builders focus on the workflow logic, not the plumbing.</div>
+        </div>
+      </div>
+      <div class="risk-item med">
+        <div class="risk-icon">⚡</div>
+        <div>
+          <div class="risk-title">A&amp;A becomes the scaling bottleneck</div>
+          <div class="risk-mitigation">As D&amp;A volume scales, A&amp;A capacity could cap throughput. Design QC to be risk-based (not 100% review of every line) and track QC time per job. Plan A&amp;A headcount accordingly.</div>
+        </div>
+      </div>
+      <div class="risk-item low">
+        <div class="risk-icon">💡</div>
+        <div>
+          <div class="risk-title">Team identity and morale</div>
+          <div class="risk-mitigation">Avoid "factory" framing. Both practices are professional. Emphasise self-selection — people go where their personality fits, not where they're placed. Clear paths between roles exist.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ SECTION: IP ═══ -->
+<div class="section" id="ip">
+  <div class="section-heading">Workflow IP</div>
+  <div class="section-subheading">The most valuable asset the D&amp;A team creates. This is the firm's proprietary execution engine — not just documentation.</div>
+
+  <div class="ip-grid">
+    <div class="ip-card">
+      <div class="ip-icon">🤖</div>
+      <div class="ip-title">Agent Workflow Library</div>
+      <div class="ip-desc">Each service line documented as a versioned workflow: inputs, agent steps, decision points, exception triggers, outputs. Owned by D&amp;A. Reviewed after every major QC finding. Version-controlled.</div>
+    </div>
+    <div class="ip-card">
+      <div class="ip-icon">📐</div>
+      <div class="ip-title">Prompt &amp; Template Bank</div>
+      <div class="ip-desc">Tested, versioned prompts for every AI-assisted task. FS and MA templates locked by A&amp;A, executed by D&amp;A. Tax and GST computation templates with standard treatment rules baked in.</div>
+    </div>
+    <div class="ip-card">
+      <div class="ip-icon">🚦</div>
+      <div class="ip-title">Escalation Decision Trees</div>
+      <div class="ip-desc">Jointly owned: A&amp;A defines what constitutes an escalation, D&amp;A uses it in the field. Covers bookkeeping, GST, payroll, and tax. Updated quarterly or after any novel escalation case.</div>
+    </div>
+    <div class="ip-card">
+      <div class="ip-icon">✅</div>
+      <div class="ip-title">QC Checklists</div>
+      <div class="ip-desc">A&amp;A-owned. Service-line specific. Used by A&amp;A for final review but also shared with D&amp;A so they know what's being checked — reduces surprises and educates builders on quality standards.</div>
+    </div>
+    <div class="ip-card">
+      <div class="ip-icon">📖</div>
+      <div class="ip-title">Onboarding Playbook</div>
+      <div class="ip-desc">New D&amp;A hire should be productive within 2 weeks using this alone. Covers: how the workflows run, common exceptions, who to escalate to, tools and access, client communication guidelines.</div>
+    </div>
+    <div class="ip-card">
+      <div class="ip-icon">📊</div>
+      <div class="ip-title">Workflow Performance Log</div>
+      <div class="ip-desc">Running record of QC findings categorised by type (workflow fix / template update / one-off). Tracks error rates over time per service line. The data that proves the model is improving — and where it needs attention.</div>
+    </div>
+  </div>
+
+  <div style="background: var(--accent-da-light); border: 1px solid var(--accent-da-mid); border-radius: var(--radius-sm); padding: 16px 20px; margin-top: 20px;">
+    <p style="font-size: 13px; font-weight: 600; color: var(--accent-da); margin-bottom: 4px;">Ownership Model</p>
+    <p style="font-size: 12px; color: var(--text-muted);">D&amp;A <strong>creates and maintains</strong> the workflow IP. A&amp;A <strong>defines the standards</strong> it's built to. Neither team owns it entirely — it's a shared asset, but D&amp;A is the custodian. As the pilot matures, this IP base becomes the competitive moat: the firm's ability to onboard, scale, and replicate consistently.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ SECTION: CORPSEC ═══ -->
+<div class="section" id="corpsec">
+  <div class="section-heading">Corporate Secretarial</div>
+  <div class="section-subheading">Highest AI leverage of any practice — ~85–90% of work is templatable. Lean team, massive volume. D&A-heavy model.</div>
+
+  <!-- D&A / A&A cards -->
+  <div class="team-grid" style="margin-bottom: 20px;">
+    <div class="team-card da">
+      <div class="team-label da"><span class="team-dot"></span>D&A owns</div>
+      <div class="team-name" style="font-size: 17px;">Execution &amp; Filing</div>
+      <div class="team-tagline">~85–90% of all CorpSec volume</div>
+      <div class="team-section-label">Routine Work (Agent-led)</div>
+      <ul class="responsibility-list">
+        <li>Annual Returns — deadline monitoring → doc chase → prepare → lodge</li>
+        <li>Standard director / shareholder / address changes via BizFile</li>
+        <li>RORC updates and statutory register maintenance</li>
+        <li>AGM prep — notice drafting, timeline tracking, minute templates</li>
+        <li>Standard incorporations — agent populates from client intake</li>
+        <li>Client comms — deadline alerts, doc requests, status updates</li>
+      </ul>
+      <div class="team-section-label">D&A Role</div>
+      <ul class="responsibility-list">
+        <li>Monitor agent outputs, review before submission</li>
+        <li>Handle routine client queries and document exceptions</li>
+        <li>Escalate anything non-standard to A&A immediately</li>
+      </ul>
+    </div>
+    <div class="team-card aa">
+      <div class="team-label aa"><span class="team-dot"></span>A&A owns</div>
+      <div class="team-name" style="font-size: 17px;">Judgment &amp; Relationships</div>
+      <div class="team-tagline">Complex matters + key accounts</div>
+      <div class="team-section-label">Non-Standard Work</div>
+      <ul class="responsibility-list">
+        <li>Complex corporate restructuring and M&A-related changes</li>
+        <li>Unusual corporate events — capital reductions, scheme of arrangement</li>
+        <li>Any filing where regulatory consequence exceeds routine late penalty</li>
+        <li>Governance advisory for Tier 2–3 clients</li>
+        <li>Final sign-off on all non-standard outputs</li>
+      </ul>
+      <div class="team-section-label">Account Management</div>
+      <ul class="responsibility-list">
+        <li>Named contact for Tier 2–3 clients</li>
+        <li>Advisory on corporate governance and ACRA requirements</li>
+        <li>New client scoping for complex structures</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Ratio callout -->
+  <div style="background: var(--accent-da-light); border: 1px solid var(--accent-da-mid); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px;">
+    <div style="font-size: 28px; font-weight: 800; color: var(--accent-da); white-space: nowrap;">3–4 : 1</div>
+    <div>
+      <p style="font-size: 13px; font-weight: 600; color: var(--text);">D&A to A&A ratio — more skewed than Accounting</p>
+      <p style="font-size: 12px; color: var(--text-muted);">Because the work is so templatable, one A&A person can cover a large D&A operation. A&A here is genuinely exception-handling and advisory — not routine review of every output.</p>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-da);"></span>
+    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-da);">D&A KPIs</span>
+  </div>
+  <div class="metrics-grid" style="margin-bottom: 20px;">
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">📅</div>
+      <div class="metric-label">On-Time Lodgement</div>
+      <div class="metric-target">100%</div>
+      <div class="metric-desc">% of ACRA filings lodged on or before deadline. The primary D&A accountability metric.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-label">Jobs Per Person</div>
+      <div class="metric-target">↑ vs. baseline</div>
+      <div class="metric-desc">Standard filings processed per D&A staff per week vs. manual baseline.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">📩</div>
+      <div class="metric-label">Doc SLA Response</div>
+      <div class="metric-target">&gt;80% in 48h</div>
+      <div class="metric-desc">% of client document requests responded to within 48 hours of agent chase.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-aa);"></span>
+    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-aa);">A&A KPIs</span>
+  </div>
+  <div class="metrics-grid" style="margin-bottom: 20px;">
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">🚫</div>
+      <div class="metric-label">ACRA Penalties</div>
+      <div class="metric-target">Zero</div>
+      <div class="metric-desc">Regulatory penalties or breach notices from ACRA. Non-negotiable floor.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">⚖️</div>
+      <div class="metric-label">Complex Matters SLA</div>
+      <div class="metric-target">100% on time</div>
+      <div class="metric-desc">Non-standard / complex matters resolved within agreed client SLA.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">🤝</div>
+      <div class="metric-label">Key Account Retention</div>
+      <div class="metric-target">↑ or stable</div>
+      <div class="metric-desc">Tier 2–3 client retention rate year-on-year. A&A relationship quality metric.</div>
+    </div>
+  </div>
+
+  <!-- Pilot -->
+  <div class="card">
+    <div class="card-title">CorpSec Pilot — Even Leaner</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Pod Composition</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 5px;">
+          <li style="font-size: 13px; color: var(--text-muted);">• 1–2 CorpSec staff → D&A</li>
+          <li style="font-size: 13px; color: var(--text-muted);">• 1 senior CorpSec → A&A</li>
+          <li style="font-size: 13px; color: var(--text-muted);">• Tech support on-call only</li>
+        </ul>
+        <p style="font-size: 11px; color: var(--text-light); margin-top: 8px;">Can run in parallel with the Accounting pilot — different service lines, same model.</p>
+      </div>
+      <div>
+        <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Start With</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 5px;">
+          <li style="font-size: 13px; color: var(--green);">✓ Annual Returns workflow (highest volume)</li>
+          <li style="font-size: 13px; color: var(--amber);">→ Standard BizFile changes (Phase 2)</li>
+          <li style="font-size: 13px; color: var(--red);">✗ Complex restructuring — not yet</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════ SECTION: COMPLIANCE ═══ -->
+<div class="section" id="compliance">
+  <div class="section-heading">Compliance</div>
+  <div class="section-subheading">Regulatory accountability wall is hard — certain decisions legally cannot be delegated. D&A owns all preparation; A&A owns all decisions.</div>
+
+  <!-- Hard wall callout -->
+  <div style="background: var(--red-light); border: 1px solid #fca5a5; border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px;">
+    <div style="font-size: 20px; flex-shrink: 0;">⚖️</div>
+    <div>
+      <p style="font-size: 13px; font-weight: 700; color: var(--red); margin-bottom: 3px;">Non-Delegable Decisions</p>
+      <p style="font-size: 12px; color: var(--text-muted);">Under MAS AML/CTF requirements, <strong>risk classification, EDD sign-off, and STR/SAR decisions</strong> must sit with qualified compliance personnel. This is regulatory accountability — not a quality preference. The A&A compliance team cannot be thinned below what's required to hold this obligation. Model accordingly.</p>
+    </div>
+  </div>
+
+  <div class="team-grid" style="margin-bottom: 20px;">
+    <div class="team-card da">
+      <div class="team-label da"><span class="team-dot"></span>D&A owns</div>
+      <div class="team-name" style="font-size: 17px;">Compliance Operations</div>
+      <div class="team-tagline">Document-driven, deadline-managed, well-tooled</div>
+      <div class="team-section-label">Agent-Led Preparation</div>
+      <ul class="responsibility-list">
+        <li>CDD document collection, organisation, and completeness checks</li>
+        <li>Sanctions &amp; PEP screening via API — agent runs, D&A reviews hits</li>
+        <li>CDD form population from collected documents</li>
+        <li>Adverse news monitoring — agent surfaces flags, D&A triages</li>
+        <li>Periodic review scheduling and document chasing</li>
+        <li>FATCA/CRS data collection, preliminary matching, form population</li>
+      </ul>
+      <div class="team-section-label">D&A Boundaries</div>
+      <ul class="responsibility-list">
+        <li>Escalate all risk classification inputs to A&A — never decide independently</li>
+        <li>Flag sanctions/PEP hits immediately — no clearance authority</li>
+        <li>Prepare the file; A&A makes the call</li>
+      </ul>
+    </div>
+    <div class="team-card aa">
+      <div class="team-label aa"><span class="team-dot"></span>A&A owns</div>
+      <div class="team-name" style="font-size: 17px;">Compliance Decisions</div>
+      <div class="team-tagline">Named compliance function — legally accountable</div>
+      <div class="team-section-label">Non-Delegable (Always)</div>
+      <ul class="responsibility-list">
+        <li>Risk classification decisions — customer and transaction risk</li>
+        <li>EDD oversight and sign-off</li>
+        <li>STR/SAR decisions — exclusively, no AI involvement</li>
+        <li>MAS regulatory reporting and submissions</li>
+        <li>Annual compliance programme oversight</li>
+      </ul>
+      <div class="team-section-label">Advisory &amp; Training</div>
+      <ul class="responsibility-list">
+        <li>Client advisory on AML/CTF obligations</li>
+        <li>Staff AML training sign-off and programme</li>
+        <li>Regulatory examination preparation and liaison</li>
+        <li>Policy and procedure ownership</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Ratio callout -->
+  <div style="background: var(--accent-aa-light); border: 1px solid var(--accent-aa-mid); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px;">
+    <div style="font-size: 28px; font-weight: 800; color: var(--accent-aa); white-space: nowrap;">2 : 1</div>
+    <div>
+      <p style="font-size: 13px; font-weight: 600; color: var(--text);">D&A to A&A ratio — more balanced than other practices</p>
+      <p style="font-size: 12px; color: var(--text-muted);">A&A can't be thinned below the minimum required to hold regulatory accountability. In practice: 1–2 qualified compliance officers as A&A, supported by D&A handling all preparation. The A&A load is decision-heavy, not volume-heavy.</p>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-da);"></span>
+    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-da);">D&A KPIs</span>
+  </div>
+  <div class="metrics-grid" style="margin-bottom: 20px;">
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">📋</div>
+      <div class="metric-label">CDD Completion Rate</div>
+      <div class="metric-target">&gt;95% on SLA</div>
+      <div class="metric-desc">% of CDD files completed and ready for A&A decision within agreed SLA from client onboarding.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">🔄</div>
+      <div class="metric-label">Periodic Review Trigger Rate</div>
+      <div class="metric-target">100%</div>
+      <div class="metric-desc">% of due periodic reviews triggered on schedule. Zero missed reviews — agent monitors and flags.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-da);">
+      <div class="metric-icon">📁</div>
+      <div class="metric-label">File Completeness</div>
+      <div class="metric-target">&gt;90% first pass</div>
+      <div class="metric-desc">% of CDD files submitted to A&A with all required documents complete — no re-work loops.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-aa);"></span>
+    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-aa);">A&A KPIs</span>
+  </div>
+  <div class="metrics-grid" style="margin-bottom: 20px;">
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">🚫</div>
+      <div class="metric-label">Overdue Periodic Reviews</div>
+      <div class="metric-target">Zero</div>
+      <div class="metric-desc">No periodic reviews past due date. Non-negotiable — a missed review is a compliance breach.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">⏱</div>
+      <div class="metric-label">STR Filing Turnaround</div>
+      <div class="metric-target">Within 5 days</div>
+      <div class="metric-desc">Days from decision to lodge STR with STRO. Once A&A decides to file, clock starts. No delays.</div>
+    </div>
+    <div class="metric-card" style="border-top: 3px solid var(--accent-aa);">
+      <div class="metric-icon">🔍</div>
+      <div class="metric-label">Exam Findings</div>
+      <div class="metric-target">Zero material</div>
+      <div class="metric-desc">Material findings from MAS or ACRA regulatory examinations. The ultimate measure of compliance programme quality.</div>
+    </div>
+  </div>
+
+  <!-- Pilot -->
+  <div class="card">
+    <div class="card-title">Compliance Pilot — Start with CDD Onboarding</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 14px;">
+      <div>
+        <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Pod Composition</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 5px;">
+          <li style="font-size: 13px; color: var(--text-muted);">• 1–2 compliance ops staff → D&A</li>
+          <li style="font-size: 13px; color: var(--text-muted);">• 1 qualified compliance officer → A&A</li>
+        </ul>
+        <p style="font-size: 11px; color: var(--text-light); margin-top: 8px;">A&A compliance officer must remain the named responsible person throughout — don't rotate this role during the pilot.</p>
+      </div>
+      <div>
+        <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Pilot Scope</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 5px;">
+          <li style="font-size: 13px; color: var(--green);">✓ CDD onboarding workflow (doc collection → screening → file for A&A decision)</li>
+          <li style="font-size: 13px; color: var(--amber);">→ Periodic review workflow (Phase 2)</li>
+          <li style="font-size: 13px; color: var(--red);">✗ STR process — A&A only, no D&A involvement</li>
+        </ul>
+      </div>
+    </div>
+    <div style="background: var(--amber-light); border: 1px solid #fde68a; border-radius: var(--radius-sm); padding: 10px 14px;">
+      <p style="font-size: 12px; color: var(--amber);">⚠ &nbsp;D&A preps the file. A&A makes every risk decision. Never invert this — even during the pilot build phase.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
