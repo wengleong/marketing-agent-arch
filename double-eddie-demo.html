@@ -1168,6 +1168,25 @@
             <div><span style="font-family:monospace;background:#dbeafe;padding:2px 7px;border-radius:3px;color:#1e40af;">DR Depreciation Expense 433.89 · CR Accumulated Depreciation 433.89</span></div>
             <div style="color:#64748b;font-size:11.5px;">Disposal JE (Printer/Scanner, fully depr): <span style="font-family:monospace;background:#fee2e2;padding:1px 5px;border-radius:3px;color:#b91c1c;">DR Acc Depr 1,200 · CR Asset Cost 1,200 · no gain/loss</span></div>
           </div>
+          <!-- Agent skill proposal card -->
+          <div style="margin-top:8px;padding:10px 14px;background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;font-size:12px;">
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <span style="font-size:16px;flex-shrink:0;">💡</span>
+              <div style="flex:1;">
+                <div style="font-weight:600;color:#92400e;margin-bottom:4px;">FixedAssetAgent — skill update suggested</div>
+                <div style="color:#78350f;margin-bottom:6px;">Server/NAS acquired this period has no matching category in <strong>Fixed Asset Schedule Skill v2</strong>. Applied 5yr (IRAS guidance for IT infrastructure). Recommend formalising in skill config to avoid manual review each period.</div>
+                <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:4px;padding:6px 10px;font-family:monospace;font-size:11.5px;color:#92400e;margin-bottom:8px;">
+                  <span style="color:#b45309;">proposed addition to</span> useful_life_defaults:<br>
+                  &nbsp;&nbsp;"server_nas": 5 &nbsp;<span style="color:#b45309;">// years, straight-line</span>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button onclick="alert('Approved — Fixed Asset Schedule Skill v3 created. Takes effect from July 2026 close.')" style="padding:4px 12px;background:#d97706;color:#fff;border:none;border-radius:4px;font-size:11.5px;font-weight:600;cursor:pointer;">Approve &amp; publish Skill v3</button>
+                  <button onclick="alert('Dismissed. Will resurface next period if Server/NAS is still in the register.')" style="padding:4px 12px;background:#fff;color:#92400e;border:1px solid #fcd34d;border-radius:4px;font-size:11.5px;cursor:pointer;">Dismiss</button>
+                  <span style="margin-left:4px;color:#b45309;font-size:11px;align-self:center;">Confidence: medium</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
