@@ -975,39 +975,144 @@
 
       <!-- Workbooks -->
       <div class="tab-content hidden" id="content-workbooks">
-        <div style="margin-bottom:16px;">
-          <div style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:4px;">Computation Workbooks</div>
-          <div style="font-size:12px;color:#64748b;">Every number in the close was computed deterministically in code — not by LLM arithmetic. These workbooks are the audit trail.</div>
+        <!-- Sheet tabs -->
+        <div style="display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:0;">
+          <button id="wb-tab-payroll" onclick="showWbSheet('payroll')" style="padding:7px 16px;font-size:12.5px;font-weight:600;background:#fff;border:1px solid #e2e8f0;border-bottom:2px solid #2563eb;border-radius:6px 6px 0 0;cursor:pointer;color:#2563eb;margin-bottom:-2px;">Payroll Schedule</button>
+          <button id="wb-tab-fa" onclick="showWbSheet('fa')" style="padding:7px 16px;font-size:12.5px;font-weight:500;background:#f8fafc;border:1px solid #e2e8f0;border-bottom:none;border-radius:6px 6px 0 0;cursor:pointer;color:#64748b;margin-bottom:-2px;margin-left:4px;">Fixed Asset Schedule</button>
         </div>
-        <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px;">
-          <div style="padding:10px 14px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;">
-            <div style="font-size:13px;font-weight:600;color:#0f172a;">Bank Reconciliation — June 2026</div>
-            <span class="badge badge-approved" style="font-size:11px;">✓ Clean</span>
-          </div>
-          <table class="txn-table">
-            <thead><tr><th>Account</th><th>Statement Total (SGD)</th><th>TB Cash Balance (SGD)</th><th>Delta</th><th>Status</th></tr></thead>
+
+        <!-- Formula bar -->
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-top:none;font-size:12px;">
+          <span style="font-weight:700;color:#64748b;font-size:13px;font-family:serif;font-style:italic;">f<sub>x</sub></span>
+          <span id="wb-formula-bar" style="font-family:monospace;color:#1d4ed8;font-size:12px;flex:1;padding:2px 6px;background:#fff;border:1px solid #dbeafe;border-radius:3px;min-height:18px;">=</span>
+        </div>
+
+        <!-- Payroll Sheet -->
+        <div id="wb-sheet-payroll" style="overflow-x:auto;">
+          <table id="wb-table-payroll" style="border-collapse:collapse;width:100%;font-size:12px;">
+            <thead>
+              <tr>
+                <th style="width:28px;background:#f1f5f9;border:1px solid #e2e8f0;padding:4px;text-align:center;color:#94a3b8;font-weight:500;"></th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:160px;">A</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:100px;">B</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:110px;">C</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:110px;">D</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:100px;">E</th>
+              </tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">1</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Employee</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Basic Salary</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">CPF Ee (20%)</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">CPF Er (17%)</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Net Pay</td>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>DBS Current Account</td><td class="mono">124,800.00</td><td class="mono">124,800.00</td><td class="mono" style="color:#15803d;">0.00</td><td><span class="badge badge-approved" style="font-size:10.5px;">matched</span></td></tr>
-              <tr><td>OCBC Business Account</td><td class="mono">38,200.00</td><td class="mono">38,200.00</td><td class="mono" style="color:#15803d;">0.00</td><td><span class="badge badge-approved" style="font-size:10.5px;">matched</span></td></tr>
-              <tr style="font-weight:700;background:#f0fdf4;"><td>Total</td><td class="mono">163,000.00</td><td class="mono">163,000.00</td><td class="mono" style="color:#15803d;font-weight:700;">0.00</td><td><span class="badge badge-approved" style="font-size:10.5px;">balanced</span></td></tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">2</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Tan Wei Ming</td>
+                <td class="wb-cell" data-formula="5000.00" onclick="selectWbCell(this,'5000.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">5,000.00</td>
+                <td class="wb-cell" data-formula="=B2*20%" onclick="selectWbCell(this,'=B2*20%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,000.00</td>
+                <td class="wb-cell" data-formula="=B2*17%" onclick="selectWbCell(this,'=B2*17%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">850.00</td>
+                <td class="wb-cell" data-formula="=B2-C2" onclick="selectWbCell(this,'=B2-C2')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">4,000.00</td>
+              </tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">3</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Sarah Lim Hui Ying</td>
+                <td class="wb-cell" data-formula="4500.00" onclick="selectWbCell(this,'4500.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">4,500.00</td>
+                <td class="wb-cell" data-formula="=B3*20%" onclick="selectWbCell(this,'=B3*20%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">900.00</td>
+                <td class="wb-cell" data-formula="=B3*17%" onclick="selectWbCell(this,'=B3*17%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">765.00</td>
+                <td class="wb-cell" data-formula="=B3-C3" onclick="selectWbCell(this,'=B3-C3')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">3,600.00</td>
+              </tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">4</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Rajan Krishnamurthy</td>
+                <td class="wb-cell" data-formula="3800.00" onclick="selectWbCell(this,'3800.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">3,800.00</td>
+                <td class="wb-cell" data-formula="=B4*20%" onclick="selectWbCell(this,'=B4*20%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">760.00</td>
+                <td class="wb-cell" data-formula="=B4*17%" onclick="selectWbCell(this,'=B4*17%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">646.00</td>
+                <td class="wb-cell" data-formula="=B4-C4" onclick="selectWbCell(this,'=B4-C4')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">3,040.00</td>
+              </tr>
+              <tr style="background:#f0fdf4;font-weight:700;">
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">5</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Total</td>
+                <td class="wb-cell" data-formula="=SUM(B2:B4)" onclick="selectWbCell(this,'=SUM(B2:B4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">13,300.00</td>
+                <td class="wb-cell" data-formula="=SUM(C2:C4)" onclick="selectWbCell(this,'=SUM(C2:C4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,660.00</td>
+                <td class="wb-cell" data-formula="=SUM(D2:D4)" onclick="selectWbCell(this,'=SUM(D2:D4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,261.00</td>
+                <td class="wb-cell" data-formula="=SUM(E2:E4)" onclick="selectWbCell(this,'=SUM(E2:E4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">10,640.00</td>
+              </tr>
             </tbody>
           </table>
-          <div style="padding:8px 14px;font-size:11.5px;color:#6b7280;background:#fafafa;border-top:1px solid #f1f5f9;">Computed by <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;">src/engine/compute/reconciliation.ts</code> · ReconciliationAgent exercised judgment on classification only</div>
-        </div>
-        <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
-          <div style="padding:10px 14px;background:#f8fafc;border-bottom:1px solid #e2e8f0;">
-            <div style="font-size:13px;font-weight:600;color:#0f172a;">Variance Analysis — June vs May 2026</div>
+          <div style="padding:8px 12px;font-size:11.5px;color:#6b7280;background:#fafafa;border:1px solid #e2e8f0;border-top:none;">
+            Accrual JE staged by DocumentAgent: <span style="font-family:monospace;background:#f1f5f9;padding:1px 5px;border-radius:3px;">DR Salary Expense 13,300 · DR CPF Er 2,261 · CR CPF Payable 2,660 · CR Accrued Salaries 10,640</span>
           </div>
-          <table class="txn-table">
-            <thead><tr><th>Account</th><th style="text-align:right">Jun 2026</th><th style="text-align:right">May 2026</th><th style="text-align:right">Delta</th><th style="text-align:right">%</th><th>Flag</th></tr></thead>
+        </div>
+
+        <!-- Fixed Asset Sheet (hidden by default) -->
+        <div id="wb-sheet-fa" style="overflow-x:auto;display:none;">
+          <table id="wb-table-fa" style="border-collapse:collapse;width:100%;font-size:12px;">
+            <thead>
+              <tr>
+                <th style="width:28px;background:#f1f5f9;border:1px solid #e2e8f0;padding:4px;text-align:center;color:#94a3b8;font-weight:500;"></th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:160px;">A</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:90px;">B</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:70px;">C</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:110px;">D</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:100px;">E</th>
+                <th style="background:#f1f5f9;border:1px solid #e2e8f0;padding:5px 10px;text-align:center;color:#64748b;font-weight:600;min-width:100px;">F</th>
+              </tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">1</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Asset</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Cost</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Life (yr)</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Monthly Depr</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Accum Depr</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;font-weight:700;background:#fafafa;color:#374151;">Net Book Value</td>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>4000 Revenue</td><td class="mono">82,400.00</td><td class="mono">70,000.00</td><td class="mono" style="color:#15803d;">+12,400.00</td><td class="mono" style="color:#15803d;">+17.7%</td><td><span style="font-size:11px;background:#fef9c3;color:#a16207;border-radius:4px;padding:1px 6px;">material</span></td></tr>
-              <tr><td>5000 Salary Expense</td><td class="mono">28,400.00</td><td class="mono">28,400.00</td><td class="mono" style="color:#94a3b8;">0.00</td><td class="mono" style="color:#94a3b8;">0.0%</td><td>—</td></tr>
-              <tr><td>5200 Office Expenses</td><td class="mono">17,100.00</td><td class="mono">14,000.00</td><td class="mono" style="color:#b91c1c;">+3,100.00</td><td class="mono" style="color:#b91c1c;">+22.1%</td><td><span style="font-size:11px;background:#fef9c3;color:#a16207;border-radius:4px;padding:1px 6px;">material</span></td></tr>
-              <tr><td>6500 Directors Fees</td><td class="mono">12,000.00</td><td class="mono">12,000.00</td><td class="mono" style="color:#94a3b8;">0.00</td><td class="mono" style="color:#94a3b8;">0.0%</td><td>—</td></tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">2</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">MacBook Pro 16"</td>
+                <td class="wb-cell" data-formula="3500.00" onclick="selectWbCell(this,'3500.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">3,500.00</td>
+                <td class="wb-cell" data-formula="3" onclick="selectWbCell(this,'3')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">3</td>
+                <td class="wb-cell" data-formula="=B2/(C2*12)" onclick="selectWbCell(this,'=B2/(C2*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">97.22</td>
+                <td class="wb-cell" data-formula="=D2*6" onclick="selectWbCell(this,'=D2*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">583.33</td>
+                <td class="wb-cell" data-formula="=B2-E2" onclick="selectWbCell(this,'=B2-E2')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,916.67</td>
+              </tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">3</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Office Furniture Set</td>
+                <td class="wb-cell" data-formula="8200.00" onclick="selectWbCell(this,'8200.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">8,200.00</td>
+                <td class="wb-cell" data-formula="5" onclick="selectWbCell(this,'5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">5</td>
+                <td class="wb-cell" data-formula="=B3/(C3*12)" onclick="selectWbCell(this,'=B3/(C3*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">136.67</td>
+                <td class="wb-cell" data-formula="=D3*6" onclick="selectWbCell(this,'=D3*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">820.00</td>
+                <td class="wb-cell" data-formula="=B3-E3" onclick="selectWbCell(this,'=B3-E3')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">7,380.00</td>
+              </tr>
+              <tr>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">4</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Server / NAS Unit</td>
+                <td class="wb-cell" data-formula="12000.00" onclick="selectWbCell(this,'12000.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">12,000.00</td>
+                <td class="wb-cell" data-formula="5" onclick="selectWbCell(this,'5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">5</td>
+                <td class="wb-cell" data-formula="=B4/(C4*12)" onclick="selectWbCell(this,'=B4/(C4*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
+                <td class="wb-cell" data-formula="=D4*6" onclick="selectWbCell(this,'=D4*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,200.00</td>
+                <td class="wb-cell" data-formula="=B4-E4" onclick="selectWbCell(this,'=B4-E4')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">10,800.00</td>
+              </tr>
+              <tr style="background:#f0fdf4;font-weight:700;">
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">5</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Total</td>
+                <td class="wb-cell" data-formula="=SUM(B2:B4)" onclick="selectWbCell(this,'=SUM(B2:B4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">23,700.00</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;"></td>
+                <td class="wb-cell" data-formula="=SUM(D2:D4)" onclick="selectWbCell(this,'=SUM(D2:D4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">433.89</td>
+                <td class="wb-cell" data-formula="=SUM(E2:E4)" onclick="selectWbCell(this,'=SUM(E2:E4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,603.33</td>
+                <td class="wb-cell" data-formula="=SUM(F2:F4)" onclick="selectWbCell(this,'=SUM(F2:F4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">21,096.67</td>
+              </tr>
             </tbody>
           </table>
-          <div style="padding:8px 14px;font-size:11.5px;color:#6b7280;background:#fafafa;border-top:1px solid #f1f5f9;">Computed by <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;">src/engine/compute/variance.ts</code> · VarianceAgent wrote commentary only — numbers are code-owned</div>
+          <div style="padding:8px 12px;font-size:11.5px;color:#6b7280;background:#fafafa;border:1px solid #e2e8f0;border-top:none;">
+            Accrual JE staged by DocumentAgent: <span style="font-family:monospace;background:#f1f5f9;padding:1px 5px;border-radius:3px;">DR Depreciation Expense 433.89 · CR Accumulated Depreciation 433.89</span>
+          </div>
         </div>
       </div>
 
@@ -1718,8 +1823,8 @@ const STEPS = [
     }
   },
   {
-    label: 'Workbooks — every computation is code-owned. Reconciliation, variance, and packet metrics are all deterministic — no LLM arithmetic.',
-    hint: 'Browse the reconciliation and variance workbooks',
+    label: 'Workbooks — payroll and fixed asset schedules with full formulas. Staff verify external computations here; accrual JEs are staged from these numbers.',
+    hint: 'Click a formula cell (shown in blue) to inspect it. Switch between Payroll Schedule and Fixed Asset Schedule.',
     setup() {
       showTab('workbooks');
     }
@@ -2215,6 +2320,31 @@ function showHint(msg) {
   el.textContent = msg;
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── Workbooks ─────────────────────────────────────────────────────────────────
+function showWbSheet(name) {
+  ['payroll','fa'].forEach(s => {
+    const sheet = document.getElementById('wb-sheet-' + s);
+    const tab   = document.getElementById('wb-tab-' + s);
+    if (!sheet || !tab) return;
+    const active = s === name;
+    sheet.style.display = active ? '' : 'none';
+    tab.style.fontWeight    = active ? '600' : '500';
+    tab.style.color         = active ? '#2563eb' : '#64748b';
+    tab.style.background    = active ? '#fff' : '#f8fafc';
+    tab.style.borderBottom  = active ? '2px solid #2563eb' : 'none';
+  });
+  document.getElementById('wb-formula-bar').textContent = '=';
+}
+function selectWbCell(el, formula) {
+  document.querySelectorAll('.wb-cell.wb-selected').forEach(c => {
+    c.classList.remove('wb-selected');
+    c.style.outline = '';
+  });
+  el.classList.add('wb-selected');
+  el.style.outline = '2px solid #2563eb';
+  document.getElementById('wb-formula-bar').textContent = formula;
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────
