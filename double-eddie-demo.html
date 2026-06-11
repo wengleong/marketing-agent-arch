@@ -1039,18 +1039,27 @@
                 <td class="wb-cell" data-formula="=B4*17%" onclick="selectWbCell(this,'=B4*17%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">646.00</td>
                 <td class="wb-cell" data-formula="=B4-C4" onclick="selectWbCell(this,'=B4-C4')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">3,040.00</td>
               </tr>
-              <tr style="background:#f0fdf4;font-weight:700;">
+              <tr>
                 <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">5</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Zhang Wei (Director) <span style="font-size:10px;background:#fef9c3;color:#a16207;border-radius:3px;padding:1px 5px;margin-left:4px;font-weight:600;">⚠ capped</span></td>
+                <td class="wb-cell" data-formula="9500.00" onclick="selectWbCell(this,'9500.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">9,500.00</td>
+                <td class="wb-cell" data-formula="=MIN(B5,8000)*20%" onclick="selectWbCell(this,'=MIN(B5,8000)*20%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,600.00</td>
+                <td class="wb-cell" data-formula="=MIN(B5,8000)*17%" onclick="selectWbCell(this,'=MIN(B5,8000)*17%')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,360.00</td>
+                <td class="wb-cell" data-formula="=B5-C5" onclick="selectWbCell(this,'=B5-C5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">7,900.00</td>
+              </tr>
+              <tr style="background:#f0fdf4;font-weight:700;">
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">6</td>
                 <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Total</td>
-                <td class="wb-cell" data-formula="=SUM(B2:B4)" onclick="selectWbCell(this,'=SUM(B2:B4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">13,300.00</td>
-                <td class="wb-cell" data-formula="=SUM(C2:C4)" onclick="selectWbCell(this,'=SUM(C2:C4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,660.00</td>
-                <td class="wb-cell" data-formula="=SUM(D2:D4)" onclick="selectWbCell(this,'=SUM(D2:D4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,261.00</td>
-                <td class="wb-cell" data-formula="=SUM(E2:E4)" onclick="selectWbCell(this,'=SUM(E2:E4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">10,640.00</td>
+                <td class="wb-cell" data-formula="=SUM(B2:B5)" onclick="selectWbCell(this,'=SUM(B2:B5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">22,800.00</td>
+                <td class="wb-cell" data-formula="=SUM(C2:C5)" onclick="selectWbCell(this,'=SUM(C2:C5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">4,260.00</td>
+                <td class="wb-cell" data-formula="=SUM(D2:D5)" onclick="selectWbCell(this,'=SUM(D2:D5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">3,621.00</td>
+                <td class="wb-cell" data-formula="=SUM(E2:E5)" onclick="selectWbCell(this,'=SUM(E2:E5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">18,540.00</td>
               </tr>
             </tbody>
           </table>
           <div style="padding:8px 12px;font-size:11.5px;color:#6b7280;background:#fafafa;border:1px solid #e2e8f0;border-top:none;">
-            Accrual JE staged by DocumentAgent: <span style="font-family:monospace;background:#f1f5f9;padding:1px 5px;border-radius:3px;">DR Salary Expense 13,300 · DR CPF Er 2,261 · CR CPF Payable 2,660 · CR Accrued Salaries 10,640</span>
+            Accrual JE staged: <span style="font-family:monospace;background:#f1f5f9;padding:1px 5px;border-radius:3px;">DR Salary Expense 22,800 · DR CPF Er 3,621 · CR CPF Payable 4,260 · CR Accrued Salaries 18,540</span>
+            &nbsp;·&nbsp; OW ceiling $8,000 applied to 1 employee
           </div>
         </div>
 
@@ -1101,28 +1110,38 @@
                 <td class="wb-cell" data-formula="=D4*6" onclick="selectWbCell(this,'=D4*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">820.00</td>
                 <td class="wb-cell" data-formula="=B4-E4" onclick="selectWbCell(this,'=B4-E4')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">7,380.00</td>
               </tr>
-              <tr style="background:#f0fdf4;">
+              <tr style="opacity:0.55;">
                 <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">5</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#94a3b8;text-decoration:line-through;">Printer / Scanner <span style="font-size:10px;background:#fee2e2;color:#b91c1c;border-radius:3px;padding:1px 5px;margin-left:4px;font-weight:600;text-decoration:none;">🗑 disposed</span></td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#94a3b8;text-decoration:line-through;">1,200.00</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#94a3b8;text-decoration:line-through;">3</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#94a3b8;text-decoration:line-through;">33.33</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#94a3b8;text-decoration:line-through;">1,200.00</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#94a3b8;text-decoration:line-through;">0.00</td>
+              </tr>
+              <tr style="background:#f0fdf4;">
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">6</td>
                 <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Server / NAS Unit <span style="font-size:10px;background:#dcfce7;color:#15803d;border-radius:3px;padding:1px 5px;margin-left:4px;font-weight:600;">new Jun</span></td>
                 <td class="wb-cell" data-formula="12000.00" onclick="selectWbCell(this,'12000.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">12,000.00</td>
                 <td class="wb-cell" data-formula="5" onclick="selectWbCell(this,'5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">5</td>
-                <td class="wb-cell" data-formula="=B5/(C5*12)" onclick="selectWbCell(this,'=B5/(C5*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
-                <td class="wb-cell" data-formula="=D5*1" onclick="selectWbCell(this,'=D5*1')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
-                <td class="wb-cell" data-formula="=B5-E5" onclick="selectWbCell(this,'=B5-E5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">11,800.00</td>
+                <td class="wb-cell" data-formula="=B6/(C6*12)" onclick="selectWbCell(this,'=B6/(C6*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
+                <td class="wb-cell" data-formula="=D6*1" onclick="selectWbCell(this,'=D6*1')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
+                <td class="wb-cell" data-formula="=B6-E6" onclick="selectWbCell(this,'=B6-E6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">11,800.00</td>
               </tr>
               <tr style="background:#f0fdf4;font-weight:700;">
-                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">6</td>
-                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Total</td>
-                <td class="wb-cell" data-formula="=SUM(B3:B5)" onclick="selectWbCell(this,'=SUM(B3:B5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">23,700.00</td>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">7</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Total <span style="font-size:10.5px;font-weight:400;color:#64748b;">(excl. disposed)</span></td>
+                <td class="wb-cell" data-formula="=SUM(B3:B4,B6)" onclick="selectWbCell(this,'=SUM(B3:B4,B6)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">23,700.00</td>
                 <td style="border:1px solid #e2e8f0;padding:5px 10px;"></td>
-                <td class="wb-cell" data-formula="=SUM(D3:D5)" onclick="selectWbCell(this,'=SUM(D3:D5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">433.89</td>
-                <td class="wb-cell" data-formula="=SUM(E3:E5)" onclick="selectWbCell(this,'=SUM(E3:E5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,603.33</td>
-                <td class="wb-cell" data-formula="=SUM(F3:F5)" onclick="selectWbCell(this,'=SUM(F3:F5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">22,096.67</td>
+                <td class="wb-cell" data-formula="=SUM(D3:D4,D6)" onclick="selectWbCell(this,'=SUM(D3:D4,D6)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">433.89</td>
+                <td class="wb-cell" data-formula="=SUM(E3:E4,E6)" onclick="selectWbCell(this,'=SUM(E3:E4,E6)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,603.33</td>
+                <td class="wb-cell" data-formula="=SUM(F3:F4,F6)" onclick="selectWbCell(this,'=SUM(F3:F4,F6)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">22,096.67</td>
               </tr>
             </tbody>
           </table>
           <div style="padding:8px 12px;font-size:11.5px;color:#6b7280;background:#fafafa;border:1px solid #e2e8f0;border-top:none;">
-            Accrual JE staged by DocumentAgent: <span style="font-family:monospace;background:#f1f5f9;padding:1px 5px;border-radius:3px;">DR Depreciation Expense 433.89 · CR Accumulated Depreciation 433.89</span>
+            Depreciation JE: <span style="font-family:monospace;background:#f1f5f9;padding:1px 5px;border-radius:3px;">DR Depreciation Expense 433.89 · CR Accumulated Depreciation 433.89</span>
+            &nbsp;·&nbsp; Disposal JE: <span style="font-family:monospace;background:#fee2e2;padding:1px 5px;border-radius:3px;">DR Acc Depr 1,200 · CR Printer/Scanner Cost 1,200 (fully depreciated, no gain/loss)</span>
           </div>
         </div>
       </div>
