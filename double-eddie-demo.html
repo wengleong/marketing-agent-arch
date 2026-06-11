@@ -975,6 +975,12 @@
 
       <!-- Workbooks -->
       <div class="tab-content hidden" id="content-workbooks">
+        <!-- Rollforward banner -->
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;margin-bottom:10px;font-size:12px;">
+          <span style="color:#1d4ed8;font-size:14px;">↩</span>
+          <span style="color:#1e40af;font-weight:600;">Rolled forward from May 2026</span>
+          <span style="color:#3b82f6;">· Opening balances and employee list carried from prior close · New assets and headcount changes applied · Accrual JEs updated automatically</span>
+        </div>
         <!-- Sheet tabs -->
         <div style="display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:0;">
           <button id="wb-tab-payroll" onclick="showWbSheet('payroll')" style="padding:7px 16px;font-size:12.5px;font-weight:600;background:#fff;border:1px solid #e2e8f0;border-bottom:2px solid #2563eb;border-radius:6px 6px 0 0;cursor:pointer;color:#2563eb;margin-bottom:-2px;">Payroll Schedule</button>
@@ -1072,41 +1078,46 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr style="background:#f0f9ff;">
                 <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">2</td>
-                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">MacBook Pro 16"</td>
-                <td class="wb-cell" data-formula="3500.00" onclick="selectWbCell(this,'3500.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">3,500.00</td>
-                <td class="wb-cell" data-formula="3" onclick="selectWbCell(this,'3')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">3</td>
-                <td class="wb-cell" data-formula="=B2/(C2*12)" onclick="selectWbCell(this,'=B2/(C2*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">97.22</td>
-                <td class="wb-cell" data-formula="=D2*6" onclick="selectWbCell(this,'=D2*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">583.33</td>
-                <td class="wb-cell" data-formula="=B2-E2" onclick="selectWbCell(this,'=B2-E2')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,916.67</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#475569;font-style:italic;font-size:11.5px;" colspan="5">↩ Opening balances rolled forward from May 2026 close — 2 assets, accum depr carried</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#475569;font-size:11.5px;">19,296.67</td>
               </tr>
               <tr>
                 <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">3</td>
-                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Office Furniture Set</td>
-                <td class="wb-cell" data-formula="8200.00" onclick="selectWbCell(this,'8200.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">8,200.00</td>
-                <td class="wb-cell" data-formula="5" onclick="selectWbCell(this,'5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">5</td>
-                <td class="wb-cell" data-formula="=B3/(C3*12)" onclick="selectWbCell(this,'=B3/(C3*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">136.67</td>
-                <td class="wb-cell" data-formula="=D3*6" onclick="selectWbCell(this,'=D3*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">820.00</td>
-                <td class="wb-cell" data-formula="=B3-E3" onclick="selectWbCell(this,'=B3-E3')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">7,380.00</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">MacBook Pro 16"</td>
+                <td class="wb-cell" data-formula="3500.00" onclick="selectWbCell(this,'3500.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">3,500.00</td>
+                <td class="wb-cell" data-formula="3" onclick="selectWbCell(this,'3')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">3</td>
+                <td class="wb-cell" data-formula="=B3/(C3*12)" onclick="selectWbCell(this,'=B3/(C3*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">97.22</td>
+                <td class="wb-cell" data-formula="=D3*6" onclick="selectWbCell(this,'=D3*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">583.33</td>
+                <td class="wb-cell" data-formula="=B3-E3" onclick="selectWbCell(this,'=B3-E3')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,916.67</td>
               </tr>
               <tr>
                 <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">4</td>
-                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Server / NAS Unit</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Office Furniture Set</td>
+                <td class="wb-cell" data-formula="8200.00" onclick="selectWbCell(this,'8200.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">8,200.00</td>
+                <td class="wb-cell" data-formula="5" onclick="selectWbCell(this,'5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">5</td>
+                <td class="wb-cell" data-formula="=B4/(C4*12)" onclick="selectWbCell(this,'=B4/(C4*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">136.67</td>
+                <td class="wb-cell" data-formula="=D4*6" onclick="selectWbCell(this,'=D4*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">820.00</td>
+                <td class="wb-cell" data-formula="=B4-E4" onclick="selectWbCell(this,'=B4-E4')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">7,380.00</td>
+              </tr>
+              <tr style="background:#f0fdf4;">
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">5</td>
+                <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Server / NAS Unit <span style="font-size:10px;background:#dcfce7;color:#15803d;border-radius:3px;padding:1px 5px;margin-left:4px;font-weight:600;">new Jun</span></td>
                 <td class="wb-cell" data-formula="12000.00" onclick="selectWbCell(this,'12000.00')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">12,000.00</td>
                 <td class="wb-cell" data-formula="5" onclick="selectWbCell(this,'5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;cursor:pointer;">5</td>
-                <td class="wb-cell" data-formula="=B4/(C4*12)" onclick="selectWbCell(this,'=B4/(C4*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
-                <td class="wb-cell" data-formula="=D4*6" onclick="selectWbCell(this,'=D4*6')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,200.00</td>
-                <td class="wb-cell" data-formula="=B4-E4" onclick="selectWbCell(this,'=B4-E4')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">10,800.00</td>
+                <td class="wb-cell" data-formula="=B5/(C5*12)" onclick="selectWbCell(this,'=B5/(C5*12)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
+                <td class="wb-cell" data-formula="=D5*1" onclick="selectWbCell(this,'=D5*1')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">200.00</td>
+                <td class="wb-cell" data-formula="=B5-E5" onclick="selectWbCell(this,'=B5-E5')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">11,800.00</td>
               </tr>
               <tr style="background:#f0fdf4;font-weight:700;">
-                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">5</td>
+                <td style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 6px;text-align:center;color:#94a3b8;font-size:11px;">6</td>
                 <td style="border:1px solid #e2e8f0;padding:5px 10px;color:#0f172a;">Total</td>
-                <td class="wb-cell" data-formula="=SUM(B2:B4)" onclick="selectWbCell(this,'=SUM(B2:B4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">23,700.00</td>
+                <td class="wb-cell" data-formula="=SUM(B3:B5)" onclick="selectWbCell(this,'=SUM(B3:B5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">23,700.00</td>
                 <td style="border:1px solid #e2e8f0;padding:5px 10px;"></td>
-                <td class="wb-cell" data-formula="=SUM(D2:D4)" onclick="selectWbCell(this,'=SUM(D2:D4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">433.89</td>
-                <td class="wb-cell" data-formula="=SUM(E2:E4)" onclick="selectWbCell(this,'=SUM(E2:E4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">2,603.33</td>
-                <td class="wb-cell" data-formula="=SUM(F2:F4)" onclick="selectWbCell(this,'=SUM(F2:F4)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">21,096.67</td>
+                <td class="wb-cell" data-formula="=SUM(D3:D5)" onclick="selectWbCell(this,'=SUM(D3:D5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">433.89</td>
+                <td class="wb-cell" data-formula="=SUM(E3:E5)" onclick="selectWbCell(this,'=SUM(E3:E5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">1,603.33</td>
+                <td class="wb-cell" data-formula="=SUM(F3:F5)" onclick="selectWbCell(this,'=SUM(F3:F5)')" style="border:1px solid #e2e8f0;padding:5px 10px;text-align:right;font-family:monospace;color:#1d4ed8;cursor:pointer;">22,096.67</td>
               </tr>
             </tbody>
           </table>
