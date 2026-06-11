@@ -840,6 +840,23 @@
           </div>
           <button class="btn btn-primary btn-sm highlight" id="approve-plan-btn" onclick="approvePlan()" style="white-space:nowrap;background:#0f172a;">Approve Plan</button>
         </div>
+
+        <!-- CloseManager reasoning -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:12px;">
+          <div style="font-weight:600;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+            <span style="font-size:13px;">🧠</span> CloseManager — context scanned, plan assembled
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="color:#16a34a;font-weight:700;flex-shrink:0;">✓</span><span style="color:#374151;">SharePoint: <strong>payroll_june_2026.xlsx</strong> detected → <strong>PayrollAgent</strong> included · Payroll Schedule Skill v3 (CPF 2026 rates)</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="color:#16a34a;font-weight:700;flex-shrink:0;">✓</span><span style="color:#374151;">SharePoint: <strong>asset_register.xlsx</strong> detected → <strong>FixedAssetAgent</strong> included · rollforward from May 2026 workbook · Skill v2</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="color:#16a34a;font-weight:700;flex-shrink:0;">✓</span><span style="color:#374151;">Prior close: Fixed Asset Schedule workbook found → running in <strong>rollforward mode</strong>, opening balances carried</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="color:#16a34a;font-weight:700;flex-shrink:0;">✓</span><span style="color:#374151;">Client memory: <strong>Directors Fees always expensed in full, no CPF</strong> · <strong>server assets classify as IT Equipment</strong> · variance threshold $5,000 · 3 prior notes loaded</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="color:#6b7280;font-weight:700;flex-shrink:0;">–</span><span style="color:#6b7280;">TB: Deferred Revenue = $0 → <strong>DeferredRevenueAgent skipped</strong></span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="color:#6b7280;font-weight:700;flex-shrink:0;">–</span><span style="color:#6b7280;">TB: IC Receivable / Payable = $0 → <strong>IntercompanyAgent skipped</strong></span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="color:#6b7280;font-weight:700;flex-shrink:0;">–</span><span style="color:#6b7280;">GST: No F5 filing period this month → <strong>GSTAgent skipped</strong></span></div>
+          </div>
+        </div>
+
         <div style="display:flex;flex-direction:column;gap:8px;" id="plan-steps-list">
           <div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
             <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0;">1</div>
@@ -858,18 +875,34 @@
           </div>
           <div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
             <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0;">4</div>
-            <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:#0f172a;">ReconciliationAgent</div><div style="font-size:11.5px;color:#94a3b8;">Compute bank recon in code — classify any gap via LLM judgment only</div></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:500;color:#0f172a;">PayrollAgent <span style="font-size:10.5px;background:#ede9fe;color:#5b21b6;border-radius:3px;padding:1px 6px;font-weight:600;margin-left:4px;">⚙ Payroll Schedule Skill v3</span></div>
+              <div style="font-size:11.5px;color:#94a3b8;">payroll_june_2026.xlsx · CPF 2026 rates · OW ceiling $8,000 · stage salary accrual JE</div>
+            </div>
             <span class="badge badge-scheduled" id="plan-step-4-badge">pending</span>
           </div>
           <div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
             <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0;">5</div>
-            <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:#0f172a;">VarianceAgent</div><div style="font-size:11.5px;color:#94a3b8;">Compute variance in code — LLM writes commentary only</div></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:500;color:#0f172a;">FixedAssetAgent <span style="font-size:10.5px;background:#ede9fe;color:#5b21b6;border-radius:3px;padding:1px 6px;font-weight:600;margin-left:4px;">⚙ Fixed Asset Schedule Skill v2</span> <span style="font-size:10.5px;background:#dbeafe;color:#1e40af;border-radius:3px;padding:1px 6px;font-weight:600;margin-left:2px;">↩ rollforward</span></div>
+              <div style="font-size:11.5px;color:#94a3b8;">asset_register.xlsx · opening balances from May 2026 · straight-line · stage depreciation JE</div>
+            </div>
             <span class="badge badge-scheduled" id="plan-step-5-badge">pending</span>
           </div>
           <div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
             <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0;">6</div>
-            <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:#0f172a;">PackageAgent</div><div style="font-size:11.5px;color:#94a3b8;">Assemble close packet — key metrics, observations, statements summary</div></div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:#0f172a;">ReconciliationAgent</div><div style="font-size:11.5px;color:#94a3b8;">Compute bank recon in code — classify any gap via LLM judgment only</div></div>
             <span class="badge badge-scheduled" id="plan-step-6-badge">pending</span>
+          </div>
+          <div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0;">7</div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:#0f172a;">VarianceAgent</div><div style="font-size:11.5px;color:#94a3b8;">Compute variance in code — LLM writes commentary only</div></div>
+            <span class="badge badge-scheduled" id="plan-step-7-badge">pending</span>
+          </div>
+          <div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0;">8</div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:#0f172a;">PackageAgent</div><div style="font-size:11.5px;color:#94a3b8;">Assemble close packet — key metrics, observations, statements summary</div></div>
+            <span class="badge badge-scheduled" id="plan-step-8-badge">pending</span>
           </div>
         </div>
       </div>
@@ -2006,14 +2039,19 @@ const EVENT_DATA = [
 const EVENT_DELAYS = [0, 1400, 1600, 2200, 1000];
 
 // Events that stream after exception is resolved
+// onComplete: optional fn called when this event finishes rendering (for plan badge ticking)
 const RESUME_EVENT_DATA = [
-  { dot: 'green',  agent: 'System',              time: '14:09:03', msg: '▶ Run resumed. All exceptions resolved. Continuing from ReadinessAgent…' },
-  { dot: 'blue',   agent: 'ReadinessAgent',      time: '14:09:05', msg: 'Pipeline 100%. TB balanced. 0 uncategorised transactions. Close can proceed.' },
-  { dot: 'blue',   agent: 'ReconciliationAgent', time: '14:10:18', msg: 'Bank statements SGD 163,000 · TB cash SGD 163,000 · Delta SGD 0.00. Reconciliation clean.' },
-  { dot: 'blue',   agent: 'VarianceAgent',       time: '14:11:42', msg: '2 material variances: Revenue +$12,400 (+17.7%) · Office Expenses +$3,100 (+22.1%). Commentary written.' },
-  { dot: 'green',  agent: 'PackageAgent',        time: '14:12:55', msg: '✓ Close packet assembled. Revenue $82,400 · Expenses $71,200 · Net Income $11,200. Run complete.' },
+  { dot: 'green',  agent: 'System',              time: '14:09:03', msg: '▶ Run resumed. All exceptions resolved. Continuing with plan…', onComplete: () => { setPlanBadge(1, 'running'); setPlanBadge(2, 'running'); setPlanBadge(3, 'running'); } },
+  { dot: 'blue',   agent: 'ReadinessAgent',      time: '14:09:05', msg: 'Pipeline 100%. TB balanced. 0 uncategorised transactions. Close can proceed.', onComplete: () => tickPlanStep(1) },
+  { dot: 'blue',   agent: 'DocumentAgent',       time: '14:09:40', msg: 'All statements uploaded and categorised. 2 accrual JEs staged and approved.', onComplete: () => tickPlanStep(2) },
+  { dot: 'blue',   agent: 'VerificationAgent',   time: '14:10:02', msg: '84 transactions reviewed. 1 exception resolved. Categorisation complete.', onComplete: () => tickPlanStep(3) },
+  { dot: 'purple', agent: 'PayrollAgent',        time: '14:10:28', msg: 'Payroll Schedule Skill v3 loaded. payroll_june_2026.xlsx read. 4 employees · CPF computed · OW ceiling applied (Zhang Wei). Salary accrual JE staged: DR Salary $28,400 · CR CPF Payable $5,860 · CR Accrued Salaries $22,540.', onComplete: () => tickPlanStep(4) },
+  { dot: 'purple', agent: 'FixedAssetAgent',     time: '14:10:55', msg: 'Fixed Asset Schedule Skill v2 loaded. Rollforward from May 2026. 3 assets active · 1 disposal (Printer/Scanner, fully depr). This period depr $433.89. Depreciation JE staged. Skill proposal: add server_nas category (5yr).', onComplete: () => tickPlanStep(5) },
+  { dot: 'blue',   agent: 'ReconciliationAgent', time: '14:11:18', msg: 'Bank statements SGD 163,000 · TB cash SGD 163,000 · Delta SGD 0.00. Reconciliation clean.', onComplete: () => tickPlanStep(6) },
+  { dot: 'blue',   agent: 'VarianceAgent',       time: '14:12:42', msg: '2 material variances: Revenue +$12,400 (+17.7%) · Office Expenses +$3,100 (+22.1%). Commentary written.', onComplete: () => tickPlanStep(7) },
+  { dot: 'green',  agent: 'PackageAgent',        time: '14:13:55', msg: '✓ Close packet assembled. Revenue $82,400 · Expenses $71,200 · Net Income $11,200. Run complete.', onComplete: () => tickPlanStep(8) },
 ];
-const RESUME_EVENT_DELAYS = [0, 800, 2200, 2800, 2600];
+const RESUME_EVENT_DELAYS = [0, 800, 1400, 1000, 2000, 1800, 1600, 2800, 2600];
 
 let streamTimer = null;
 let streamDone = false;
@@ -2109,6 +2147,7 @@ function streamResumeEvents() {
       typing.style.display = 'none';
       rows[i].classList.add('visible');
       rows[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (ev.onComplete) ev.onComplete();
     }, cumDelay);
   });
 }
@@ -2193,24 +2232,54 @@ function showTab(name) {
 }
 
 let planApproved = false;
+const PLAN_STEPS = 8;
+
+function setPlanBadge(n, state) {
+  const b = document.getElementById('plan-step-' + n + '-badge');
+  if (!b) return;
+  const map = {
+    pending:  ['badge badge-scheduled', 'pending'],
+    running:  ['badge badge-running',   'running'],
+    complete: ['badge badge-approved',  'complete'],
+  };
+  const [cls, txt] = map[state] || map.pending;
+  b.className = cls; b.textContent = txt;
+}
+
+function tickPlanStep(n) {
+  // Mark step n complete, mark step n+1 running (if exists)
+  setPlanBadge(n, 'complete');
+  if (n < PLAN_STEPS) setPlanBadge(n + 1, 'running');
+
+  // If all steps complete, show close-complete flash
+  const allDone = Array.from({length: PLAN_STEPS}, (_, i) => i + 1)
+    .every(i => {
+      const b = document.getElementById('plan-step-' + i + '-badge');
+      return b && b.textContent === 'complete';
+    });
+  if (allDone) {
+    const list = document.getElementById('plan-steps-list');
+    if (list) {
+      const notice = document.createElement('div');
+      notice.style = 'padding:10px 14px;background:#dcfce7;border:1px solid #86efac;border-radius:8px;font-size:12.5px;font-weight:600;color:#15803d;text-align:center;margin-top:4px;';
+      notice.textContent = '✓ All plan steps complete — close run finished';
+      list.appendChild(notice);
+    }
+  }
+}
+
 function showPlanPending() {
   document.getElementById('plan-approve-banner').style.display = 'flex';
-  ['1','2','3','4','5','6'].forEach(n => {
-    const b = document.getElementById('plan-step-' + n + '-badge');
-    if (b) { b.className = 'badge badge-scheduled'; b.textContent = 'pending'; }
-  });
+  for (let i = 1; i <= PLAN_STEPS; i++) setPlanBadge(i, 'pending');
 }
+
 function approvePlan() {
   planApproved = true;
   document.getElementById('plan-approve-banner').style.display = 'none';
-  ['1','2','3'].forEach(n => {
-    const b = document.getElementById('plan-step-' + n + '-badge');
-    if (b) { b.className = 'badge badge-approved'; b.textContent = 'complete'; }
-  });
-  ['4','5','6'].forEach(n => {
-    const b = document.getElementById('plan-step-' + n + '-badge');
-    if (b) { b.className = 'badge badge-running'; b.textContent = 'running'; }
-  });
+  // Steps 1-3 start immediately (ReadinessAgent, DocumentAgent, VerificationAgent)
+  for (let i = 1; i <= 3; i++) setPlanBadge(i, 'running');
+  // Rest remain pending until their turn
+  for (let i = 4; i <= PLAN_STEPS; i++) setPlanBadge(i, 'pending');
   showHint('Plan approved! Execution started — watch the Event Feed.');
   if (step === 2) { setTimeout(() => { step = 3; updateBar(); }, 900); }
 }
